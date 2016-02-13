@@ -46,7 +46,10 @@ class SearchApiViewsPageDeriver extends FacetSourceDeriverBase {
                 'view_display' => $name,
               ] + $base_plugin_definition;
 
-              $sources[] = $this->t('Search api view: ' . $view->label() . ' display: ' . $display_info['display_title']);
+              $sources[] = $this->t(
+                'Search api view: %view, display: %display',
+                ['%view' => $view->label(), '%display' => $display_info['display_title']]
+              );
             }
           }
         }

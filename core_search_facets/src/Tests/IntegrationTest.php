@@ -337,7 +337,7 @@ class IntegrationTest extends CoreSearchFacetsWebTestBase {
 
     // Check that the facet by testing for the message and the absence of the
     // facet name on the overview.
-    $this->assertRaw($this->t('The facet is currently used in a block and thus can\'t be removed. Remove the block first.'));
+    $this->assertRaw($this->t("The facet is currently used in a block and thus can't be removed. Remove the block first."));
   }
 
   /**
