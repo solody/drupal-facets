@@ -138,6 +138,16 @@ class FacetForm extends EntityForm {
    */
   public function buildEntityForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
 
+    $facet_sources = [];
+    foreach ($this->getFacetSourcePluginManager()->getDefinitions() as $facet_source_id => $definition) {
+      $facet_sources[$definition['id']] = !empty($definition['label']) ? $definition['label'] : $facet_source_id;
+    }
+
+    if (count($facet_sources) == 0) {
+      $form['#markup'] = $this->t('You currently have no facet sources defined. You should start by adding a facet source before creating facets.');
+      return;
+    }
+
     $form['name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Facet name'),
@@ -169,10 +179,6 @@ class FacetForm extends EntityForm {
       ],
     ];
 
-    $facet_sources = [];
-    foreach ($this->getFacetSourcePluginManager()->getDefinitions() as $facet_source_id => $definition) {
-      $facet_sources[$definition['id']] = !empty($definition['label']) ? $definition['label'] : $facet_source_id;
-    }
     $form['facet_source_id'] = [
       '#type' => 'select',
       '#title' => $this->t('Facet source'),
