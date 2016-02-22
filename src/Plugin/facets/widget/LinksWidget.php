@@ -29,13 +29,6 @@ class LinksWidget implements WidgetInterface {
   /**
    * {@inheritdoc}
    */
-  public function execute() {
-    // Execute all the things.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function build(FacetInterface $facet) {
     /** @var \Drupal\facets\Result\Result[] $results */
     $results = $facet->getResults();

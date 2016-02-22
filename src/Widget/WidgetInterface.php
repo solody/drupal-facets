@@ -14,14 +14,6 @@ use Drupal\facets\FacetInterface;
 interface WidgetInterface {
 
   /**
-   * Adds facet info to the query using the selected query type.
-   *
-   * @return mixed
-   *   A boolean
-   */
-  public function execute();
-
-  /**
    * Builds the widget for rendering.
    *
    * @param \Drupal\facets\FacetInterface $facet

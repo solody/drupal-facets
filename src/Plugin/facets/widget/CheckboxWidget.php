@@ -31,13 +31,6 @@ class CheckboxWidget implements WidgetInterface, FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function execute() {
-    // Execute all the things.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function build(FacetInterface $facet) {
     $form_builder = \Drupal::getContainer()->get('form_builder');
 
