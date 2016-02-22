@@ -32,6 +32,11 @@ Before adding a facet, there should be a facet source. Facet sources can be:
 After adding one of those, you can add a facet on the facets configuration page:
 /admin/config/search/facets
 
+If you're using Search API views, make sure to disable views cache when using
+facets for that view.
+
 FAQ
 ---
-Todo
+
+Q: Why do the facets disappear after a refresh.
+A: We don't support cached views, change the view to disable caching.

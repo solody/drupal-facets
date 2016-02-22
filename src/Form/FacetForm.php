@@ -323,9 +323,8 @@ class FacetForm extends EntityForm {
     $facet->save();
 
     // Ensure that the caching of the view display is disabled, so the search
-    // correctly returns the facets. This is a temporary fix, until the cache
-    // metadata is correctly stored on the facet block. Only apply this when the
-    // facet source type is actually something this is related to views.
+    // correctly returns the facets. Only apply this when the facet source is
+    // actually a view by exploding
     list($type,) = explode(':', $facet_source_id);
 
     if ($type === 'search_api_views') {
@@ -334,10 +333,9 @@ class FacetForm extends EntityForm {
 
     if (isset($view_id)) {
       $view = Views::getView($view_id);
-
-      $display = &$view->storage->getDisplay($display);
-      $display['display_options']['cache']['type'] = 'none';
-      $view->storage->save();
+      $view->setDisplay($display);
+      $view->display_handler->overrideOption('cache', ['type' => 'none']);
+      $view->save();
     }
 
     if ($is_new) {
