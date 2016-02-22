@@ -80,6 +80,80 @@ class WidgetIntegrationTest extends FacetWebTestBase {
   }
 
   /**
+   * Tests multiple checkbox widgets.
+   */
+  public function testMultipleCheckboxWidget() {
+    $facet_add_page = 'admin/config/search/facets/add-facet';
+
+    $id = 'type';
+    $name = 'Northern hawk-owl | type';
+    $id_2 = 'keywords';
+    $name_2 = 'Papuan hawk-owl | keywords';
+
+    // Add a new facet.
+    $form_values = [
+      'id' => $id,
+      'status' => 1,
+      'url_alias' => $id,
+      'name' => $name,
+      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
+      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
+    ];
+    $this->drupalGet($facet_add_page);
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->drupalPostForm(NULL, ['widget' => 'checkbox'], $this->t('Save'));
+
+    // Add a new facet.
+    $form_values = [
+      'id' => $id_2,
+      'status' => 1,
+      'url_alias' => $id_2,
+      'name' => $name_2,
+      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
+      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'keywords',
+    ];
+    $this->drupalGet($facet_add_page);
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->drupalPostForm(NULL, ['widget' => 'checkbox'], $this->t('Save'));
+
+    // Place facets as blocks.
+    $block_values = ['region' => 'footer', 'id' => str_replace('_', '-', $id)];
+    $this->drupalPlaceBlock('facet_block:' . $id, $block_values);
+    $block_values = ['region' => 'footer', 'id' => str_replace('_', '-', $id_2)];
+    $this->drupalPlaceBlock('facet_block:' . $id_2, $block_values);
+
+    // Go to the test view and test that both facets are shown on the page.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText($name);
+    $this->assertText($name_2);
+    $this->assertText('item');
+    $this->assertText('apple');
+
+    // Submit the facet form and check that the form is submitted and the
+    // checkbox is now checked.
+    $edit = array('type[item]' => 'item');
+    $this->drupalPostForm(NULL, $edit, $this->t('submit'));
+    $this->assertText($name);
+    $this->assertText($name_2);
+    $this->assertText('item');
+    $this->assertText('apple');
+    $this->assertFieldChecked('edit-type-item');
+
+    // Submit the second facet form and check that the form is submitted and the
+    // checkbox is now checked.
+    $edit = array('keywords[apple]' => 'apple');
+    $this->drupalPostForm(NULL, $edit, $this->t('submit'));
+    $this->assertText($name);
+    $this->assertText($name_2);
+    $this->assertText('item');
+    $this->assertText('apple');
+    $this->assertFieldChecked('edit-type-item');
+    $this->assertFieldChecked('edit-keywords-apple');
+  }
+
+  /**
    * Tests links widget's basic functionality.
    */
   public function testLinksWidget() {

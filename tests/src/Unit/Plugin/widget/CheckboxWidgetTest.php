@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
-use Drupal\Core\Form\FormState;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\widget\CheckboxWidget;
 use Drupal\facets\Result\Result;
@@ -57,6 +56,9 @@ class CheckboxWidgetTest extends UnitTestCase {
     $form_builder = $this->getMockBuilder('\Drupal\Core\Form\FormBuilder')
       ->disableOriginalConstructor()
       ->getMock();
+    $form_builder->expects($this->once())
+      ->method('getForm')
+      ->willReturn('build');
 
     $string_translation = $this->getMockBuilder('\Drupal\Core\StringTranslation\TranslationManager')
       ->disableOriginalConstructor()
@@ -78,73 +80,8 @@ class CheckboxWidgetTest extends UnitTestCase {
     $facet->setResults($this->originalResults);
     $facet->setFieldIdentifier('test_field');
 
-    $form_state = new FormState();
-    $form_state->addBuildInfo('args', [$facet]);
-    $form = [];
-    $built_form = $this->widget->buildForm($form, $form_state);
-
-    $this->assertInternalType('array', $built_form);
-    $this->assertCount(4, $built_form['test_field']['#options']);
-    $this->assertEquals('checkboxes', $built_form['test_field']['#type']);
-
-    $expected_links = [
-      'llama' => 'Llama',
-      'badger' => 'Badger',
-      'duck' => 'Duck',
-      'alpaca' => 'Alpaca',
-    ];
-    foreach ($expected_links as $index => $value) {
-      $this->assertEquals($value, $built_form['test_field']['#options'][$index]);
-    }
-  }
-
-  /**
-   * Tests widget, make sure hiding and showing numbers works.
-   */
-  public function testHideNumbers() {
-    $original_results = $this->originalResults;
-    $original_results[1]->setActiveState(TRUE);
-
-    $facet = new Facet([], 'facet');
-    $facet->setResults($original_results);
-    $facet->setFieldIdentifier('test__field');
-    $facet->setWidgetConfigs(['show_numbers' => 0]);
-
-    $form_state = new FormState();
-    $form_state->addBuildInfo('args', [$facet]);
-    $form = [];
-    $built_form = $this->widget->buildForm($form, $form_state);
-
-    $this->assertInternalType('array', $built_form);
-    $this->assertCount(4, $built_form['test__field']['#options']);
-    $expected_links = [
-      'llama' => 'Llama',
-      'badger' => 'Badger',
-      'duck' => 'Duck',
-      'alpaca' => 'Alpaca',
-    ];
-    foreach ($expected_links as $index => $value) {
-      $this->assertEquals($value, $built_form['test__field']['#options'][$index]);
-    }
-
-    // Enable the 'show_numbers' setting again to make sure that the switch
-    // between those settings works.
-    $facet->setWidgetConfigs(['show_numbers' => 1]);
-
-    $built_form = $this->widget->buildForm($form, $form_state);
-
-    $this->assertInternalType('array', $built_form);
-    $this->assertCount(4, $built_form['test__field']['#options']);
-
-    $expected_links = [
-      'llama' => 'Llama (10)',
-      'badger' => 'Badger (20)',
-      'duck' => 'Duck (15)',
-      'alpaca' => 'Alpaca (9)',
-    ];
-    foreach ($expected_links as $index => $value) {
-      $this->assertEquals($value, $built_form['test__field']['#options'][$index]);
-    }
+    $built_form = $this->widget->build($facet);
+    $this->assertEquals('build', $built_form);
   }
 
 }
