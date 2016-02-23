@@ -324,7 +324,7 @@ class FacetForm extends EntityForm {
 
     // Ensure that the caching of the view display is disabled, so the search
     // correctly returns the facets. Only apply this when the facet source is
-    // actually a view by exploding
+    // actually a view by exploding on :.
     list($type,) = explode(':', $facet_source_id);
 
     if ($type === 'search_api_views') {
