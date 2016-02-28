@@ -8,6 +8,7 @@
 namespace Drupal\facets\Plugin\facets\facet_source;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\search_api\Query\ResultSetInterface;
 use Drupal\views\Views;
@@ -21,7 +22,7 @@ use Drupal\views\Views;
  *   deriver = "Drupal\facets\Plugin\facets\facet_source\SearchApiViewsPageDeriver"
  * )
  */
-class SearchApiViewsPage extends SearchApiBaseFacetSource {
+class SearchApiViewsPage extends SearchApiBaseFacetSource implements SearchApiFacetSourceInterface {
 
   use DependencySerializationTrait;
 
@@ -45,6 +46,13 @@ class SearchApiViewsPage extends SearchApiBaseFacetSource {
    * @var \Drupal\Core\Config\ConfigFactoryInterface|null
    */
   protected $configFactory;
+
+  /**
+   * The search index the query should is executed on.
+   *
+   * @var \Drupal\search_api\IndexInterface
+   */
+  protected $index;
 
   /**
    * {@inheritdoc}
@@ -130,6 +138,13 @@ class SearchApiViewsPage extends SearchApiBaseFacetSource {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIndex() {
+    return $this->index;
   }
 
 }
