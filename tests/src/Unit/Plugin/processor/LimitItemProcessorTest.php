@@ -13,7 +13,6 @@ use Drupal\facets\Result\Result;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Config\ConfigManager;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Unit test for processor.

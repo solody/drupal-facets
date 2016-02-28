@@ -7,7 +7,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
-use Drupal\Core\Config\ConfigManager;
+use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
@@ -28,8 +28,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInterface, ContainerFactoryPluginInterface {
+
   /**
-   * @var \Drupal\Core\Entity\EntityTypeManager
+   * The config manager.
+   *
+   * @var \Drupal\Core\Config\ConfigManagerInterface
    */
   private $configManager;
 
@@ -37,7 +40,7 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigManager $config_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigManagerInterface $config_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->configManager = $config_manager;
@@ -67,7 +70,7 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
       $index = $facet->getFacetSource()->getIndex();
       $field = $index->getField($field_identifier);
 
-      $entity = str_replace('entity:' , '', $field->getDatasourceId());
+      $entity = str_replace('entity:', '', $field->getDatasourceId());
     }
 
     $config_entity_name = sprintf('field.storage.%s.%s', $entity, $field_identifier);
