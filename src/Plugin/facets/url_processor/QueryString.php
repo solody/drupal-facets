@@ -66,6 +66,12 @@ class QueryString extends UrlProcessorPluginBase {
     // Set the url alias from the the facet object.
     $this->urlAlias = $facet->getUrlAlias();
 
+    $request = $this->request;
+    if ($facet->getFacetSource()->getPath()) {
+      $request = Request::create('/' . $facet->getFacetSource()->getPath());
+    }
+    $url = Url::createFromRequest($request);
+
     /** @var \Drupal\facets\Result\ResultInterface $result */
     foreach ($results as &$result) {
       $filter_string = $this->urlAlias . self::SEPARATOR . $result->getRawValue();
@@ -86,11 +92,8 @@ class QueryString extends UrlProcessorPluginBase {
       }
 
       $result_get_params->set($this->filterKey, $filter_params);
-      $request = $this->request;
-      if ($facet->getFacetSource()->getPath()) {
-        $request = Request::create('/' . $facet->getFacetSource()->getPath());
-      }
-      $url = Url::createFromRequest($request);
+
+      $url = clone $url;
       $url->setOption('query', $result_get_params->all());
 
       $result->setUrl($url);
