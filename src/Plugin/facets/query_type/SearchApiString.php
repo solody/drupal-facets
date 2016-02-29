@@ -103,7 +103,14 @@ class SearchApiString extends QueryTypePluginBase {
         if ($result['count'] || $query_operator == 'OR') {
           $count = $result['count'];
           if ($query_operator === 'OR') {
-            $count = $this->facet->getUnfilteredResults()[$this->facet->getFieldIdentifier()][$key]['count'];
+            $unfiltered_results = $this->facet->getUnfilteredResults();
+            $field_identifier = $this->facet->getFieldIdentifier();
+
+            foreach ($unfiltered_results[$field_identifier] as $unfiltered_result) {
+              if ($unfiltered_result['filter'] === $result['filter']) {
+                $count = $unfiltered_result['count'];
+              }
+            }
           }
 
           $result = new Result(trim($result['filter'], '"'), trim($result['filter'], '"'), $count);

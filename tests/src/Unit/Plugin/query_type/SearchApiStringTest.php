@@ -20,9 +20,9 @@ use Drupal\Tests\UnitTestCase;
 class SearchApiStringTest extends UnitTestCase {
 
   /**
-   * Tests string query type without executing the query.
+   * Tests string query type without executing the query with an "AND" operator.
    */
-  public function testQueryType() {
+  public function testQueryTypeAnd() {
     $query = new SearchApiQuery([], 'search_api_query', []);
     $facet = new Facet(
       ['query_operator' => 'AND'],
@@ -58,6 +58,58 @@ class SearchApiStringTest extends UnitTestCase {
       $this->assertEquals($result['filter'], $results[$k]->getDisplayValue());
     }
   }
+
+  /**
+   * Tests string query type without executing the query with an "OR" operator.
+   */
+  public function testQueryTypeOr() {
+    $query = new SearchApiQuery([], 'search_api_query', []);
+    $facet = new Facet(
+      ['query_operator' => 'OR'],
+      'facets_facet'
+    );
+
+    $facet->setUnfilteredResults([
+      'field_animal' => [
+        ['count' => 9, 'filter' => 'unicorn'],
+        ['count' => 3, 'filter' => 'badger'],
+        ['count' => 7, 'filter' => 'narwhal'],
+        ['count' => 5, 'filter' => 'mushroom'],
+      ],
+    ]);
+
+    $facet->setFieldIdentifier('field_animal');
+
+    $original_results = [
+      ['count' => 3, 'filter' => 'badger'],
+      ['count' => 5, 'filter' => 'mushroom'],
+      ['count' => 7, 'filter' => 'narwhal'],
+      ['count' => 9, 'filter' => 'unicorn'],
+    ];
+
+    $query_type = new SearchApiString(
+      [
+        'facet' => $facet,
+        'query' => $query,
+        'results' => $original_results,
+      ],
+      'search_api_string',
+      []
+    );
+
+    $built_facet = $query_type->build();
+    $this->assertInstanceOf('\Drupal\facets\FacetInterface', $built_facet);
+
+    $results = $built_facet->getResults();
+    $this->assertInternalType('array', $results);
+
+    foreach ($original_results as $k => $result) {
+      $this->assertInstanceOf('\Drupal\facets\Result\ResultInterface', $results[$k]);
+      $this->assertEquals($result['count'], $results[$k]->getCount());
+      $this->assertEquals($result['filter'], $results[$k]->getDisplayValue());
+    }
+  }
+
 
   /**
    * Tests string query type without results.
