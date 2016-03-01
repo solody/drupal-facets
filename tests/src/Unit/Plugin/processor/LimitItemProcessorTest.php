@@ -89,6 +89,7 @@ class LimitItemProcessorTest extends UnitTestCase {
       'weights' => [],
       'settings' => [],
     ]);
+    /** @var \Drupal\facets\Result\Result[] $sorted_results */
     $sorted_results = $processor->build($facet, $this->originalResults);
 
     $this->assertCount(3, $sorted_results);
