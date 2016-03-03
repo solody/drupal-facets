@@ -7,6 +7,7 @@
 
 namespace Drupal\facets\Plugin\facets\facet_source;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\facets\FacetSource\FacetSourceDeriverBase;
 
@@ -23,11 +24,17 @@ class SearchApiViewsPageDeriver extends FacetSourceDeriverBase {
   public function getDerivativeDefinitions($base_plugin_definition) {
     $base_plugin_id = $base_plugin_definition['id'];
 
-    if (!isset($this->derivatives[$base_plugin_id])) {
-      $plugin_derivatives = array();
+    try {
       /** @var \Drupal\Core\Entity\EntityStorageInterface $views_storage */
       $views_storage = $this->entityTypeManager->getStorage('view');
       $all_views = $views_storage->loadMultiple();
+    }
+    catch (PluginNotFoundException $e) {
+      return [];
+    }
+
+    if (!isset($this->derivatives[$base_plugin_id])) {
+      $plugin_derivatives = array();
 
       /** @var \Drupal\views\Entity\View $view */
       foreach ($all_views as $view) {

@@ -26,7 +26,6 @@ abstract class WebTestBase extends SimpletestWebTestBase {
     'field',
     'search',
     'entity_test',
-    'views',
     'node',
     'facets',
     'block',
