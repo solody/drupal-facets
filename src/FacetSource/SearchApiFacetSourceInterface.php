@@ -8,7 +8,7 @@
 namespace Drupal\facets\FacetSource;
 
 /**
- * A facet source that uses search api as a base.
+ * A facet source that uses Search API as a base.
  */
 interface SearchApiFacetSourceInterface {
 
@@ -16,7 +16,7 @@ interface SearchApiFacetSourceInterface {
    * Returns the search_api index.
    *
    * @return \Drupal\search_api\IndexInterface
-   *   The search api index.
+   *   The Search API index.
    */
   public function getIndex();
 

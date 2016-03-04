@@ -37,7 +37,7 @@ class FacetController extends ControllerBase {
   }
 
   /**
-   * Returns a form to add a new facet to a search api index.
+   * Returns a form to add a new facet to a Search API index.
    *
    * @return array
    *   The facet add form.
@@ -48,7 +48,7 @@ class FacetController extends ControllerBase {
   }
 
   /**
-   * Returns a form to edit a facet on a search api index.
+   * Returns a form to edit a facet on a Search API index.
    *
    * @param \Drupal\facets\FacetInterface $facets_facet
    *   Facet currently being edited.

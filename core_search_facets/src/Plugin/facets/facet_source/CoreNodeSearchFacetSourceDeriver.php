@@ -14,7 +14,7 @@ use Drupal\search\SearchPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Derives a facet source plugin definition for every search api view.
+ * Derives a facet source plugin definition for every Search API view.
  *
  * @see \Drupal\facets\Plugin\facets\facet_source\SearchApiViewsPage
  */

@@ -12,7 +12,7 @@ use Drupal\Component\Plugin\PluginBase;
 use Drupal\facets\FacetSource\FacetSourceDeriverBase;
 
 /**
- * Derives a facet source plugin definition for every search api view.
+ * Derives a facet source plugin definition for every Search API view.
  *
  * @see \Drupal\facets\Plugin\facets\facet_source\SearchApiViewsPage
  */
@@ -38,7 +38,7 @@ class SearchApiViewsPageDeriver extends FacetSourceDeriverBase {
 
       /** @var \Drupal\views\Entity\View $view */
       foreach ($all_views as $view) {
-        // Hardcoded usage of search api views, for now.
+        // Hardcoded usage of Search API views, for now.
         if (strpos($view->get('base_table'), 'search_api_index') !== FALSE) {
           $displays = $view->get('display');
           foreach ($displays as $name => $display_info) {
@@ -47,14 +47,14 @@ class SearchApiViewsPageDeriver extends FacetSourceDeriverBase {
 
               $plugin_derivatives[$machine_name] = [
                 'id' => $base_plugin_id . PluginBase::DERIVATIVE_SEPARATOR . $machine_name,
-                'label' => $this->t('Search api view: %view_name, display: %display_title', ['%view_name' => $view->label(), '%display_title' => $display_info['display_title']]),
+                'label' => $this->t('Search API view: %view_name, display: %display_title', ['%view_name' => $view->label(), '%display_title' => $display_info['display_title']]),
                 'description' => $this->t('Provides a facet source.'),
                 'view_id' => $view->id(),
                 'view_display' => $name,
               ] + $base_plugin_definition;
 
               $sources[] = $this->t(
-                'Search api view: %view, display: %display',
+                'Search API view: %view, display: %display',
                 ['%view' => $view->label(), '%display' => $display_info['display_title']]
               );
             }

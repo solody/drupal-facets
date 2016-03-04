@@ -336,7 +336,7 @@ class IntegrationTest extends FacetWebTestBase {
     $this->drupalGet($facet_add_page);
     $this->assertResponse(200);
 
-    // Configure the facet source by selecting one of the search api views.
+    // Configure the facet source by selecting one of the Search API views.
     $this->drupalGet($facet_add_page);
     $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
 
@@ -625,7 +625,7 @@ class IntegrationTest extends FacetWebTestBase {
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertNoText($this->t('Facet name field is required.'));
 
-    // Configure the facet source by selecting one of the search api views.
+    // Configure the facet source by selecting one of the Search API views.
     $this->drupalGet($facet_add_page);
     $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
 
@@ -772,7 +772,7 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
-   * Add fields to search api index.
+   * Add fields to Search API index.
    */
   protected function addFieldsToIndex() {
     $edit = [

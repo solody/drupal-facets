@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Represents a facet source which represents the search api views.
+ * Represents a facet source which represents the Search API views.
  *
  * @FacetsFacetSource(
  *   id = "core_node_search",

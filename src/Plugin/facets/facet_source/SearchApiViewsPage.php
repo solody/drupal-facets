@@ -15,7 +15,7 @@ use Drupal\views\Views;
 
 
 /**
- * Represents a facet source which represents the search api views.
+ * Represents a facet source which represents the Search API views.
  *
  * @FacetsFacetSource(
  *   id = "search_api_views",
@@ -62,7 +62,7 @@ class SearchApiViewsPage extends SearchApiBaseFacetSource implements SearchApiFa
 
     // Load facet plugin definition and depending on those settings; load the
     // corresponding view with the correct view with the correct display set.
-    // Get that display's query so we can check if this is a search API based
+    // Get that display's query so we can check if this is a Search API based
     // view.
     $view = Views::getView($plugin_definition['view_id']);
     if (!empty($view)) {
@@ -71,7 +71,7 @@ class SearchApiViewsPage extends SearchApiBaseFacetSource implements SearchApiFa
 
       // Only add the index if the $query is a Search API Query.
       if ($query instanceof SearchApiQuery) {
-        // Set the Search Api Index.
+        // Set the Search API Index.
         $this->index = $query->getIndex();
       }
     }

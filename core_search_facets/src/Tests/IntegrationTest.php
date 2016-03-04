@@ -259,7 +259,7 @@ class IntegrationTest extends CoreSearchFacetsWebTestBase {
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertNoText($this->t('Facet name field is required.'));
 
-    // Configure the facet source by selecting one of the search api views.
+    // Configure the facet source by selecting one of the Search API views.
     $this->drupalGet($facet_add_page);
     $this->drupalPostForm(NULL, ['facet_source_id' => 'core_node_search:node_search'], $this->t('Configure facet source'));
 
