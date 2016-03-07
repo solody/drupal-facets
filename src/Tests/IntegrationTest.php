@@ -386,62 +386,6 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
-   * Tests for processor integration.
-   */
-  public function testProcessorIntegration() {
-    $facet_name = "Snowy owl~";
-    $facet_id = "snowy_owl_";
-    $this->addFacet($facet_name);
-
-    // Go to the processors form and check that the count limit processor is not
-    // checked.
-    $this->drupalGet('admin/config/search/facets/' . $facet_id . '/display');
-    $this->assertNoFieldChecked('edit-facet-settings-count-limit-status');
-
-    $form = ['facet_settings[count_limit][status]' => TRUE];
-    $this->drupalPostForm(NULL, $form, $this->t('Save'));
-    $this->assertResponse(200);
-    $this->assertFieldChecked('edit-facet-settings-count-limit-status');
-
-    // Enable the sort processor and change sort direction.
-    // Test that the sort settings change persisted.
-    $form = [
-      'facet_sorting[active_widget_order][status]' => TRUE,
-      'facet_sorting[active_widget_order][settings][sort]' => 'DESC',
-    ];
-    $this->drupalPostForm(NULL, $form, $this->t('Save'));
-    $this->assertResponse(200);
-    $this->assertFieldChecked('edit-facet-sorting-active-widget-order-status');
-    $this->assertFieldChecked('edit-facet-sorting-active-widget-order-settings-sort-desc');
-
-    // Add an extra processor so we can test the weights as well.
-    $form = [
-      'facet_settings[hide_non_narrowing_result_processor][status]' => TRUE,
-      'facet_settings[count_limit][status]' => TRUE,
-    ];
-    $this->drupalPostForm(NULL, $form, $this->t('Save'));
-
-    $this->assertResponse(200);
-    $this->assertFieldChecked('edit-facet-settings-count-limit-status');
-    $this->assertFieldChecked('edit-facet-settings-hide-non-narrowing-result-processor-status');
-    $this->assertOptionSelected('edit-processors-count-limit-weights-build', -10);
-    $this->assertOptionSelected('edit-processors-hide-non-narrowing-result-processor-weights-build', -10);
-
-    // Change the weight of one of the processors and test that the weight
-    // change persisted.
-    $form = [
-      'facet_settings[hide_non_narrowing_result_processor][status]' => TRUE,
-      'facet_settings[count_limit][status]' => TRUE,
-      'processors[hide_non_narrowing_result_processor][weights][build]' => 5,
-    ];
-    $this->drupalPostForm(NULL, $form, $this->t('Save'));
-    $this->assertFieldChecked('edit-facet-settings-count-limit-status');
-    $this->assertFieldChecked('edit-facet-settings-hide-non-narrowing-result-processor-status');
-    $this->assertOptionSelected('edit-processors-count-limit-weights-build', -10);
-    $this->assertOptionSelected('edit-processors-hide-non-narrowing-result-processor-weights-build', 5);
-  }
-
-  /**
    * Tests the facet's exclude functionality.
    */
   public function testExcludeFacet() {

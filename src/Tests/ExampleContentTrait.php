@@ -7,6 +7,7 @@
 
 namespace Drupal\facets\Tests;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\search_api\Entity\Index;
 
 /**
@@ -92,6 +93,56 @@ trait ExampleContentTrait {
     /** @var \Drupal\search_api\IndexInterface $index */
     $index = Index::load($index_id);
     return $index->indexItems();
+  }
+
+  /**
+   * Add a facet trough the UI.
+   *
+   * @param string $name
+   *   The facet name.
+   * @param string $id
+   *   The facet id.
+   * @param string $field
+   *   The facet field.
+   */
+  protected function createFacet($name, $id, $field = 'type') {
+    $facet_add_page = 'admin/config/search/facets/add-facet';
+
+    $this->drupalGet($facet_add_page);
+
+    $form_values = [
+      'id' => $id,
+      'status' => 1,
+      'url_alias' => $id,
+      'name' => $name,
+      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
+      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => $field,
+    ];
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+  }
+
+  /**
+   * Asserts that a string is found before another string in the source.
+   *
+   * This uses the simpletest's getRawContent method to search in the source of
+   * the page for the position of 2 strings and that the first argument is
+   * before the second argument's position.
+   *
+   * @param string $x
+   *   A string.
+   * @param string $y
+   *   Another string.
+   */
+  protected function assertStringPosition($x, $y) {
+    $this->assertText($x);
+    $this->assertText($y);
+
+    $x_position = strpos($this->getRawContent(), $x);
+    $y_position = strpos($this->getRawContent(), $y);
+
+    $message = new FormattableMarkup('Assert that %x is before %y in the source', ['%x' => $x, '%y' => $y]);
+    $this->assertTrue($x_position < $y_position, $message);
   }
 
 }
