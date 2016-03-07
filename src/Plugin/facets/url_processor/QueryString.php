@@ -71,6 +71,7 @@ class QueryString extends UrlProcessorPluginBase {
       $request = Request::create('/' . $facet->getFacetSource()->getPath());
     }
     $url = Url::createFromRequest($request);
+    $url->setOption('attributes', ['rel' => 'nofollow']);
 
     /** @var \Drupal\facets\Result\ResultInterface[] $results */
     foreach ($results as &$result) {
