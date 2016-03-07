@@ -98,11 +98,11 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * {@inheritdoc}
    */
   public function getPath() {
-    /*$view = Views::getView($this->pluginDefinition['view_id']);
-    $view->setDisplay($this->pluginDefinition['view_display']);
-    $view->execute();
-
-    return $view->getDisplay()->getOption('path');*/
+    $request = \Drupal::requestStack()->getMasterRequest();
+    $search_page = $request->attributes->get('entity');
+    if ($search_page instanceof SearchPageInterface) {
+      return '/' . $search_page->getPath();
+    }
     return '';
   }
 
