@@ -38,21 +38,21 @@ class FacetListBuilder extends ConfigEntityListBuilder {
         $operations['edit'] = array(
           'title' => $this->t('Edit'),
           'weight' => 10,
-          'url' => $entity->urlInfo('edit-form'),
+          'url' => $entity->toUrl('edit-form'),
         );
       }
       if ($entity->access('update') && $entity->hasLinkTemplate('display-form')) {
         $operations['display'] = array(
           'title' => $this->t('Display'),
           'weight' => 20,
-          'url' => $entity->urlInfo('display-form'),
+          'url' => $entity->toUrl('display-form'),
         );
       }
       if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
         $operations['delete'] = array(
           'title' => $this->t('Delete'),
           'weight' => 100,
-          'url' => $entity->urlInfo('delete-form'),
+          'url' => $entity->toUrl('delete-form'),
         );
       }
 
@@ -105,7 +105,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
             '#type' => 'link',
             '#title' => $entity->getName(),
             '#suffix' => '<div>' . $entity->getFieldAlias() . ' - ' . $entity->getWidget() . '</div>',
-          ) + $entity->urlInfo('edit-form')->toRenderArray(),
+          ) + $entity->toUrl('edit-form')->toRenderArray(),
           'class' => array('search-api-title'),
         ),
         'status' => array(
