@@ -72,7 +72,7 @@ class QueryString extends UrlProcessorPluginBase {
     }
     $url = Url::createFromRequest($request);
 
-    /** @var \Drupal\facets\Result\ResultInterface $result */
+    /** @var \Drupal\facets\Result\ResultInterface[] $results */
     foreach ($results as &$result) {
       $filter_string = $this->urlAlias . self::SEPARATOR . $result->getRawValue();
       $result_get_params = clone $get_params;
@@ -89,6 +89,20 @@ class QueryString extends UrlProcessorPluginBase {
       // If the value is not active, add the filter string.
       else {
         $filter_params[] = $filter_string;
+        // Exclude currently active results from the filter params if we are in
+        // the show_only_one_result mode.
+        if ($facet->getShowOnlyOneResult()) {
+          foreach ($results as $result2) {
+            if ($result2->isActive()) {
+              $active_filter_string = $this->urlAlias . self::SEPARATOR . $result2->getRawValue();
+              foreach ($filter_params as $key2 => $filter_param2) {
+                if ($filter_param2 == $active_filter_string) {
+                  unset($filter_params[$key2]);
+                }
+              }
+            }
+          }
+        }
       }
 
       $result_get_params->set($this->filterKey, $filter_params);

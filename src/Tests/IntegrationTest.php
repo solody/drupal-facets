@@ -488,6 +488,37 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
+   * Tests allow only one active item.
+   */
+  public function testAllowOneActiveItem() {
+    $facet_name = 'Spotted wood owl';
+    $facet_id = 'spotted_wood_owl';
+    $facet_edit_page = 'admin/config/search/facets/' . $facet_id;
+
+    $this->addFacet($facet_name, 'keywords');
+    $this->createFacetBlock($facet_id);
+
+    $this->drupalGet($facet_edit_page . '/display');
+    $edit = ['facet_settings[show_only_one_result]' => TRUE];
+    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 5 search results');
+    $this->assertLink('grape');
+    $this->assertLink('orange');
+
+    $this->clickLink('grape');
+    $this->assertText('Displaying 3 search results');
+    $this->assertLink('(-) grape');
+    $this->assertLink('orange');
+
+    $this->clickLink('orange');
+    $this->assertText('Displaying 3 search results');
+    $this->assertLink('grape');
+    $this->assertLink('(-) orange');
+  }
+
+  /**
    * Deletes a facet block by id.
    *
    * @param string $id

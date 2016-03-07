@@ -38,6 +38,7 @@ use Drupal\facets\FacetInterface;
  *     "id",
  *     "name",
  *     "url_alias",
+ *     "show_only_one_result",
  *     "field_identifier",
  *     "query_type_name",
  *     "facet_source_id",
@@ -221,6 +222,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * @var boolean
    */
   protected $only_visible_when_facet_source_is_visible;
+
+  /**
+   * Determines if only one result can be selected in the facet at one time.
+   *
+   * @var bool
+   */
+  protected $show_only_one_result = FALSE;
 
   /**
    * The no-result configuration.
@@ -474,6 +482,20 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     }
 
     return $this->facet_source_instance;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getShowOnlyOneResult() {
+    return $this->show_only_one_result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setShowOnlyOneResult($show_only_one_result) {
+    $this->show_only_one_result = $show_only_one_result;
   }
 
   /**

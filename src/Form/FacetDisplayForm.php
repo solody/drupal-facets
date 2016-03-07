@@ -326,6 +326,13 @@ class FacetDisplayForm extends EntityForm {
       '#default_value' => $facet->getOnlyVisibleWhenFacetSourceIsVisible(),
     ];
 
+    $form['facet_settings']['show_only_one_result'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Make sure only one result can be shown.'),
+      '#description' => $this->t('When checked, this will make sure that only one result can be selected for this facet at one time.'),
+      '#default_value' => $facet->getShowOnlyOneResult(),
+    ];
+
     $empty_behavior_config = $facet->getEmptyBehavior();
     $form['facet_settings']['empty_behavior'] = [
       '#type' => 'radios',
@@ -522,6 +529,7 @@ class FacetDisplayForm extends EntityForm {
     $facet->setWidget($form_state->getValue('widget'));
     $facet->setWidgetConfigs($form_state->getValue('widget_configs'));
     $facet->setOnlyVisibleWhenFacetSourceIsVisible($form_state->getValue(['facet_settings', 'only_visible_when_facet_source_is_visible']));
+    $facet->setShowOnlyOneResult($form_state->getValue(['facet_settings', 'show_only_one_result']));
 
     $empty_behavior_config = [];
     $empty_behavior = $form_state->getValue(['facet_settings', 'empty_behavior']);

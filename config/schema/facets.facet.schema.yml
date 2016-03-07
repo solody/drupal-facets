@@ -57,6 +57,9 @@ facets.facet.*:
     only_visible_when_facet_source_is_visible:
       type: boolean
       label: 'Show this facet only when the facet source is visible.'
+    show_only_one_result:
+      type: boolean
+      label: 'Show only one result'
     processor_configs:
       type: sequence
       label: 'Processor settings'
