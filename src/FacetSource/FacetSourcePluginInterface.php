@@ -64,7 +64,7 @@ interface FacetSourcePluginInterface extends PluginFormInterface {
   public function isRenderedInCurrentRequest();
 
   /**
-   * Returns an array of fields that are defined on the datasource.
+   * Returns an array of fields that are defined on the facet source.
    *
    * This returns an array of fields that are defined on the source. This array
    * is keyed by the field's machine name and has values of the field's label.

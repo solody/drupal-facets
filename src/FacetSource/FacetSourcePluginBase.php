@@ -19,9 +19,9 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * Plugins extending this class need to define a plugin definition array through
  * annotation. The definition includes the following keys:
- * - id: The unique, system-wide identifier of the datasource.
- * - label: The human-readable name of the datasource, translated.
- * - description: A human-readable description for the datasource, translated.
+ * - id: The unique, system-wide identifier of the facet source.
+ * - label: The human-readable name of the facet source, translated.
+ * - description: A human-readable description for the facet source, translated.
  *
  * @see \Drupal\facets\Annotation\FacetsFacetSource
  * @see \Drupal\facets\FacetSource\FacetSourcePluginManager

@@ -616,7 +616,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
       }
     }
 
-    // Filter datasources by status if required.
+    // Filter facet sources by status if required.
     if (!$only_enabled) {
       return $this->facetSourcePlugins;
     }
