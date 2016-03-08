@@ -114,7 +114,7 @@ class SearchApiViewsPage extends SearchApiBaseFacetSource implements SearchApiFa
         $configuration = array(
           'query' => NULL,
           'facet' => $facet,
-          'results' => $facet_results[$facet->getFieldIdentifier()],
+          'results' => isset($facet_results[$facet->getFieldIdentifier()]) ? $facet_results[$facet->getFieldIdentifier()] : [],
         );
 
         // Get the Facet Specific Query Type so we can process the results
