@@ -101,7 +101,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
     $request = \Drupal::requestStack()->getMasterRequest();
     $search_page = $request->attributes->get('entity');
     if ($search_page instanceof SearchPageInterface) {
-      return '/' . $search_page->getPath();
+      return 'search/' . $search_page->getPath();
     }
     return '';
   }
@@ -177,7 +177,6 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
     }
 
     return FALSE;
-
   }
 
   /**

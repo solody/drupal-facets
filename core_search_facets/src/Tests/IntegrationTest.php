@@ -72,6 +72,10 @@ class IntegrationTest extends CoreSearchFacetsWebTestBase {
     $this->assertLink('page (10)');
     $this->assertLink('article (10)');
 
+    // Verify that the label is correct for a clicked link.
+    $this->clickLink('page (10)');
+    $this->assertLink('(-) page (10)');
+
     // Do not show the block on empty behaviors.
     // Truncate the search_index table because, for the moment, we don't have
     // the possibility to clear the index from the API.
