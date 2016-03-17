@@ -65,7 +65,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    return [
+    $header = [
       'type' => $this->t('Type'),
       'title' => [
         'data' => $this->t('Title'),
@@ -74,7 +74,8 @@ class FacetListBuilder extends ConfigEntityListBuilder {
         'data' => $this->t('Enabled'),
         'class' => ['checkbox'],
       ],
-    ] + parent::buildHeader();
+    ];
+    return $header + parent::buildHeader();
   }
 
   /**
@@ -167,8 +168,6 @@ class FacetListBuilder extends ConfigEntityListBuilder {
 
     $list['#attached']['library'][] = 'facets/drupal.facets.admin_css';
 
-    $list['#type'] = 'container';
-
     $list['facet_sources'] = array(
       '#type' => 'table',
       '#header' => $this->buildHeader(),
@@ -201,7 +200,8 @@ class FacetListBuilder extends ConfigEntityListBuilder {
         $list['lone_facets']['table']['#rows'][$entity->id()] = $this->buildRow($entity);
       }
     }
-    return $list;
+
+    return $list + parent::render();
   }
 
   /**

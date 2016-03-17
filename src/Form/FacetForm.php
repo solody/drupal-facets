@@ -215,6 +215,14 @@ class FacetForm extends EntityForm {
     ];
     $this->buildFacetSourceConfigForm($form, $form_state);
 
+    $form['weight'] = [
+      '#type' => 'number',
+      '#title' => $this->t('The weight of the facet'),
+      '#default_value' => $facet->getWeight(),
+      '#maxlength' => 4,
+      '#required' => TRUE,
+    ];
+
     $form['status'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enabled'),
@@ -313,6 +321,8 @@ class FacetForm extends EntityForm {
       $facet->setEmptyBehavior(['behavior' => 'none']);
       $facet->setOnlyVisibleWhenFacetSourceIsVisible(TRUE);
     }
+
+    $facet->setWeight((int) $form_state->getValue('weight'));
 
     $facet_source_id = $form_state->getValue('facet_source_id');
     if (!is_null($facet_source_id) && $facet_source_id !== '') {

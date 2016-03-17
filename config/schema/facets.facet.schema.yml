@@ -11,6 +11,9 @@ facets.facet.*:
     uuid:
       type: string
       label: 'UUID'
+    weight:
+      type: integer
+      label: 'Weight'
     status:
       type: boolean
       label: 'Status'

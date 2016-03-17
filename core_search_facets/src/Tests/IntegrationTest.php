@@ -250,6 +250,7 @@ class IntegrationTest extends CoreSearchFacetsWebTestBase {
       'id' => $facet_id,
       'status' => 1,
       'url_alias' => $facet_id,
+      'weight' => 4,
     ];
 
     // Try filling out the form, but without having filled in a name for the
@@ -285,7 +286,6 @@ class IntegrationTest extends CoreSearchFacetsWebTestBase {
 
     $this->drupalGet('admin/config/search/facets');
   }
-
 
   /**
    * Tests editing of a facet through the UI.

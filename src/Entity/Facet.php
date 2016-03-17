@@ -32,12 +32,14 @@ use Drupal\facets\FacetInterface;
  *     "id" = "id",
  *     "label" = "name",
  *     "uuid" = "uuid",
- *     "status" = "status"
+ *     "status" = "status",
+ *     "weight" = "weight"
  *   },
  *   config_export = {
  *     "id",
  *     "name",
  *     "url_alias",
+ *     "weight",
  *     "show_only_one_result",
  *     "field_identifier",
  *     "query_type_name",
@@ -251,6 +253,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    *   The facet source config object.
    */
   protected $facetSourceConfig;
+
+  /**
+   * The facet weight.
+   *
+   * @var integer
+   *   The weight of the facet.
+   */
+  protected $weight;
 
   /**
    * {@inheritdoc}
@@ -746,6 +756,21 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   public function getFacetConfigs() {
     return $this->facet_configs;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight() {
+    return $this->weight;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWeight($weight) {
+    $this->weight = $weight;
+    return $this;
   }
 
 }

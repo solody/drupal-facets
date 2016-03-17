@@ -8,6 +8,7 @@
 namespace Drupal\facets\Tests;
 
 use Drupal\Core\Url;
+use Drupal\facets\Entity\Facet;
 use Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
 
 /**
@@ -177,6 +178,7 @@ class IntegrationTest extends FacetWebTestBase {
       'status' => 1,
       'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
       'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
+      'weight' => 4,
     ];
     $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
@@ -463,6 +465,20 @@ class IntegrationTest extends FacetWebTestBase {
   }
 
   /**
+   * Tests facet weights.
+   */
+  public function testWeight() {
+    $facet_name = "Forest owlet";
+    $id = "forest_owlet";
+    $this->addFacet($facet_name);
+
+    /** @var \Drupal\facets\FacetInterface $facet */
+    $facet = Facet::load($id);
+    $facet->setWeight(10);
+    $this->assertEqual(10, $facet->getWeight());
+  }
+
+  /**
    * Deletes a facet block by id.
    *
    * @param string $id
@@ -594,9 +610,11 @@ class IntegrationTest extends FacetWebTestBase {
     $this->drupalPostForm($facet_add_page, $form_values, $this->t('Save'));
     $this->assertText($this->t('Facet name field is required.'));
     $this->assertText($this->t('Facet source field is required.'));
+    $this->assertText($this->t('The weight of the facet field is required.'));
 
     // Make sure that when filling out the name, the form error disappears.
     $form_values['name'] = $facet_name;
+    $form_values['weight'] = 15;
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertNoText($this->t('Facet name field is required.'));
 
@@ -641,6 +659,7 @@ class IntegrationTest extends FacetWebTestBase {
       'id' => $facet_id,
       'url_alias' => $facet_id,
       'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
+      'weight' => 7,
     ];
 
     $facet_source_configs['facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]'] = $facet_type;

@@ -384,4 +384,17 @@ interface FacetInterface extends ConfigEntityInterface {
    */
   public function setFacetConfigs(array $facet_config);
 
+  /**
+   * Returns the weight of the facet.
+   */
+  public function getWeight();
+
+  /**
+   * Sets the weight of the facet.
+   *
+   * @param int $weight
+   *   Weight of the facet.
+   */
+  public function setWeight($weight);
+
 }
