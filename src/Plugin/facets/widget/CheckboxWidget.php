@@ -31,17 +31,8 @@ class CheckboxWidget implements WidgetInterface {
    */
   public function build(FacetInterface $facet) {
     $form_builder = \Drupal::getContainer()->get('form_builder');
-
     $form_object = new CheckboxWidgetForm($facet);
-
-    // The form builder's getForm method accepts 1 argument in the interface,
-    // the form ID. Extra arguments get passed into the form states addBuildInfo
-    // method. This way we can pass the facet to the
-    // \Drupal\facets\Form\CheckboxWidgetForm::buildForm method, it uses
-    // FormState::getBuildInfo to get the facet out.
-    $build = $form_builder->getForm($form_object, $facet);
-
-    return $build;
+    return $form_builder->getForm($form_object);
   }
 
   /**

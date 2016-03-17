@@ -53,13 +53,7 @@ class CheckboxWidgetForm implements BaseFormIdInterface {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-
-    // Get the facet form the build info, see the remark in
-    // \Drupal\facets\Plugin\facets\widget\CheckboxWidget::build.
-    $build_info = $form_state->getBuildInfo();
-
-    /** @var \Drupal\facets\FacetInterface $facet */
-    $facet = $build_info['args'][0];
+    $facet = $this->facet;
 
     /** @var \Drupal\facets\Result\Result[] $results */
     $results = $facet->getResults();
@@ -105,10 +99,7 @@ class CheckboxWidgetForm implements BaseFormIdInterface {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
-
-    /** @var \Drupal\facets\FacetInterface $facet */
-    $build_info = $form_state->getBuildInfo();
-    $facet = $build_info['args'][0];
+    $facet = $this->facet;
 
     $result_link = FALSE;
     $active_items = [];
