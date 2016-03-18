@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Tests\ExampleContentTrait.
- */
-
 namespace Drupal\facets\Tests;
 
 use Drupal\Component\Render\FormattableMarkup;

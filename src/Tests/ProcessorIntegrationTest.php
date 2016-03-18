@@ -1,20 +1,13 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Tests\ProcessorIntegrationTest.
- */
-
 namespace Drupal\facets\Tests;
-
-use Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
 
 /**
  * Tests the processor functionality.
  *
  * @group facets
  */
-class ProcessorIntegrationTest extends FacetWebTestBase {
+class ProcessorIntegrationTest extends WebTestBase {
 
   /**
    * The url of the edit form.

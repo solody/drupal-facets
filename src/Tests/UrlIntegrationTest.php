@@ -1,15 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Tests\UrlIntegrationTest.
- */
-
 namespace Drupal\facets\Tests;
 
 use Drupal\Core\Url;
 use Drupal\facets\FacetInterface;
-use Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\FacetSourceInterface;
 
@@ -18,7 +12,7 @@ use Drupal\facets\FacetSourceInterface;
  *
  * @group facets
  */
-class UrlIntegrationTest extends FacetWebTestBase {
+class UrlIntegrationTest extends WebTestBase {
 
   /**
    * {@inheritdoc}

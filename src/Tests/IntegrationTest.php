@@ -1,22 +1,16 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Tests\IntegrationTest.
- */
-
 namespace Drupal\facets\Tests;
 
 use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
-use Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
 
 /**
  * Tests the overall functionality of the Facets admin UI.
  *
  * @group facets
  */
-class IntegrationTest extends FacetWebTestBase {
+class IntegrationTest extends WebTestBase {
 
   /**
    * The block entities used by this test.

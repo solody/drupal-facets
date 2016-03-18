@@ -1,20 +1,13 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Tests\FacetSourceTest.
- */
-
 namespace Drupal\facets\Tests;
-
-use Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
 
 /**
  * Tests the functionality of the facet source config entity.
  *
  * @group facets
  */
-class FacetSourceTest extends FacetWebTestBase {
+class FacetSourceTest extends WebTestBase {
 
   /**
    * {@inheritdoc}

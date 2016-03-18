@@ -2,7 +2,6 @@
 
 namespace Drupal\core_search_facets\Tests;
 
-
 /**
  * Tests the admin UI with the core search facet source.
  *

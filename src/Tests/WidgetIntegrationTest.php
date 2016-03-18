@@ -1,21 +1,15 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Tests\WidgetIntegrationTest.
- */
-
 namespace Drupal\facets\Tests;
 
 use Drupal\Core\Url;
-use \Drupal\facets\Tests\WebTestBase as FacetWebTestBase;
 
 /**
  * Tests the overall functionality of the Facets admin UI.
  *
  * @group facets
  */
-class WidgetIntegrationTest extends FacetWebTestBase {
+class WidgetIntegrationTest extends WebTestBase {
 
   /**
    * {@inheritdoc}
