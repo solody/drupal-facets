@@ -1,15 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Plugin\facets\query_type\SearchApiString.
- */
-
 namespace Drupal\facets\Plugin\facets\query_type;
 
 use Drupal\facets\QueryType\QueryTypePluginBase;
 use Drupal\facets\Result\Result;
-
 
 /**
  * Provides support for string facets within the Search API scope.

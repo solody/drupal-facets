@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\facets\Annotation\FacetsProcessor.
- */
 
 namespace Drupal\facets\Annotation;
 

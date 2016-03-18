@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Form\FacetDisplayForm.
- */
-
 namespace Drupal\facets\Form;
 
 use Drupal\Core\Config\Config;

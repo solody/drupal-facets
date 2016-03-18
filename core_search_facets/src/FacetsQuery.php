@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\core_search_facets\FacetsQuery.
- */
-
 namespace Drupal\core_search_facets;
 
 use Drupal\search\SearchQuery;

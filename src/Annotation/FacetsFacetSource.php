@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Annotation\FacetsFacetSource.
- */
-
 namespace Drupal\facets\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Plugin\facets\widget\DropdownWidget.
- */
-
 namespace Drupal\facets\Plugin\facets\widget;
 
 use Drupal\Core\Form\FormStateInterface;

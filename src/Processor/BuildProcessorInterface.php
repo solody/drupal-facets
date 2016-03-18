@@ -1,14 +1,8 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Processor\BuildProcessorInterface.
- */
-
 namespace Drupal\facets\Processor;
 
 use Drupal\facets\FacetInterface;
-
 
 /**
  * Processor runs before the renderable array is created.

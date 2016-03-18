@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Exception\InvalidQueryTypeException.
- */
-
 namespace Drupal\facets\Exception;
 
 /**

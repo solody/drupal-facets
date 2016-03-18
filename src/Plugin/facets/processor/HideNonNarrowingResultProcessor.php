@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\facets\Plugin\facets\HideNonNarrowingResultProcessor.
- */
 
 namespace Drupal\facets\Plugin\facets\processor;
 

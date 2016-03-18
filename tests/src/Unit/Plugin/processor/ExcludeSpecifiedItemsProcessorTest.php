@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\facets\Plugin\Processor\ExcludeSpecifiedItemsProcessorTest.
- */
 
 namespace Drupal\Tests\facets\Unit\Plugin\processor;
 

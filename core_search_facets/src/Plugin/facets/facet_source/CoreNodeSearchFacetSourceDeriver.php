@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\core_search_facets\Plugin\facets\facet_source\CoreNodeSearchFacetSourceDeriver.
- */
-
 namespace Drupal\core_search_facets\Plugin\facets\facet_source;
 
 use Drupal\Component\Plugin\PluginBase;

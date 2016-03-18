@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Processor\PostQueryProcessorInterface.
- */
-
 namespace Drupal\facets\Processor;
 
 

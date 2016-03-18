@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Plugin\url_processor\QueryStringTest.
- */
-
 namespace Drupal\Tests\facets\Unit\Plugin\url_processor;
 
 use Drupal\facets\Entity\Facet;

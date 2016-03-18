@@ -1,20 +1,14 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\core_search_facets\Tests\IntegrationTest.
- */
-
 namespace Drupal\core_search_facets\Tests;
 
-use Drupal\core_search_facets\Tests\WebTestBase as CoreSearchFacetsWebTestBase;
 
 /**
  * Tests the admin UI with the core search facet source.
  *
  * @group core_search_facets
  */
-class IntegrationTest extends CoreSearchFacetsWebTestBase {
+class IntegrationTest extends WebTestBase {
 
   /**
    * The block entities used by this test.

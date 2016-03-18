@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Processor\PreQueryProcessorInterface.
- */
-
 namespace Drupal\facets\Processor;
 
 use Drupal\facets\FacetInterface;

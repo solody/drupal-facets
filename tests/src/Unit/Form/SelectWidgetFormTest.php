@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Unit\Form\SelectWidgetFormTest.
- */
-
 namespace Drupal\Tests\facets\Unit\Form;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

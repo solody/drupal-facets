@@ -1,11 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Unit\Widget\WidgetPluginManagerTest.
- */
-
-namespace Drupal\Tests\facets\Unit\UrlProcessor;
+namespace Drupal\Tests\facets\Unit\Widget;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Factory\DefaultFactory;

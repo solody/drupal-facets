@@ -1,12 +1,8 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Plugin\widget\LinksWidgetTest.
- */
-
 namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
+use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\widget\LinksWidget;
 use Drupal\facets\Result\Result;
@@ -48,7 +44,7 @@ class LinksWidgetTest extends UnitTestCase {
     ];
 
     foreach ($original_results as $original_result) {
-      $original_result->setUrl(new \Drupal\Core\Url('test'));
+      $original_result->setUrl(new Url('test'));
     }
     $this->originalResults = $original_results;
 

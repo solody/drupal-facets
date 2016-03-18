@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Processor\ProcessorPluginManager.
- */
-
 namespace Drupal\facets\Processor;
 
 use Drupal\Core\Cache\CacheBackendInterface;

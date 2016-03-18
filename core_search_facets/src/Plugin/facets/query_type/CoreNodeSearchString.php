@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\core_search_facets\Plugin\facets\query_type\CoreNodeSearchString.
- */
-
 namespace Drupal\core_search_facets\Plugin\facets\query_type;
 
 use Drupal\facets\QueryType\QueryTypePluginBase;

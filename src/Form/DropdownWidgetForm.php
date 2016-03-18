@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Form\DropdownWidgetForm.
- */
-
 namespace Drupal\facets\Form;
 
 use Drupal\Core\Form\BaseFormIdInterface;

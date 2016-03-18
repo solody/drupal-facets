@@ -1,13 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Unit\Form\CheckboxWidgetFormTest.
- */
-
 namespace Drupal\Tests\facets\Unit\Form;
 
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Form\CheckboxWidgetForm;
 use Drupal\facets\Result\Result;
@@ -18,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
  *
  * @group facets
  */
-class CheckboxWidgetTest extends UnitTestCase {
+class CheckboxWidgetFormTest extends UnitTestCase {
 
   /**
    * An array containing the results before the processor has ran.
@@ -42,7 +38,7 @@ class CheckboxWidgetTest extends UnitTestCase {
     ];
 
     foreach ($original_results as $original_result) {
-      $original_result->setUrl(new \Drupal\Core\Url('test'));
+      $original_result->setUrl(new Url('test'));
     }
     $original_results[1]->setActiveState(TRUE);
 

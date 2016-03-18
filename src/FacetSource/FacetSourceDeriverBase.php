@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\FacetSource\FacetSourceDeriverBase.
- */
-
 namespace Drupal\facets\FacetSource;
 
 

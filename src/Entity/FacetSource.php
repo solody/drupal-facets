@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Entity\FacetSource.
- */
-
 namespace Drupal\facets\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

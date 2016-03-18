@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Plugin\facets\TranslateTaxonomyProcessor.
- */
-
 namespace Drupal\facets\Plugin\facets\processor;
 
 use Drupal\facets\FacetInterface;

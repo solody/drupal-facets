@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Plugin\url_processor\QueryStringTest.
- */
-
 namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Plugin\Processor\TranslateTaxonomyTermTest.
- */
-
 namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
 use Drupal\Core\Language\Language;

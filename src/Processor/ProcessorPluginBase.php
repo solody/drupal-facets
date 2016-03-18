@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\facets\Processor\ProcessorPluginBase.
- */
-
 namespace Drupal\facets\Processor;
 
 

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Plugin\Condition\OtherFacetTest.
- */
-
 namespace Drupal\Tests\facets\Unit\Plugin\Condition;
 
 use Drupal\facets\Entity\Facet;

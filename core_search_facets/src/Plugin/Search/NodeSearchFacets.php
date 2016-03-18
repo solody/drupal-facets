@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\core_search_facets\Plugin\Search\NodeSearchFacets.
- */
-
 namespace Drupal\core_search_facets\Plugin\Search;
 
 use Drupal\Core\Form\FormStateInterface;

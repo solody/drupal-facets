@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\FacetSource\FacetSourcePluginManager.
- */
-
 namespace Drupal\facets\FacetSource;
 
 use Drupal\Core\Cache\CacheBackendInterface;

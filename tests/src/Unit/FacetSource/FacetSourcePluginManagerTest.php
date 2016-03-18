@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Unit\FacetSource\FacetSourcePluginManagerTest.
- */
-
 namespace Drupal\Tests\facets\Unit\FacetSource;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Controller\FacetController.
- */
-
 namespace Drupal\facets\Controller;
 
 use Drupal\Component\Render\FormattableMarkup;

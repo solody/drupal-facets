@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains Drupal\facets\Result\Result.
- */
 
 namespace Drupal\facets\Result;
 

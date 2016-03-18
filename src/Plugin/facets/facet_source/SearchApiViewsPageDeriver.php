@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Plugin\facets\facet_source\SearchApiViewsPageDeriver.
- */
-
 namespace Drupal\facets\Plugin\facets\facet_source;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;

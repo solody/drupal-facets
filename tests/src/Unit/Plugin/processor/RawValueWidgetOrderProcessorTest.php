@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Plugin\Processor\RawValueWidgetOrderProcessorTest.
- */
-
 namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
 use Drupal\facets\Entity\Facet;

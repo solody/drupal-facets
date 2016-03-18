@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Plugin\facets\processor\DisplayValueWidgetOrderProcessor.
- */
-
 namespace Drupal\facets\Plugin\facets\processor;
 
 use Drupal\facets\Processor\WidgetOrderPluginBase;

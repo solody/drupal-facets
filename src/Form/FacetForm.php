@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Form\FacetForm.
- */
-
 namespace Drupal\facets\Form;
 
 use Drupal\Core\Entity\EntityForm;

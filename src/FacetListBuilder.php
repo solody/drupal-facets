@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\FacetListBuilder.
- */
-
 namespace Drupal\facets;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Plugin\Condition\OtherFacet.
- */
-
 namespace Drupal\facets\Plugin\Condition;
 
 use Drupal\Component\Plugin\PluginBase;

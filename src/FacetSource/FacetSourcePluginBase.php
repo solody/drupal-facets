@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\FacetSource\FacetSourcePluginBase.
- */
-
 namespace Drupal\facets\FacetSource;
 
 use Drupal\Component\Plugin\PluginBase;
@@ -12,7 +7,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Facets\FacetInterface;
 use Drupal\Core\Form\FormStateInterface;
-
 
 /**
  * Defines a base class from which other facet sources may extend.

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\facets_query_processor\Plugin\facets\url_processor\DummyQuery.
- */
-
 namespace Drupal\facets_query_processor\Plugin\facets\url_processor;
 
 use Drupal\Core\Url;

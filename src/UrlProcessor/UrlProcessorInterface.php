@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains Drupal\facets\UrlProcessor\UrlProcessorInterface.
- */
 
 namespace Drupal\facets\UrlProcessor;
 

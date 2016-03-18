@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\FacetSource\FacetSourcePluginInterface.
- */
-
 namespace Drupal\facets\FacetSource;
 
 use Drupal\Core\Plugin\PluginFormInterface;

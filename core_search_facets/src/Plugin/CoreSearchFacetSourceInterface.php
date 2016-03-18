@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\core_search_facets\Plugin\CoreSearchFacetSourceInterface.
- */
-
 namespace Drupal\core_search_facets\Plugin;
 
 use Drupal\facets\FacetInterface;

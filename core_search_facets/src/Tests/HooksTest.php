@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\core_search_facets\Tests\HooksTest.
- */
-
 namespace Drupal\core_search_facets\Tests;
 
 use Drupal\field\Entity\FieldConfig;

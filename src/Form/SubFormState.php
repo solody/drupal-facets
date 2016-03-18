@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Form\SubFormState.
- */
-
 namespace Drupal\facets\Form;
 
 use Drupal\Component\Utility\NestedArray;

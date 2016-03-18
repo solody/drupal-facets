@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\FacetSource\SearchApiFacetSourceInterface.
- */
-
 namespace Drupal\facets\FacetSource;
 
 /**

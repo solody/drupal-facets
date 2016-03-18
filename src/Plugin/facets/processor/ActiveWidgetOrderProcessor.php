@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Plugin\facets\processor\ActiveWidgetOrderProcessor.
- */
-
 namespace Drupal\facets\Plugin\facets\processor;
 
 

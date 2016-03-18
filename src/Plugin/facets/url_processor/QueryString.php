@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\facets\Plugin\facets\url_processor\QueryString.
- */
-
 namespace Drupal\facets\Plugin\facets\url_processor;
 
 use Drupal\Core\Url;

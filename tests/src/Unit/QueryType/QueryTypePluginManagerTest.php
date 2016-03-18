@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\facets\Unit\QueryType\QueryTypePluginManagerTest.
- */
 
 namespace Drupal\Tests\facets\Unit\QueryType;
 

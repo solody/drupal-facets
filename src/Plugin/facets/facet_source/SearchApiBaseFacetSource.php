@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\facets\Plugin\facets\facet_source\SearchApiBaseFacetSource.
- */
 
 namespace Drupal\facets\Plugin\facets\facet_source;
 

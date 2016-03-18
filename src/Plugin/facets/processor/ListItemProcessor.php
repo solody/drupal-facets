@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Plugin\facets\ListItemProcessor.
- */
-
 namespace Drupal\facets\Plugin\facets\processor;
 
 use Drupal\Core\Config\ConfigManagerInterface;

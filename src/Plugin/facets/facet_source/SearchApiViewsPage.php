@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Plugin\facets\facet_source\SearchApiViewsPage.
- */
-
 namespace Drupal\facets\Plugin\facets\facet_source;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -12,7 +7,6 @@ use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\search_api\Query\ResultSetInterface;
 use Drupal\views\Views;
-
 
 /**
  * Represents a facet source which represents the Search API views.

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Plugin\widget\SelectWidgetTest.
- */
-
 namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
 use Drupal\Core\Url;

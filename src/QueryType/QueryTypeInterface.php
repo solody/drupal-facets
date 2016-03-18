@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains Drupal\facets\QueryType\QueryType.
- */
 
 namespace Drupal\facets\QueryType;
 

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Annotation\FacetsQueryType.
- */
-
 namespace Drupal\facets\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

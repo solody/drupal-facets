@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\facets\FacetSourceInterface.
- */
-
 namespace Drupal\facets;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\facets\Plugin\facets\HideActiveItemsProcessor.
- */
 
 namespace Drupal\facets\Plugin\facets\processor;
 

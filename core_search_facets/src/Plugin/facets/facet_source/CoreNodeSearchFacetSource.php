@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\core_search_facets\Plugin\facets\facet_source\CoreNodeSearchFacetSource.
- */
-
 namespace Drupal\core_search_facets\Plugin\facets\facet_source;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;

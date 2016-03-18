@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Processor\UrlProcessorPluginManager.
- */
-
 namespace Drupal\facets\UrlProcessor;
 
 use Drupal\Core\Cache\CacheBackendInterface;

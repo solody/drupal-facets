@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains Drupal\facets\Widget\WidgetPluginManager.
- */
 
 namespace Drupal\facets\Widget;
 

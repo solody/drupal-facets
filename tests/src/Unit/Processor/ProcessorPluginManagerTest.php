@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Unit\Processor\ProcessorPluginManagerTest.
- */
-
 namespace Drupal\Tests\facets\Unit\Processor;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;

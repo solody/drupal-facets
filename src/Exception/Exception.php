@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Exception\Exception.
- */
-
 namespace Drupal\facets\Exception;
 
 /**

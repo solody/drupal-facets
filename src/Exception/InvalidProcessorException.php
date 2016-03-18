@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Exception\InvalidProcessorException.
- */
-
 namespace Drupal\facets\Exception;
 
 /**

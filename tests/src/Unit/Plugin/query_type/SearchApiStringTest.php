@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Plugin\query_string\SearchApiStringTest.
- */
-
 namespace Drupal\Tests\facets\Unit\Plugin\query_type;
 
 use Drupal\facets\Entity\Facet;

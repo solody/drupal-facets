@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Controller\FacetSourceController.
- */
-
 namespace Drupal\facets\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\facets\Processor\ProcessorInterface.
- */
-
 namespace Drupal\facets\Processor;
 
 use Drupal\Core\Form\FormStateInterface;

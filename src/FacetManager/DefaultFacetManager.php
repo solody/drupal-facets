@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\facets\FacetManager\DefaultFacetManager.
- */
-
 namespace Drupal\facets\FacetManager;
 
 use Drupal\Component\Render\FormattableMarkup;

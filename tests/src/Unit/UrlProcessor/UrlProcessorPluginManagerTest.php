@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\facets\Unit\UrlProcessor\UrlProcessorPluginManagerTest.
- */
-
 namespace Drupal\Tests\facets\Unit\UrlProcessor;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;

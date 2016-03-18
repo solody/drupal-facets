@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\facets\Plugin\Block\FacetBlock.
- */
-
 namespace Drupal\facets\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
