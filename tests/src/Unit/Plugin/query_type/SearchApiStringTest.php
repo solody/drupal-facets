@@ -105,7 +105,6 @@ class SearchApiStringTest extends UnitTestCase {
     }
   }
 
-
   /**
    * Tests string query type without results.
    */

@@ -63,7 +63,6 @@ class LinksWidget implements WidgetInterface {
     return $build;
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -83,7 +82,6 @@ class LinksWidget implements WidgetInterface {
 
     return $form;
   }
-
 
   /**
    * {@inheritdoc}

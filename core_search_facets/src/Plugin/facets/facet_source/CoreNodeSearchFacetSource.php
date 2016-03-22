@@ -88,7 +88,6 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
     );
   }
 
-
   /**
    * {@inheritdoc}
    */

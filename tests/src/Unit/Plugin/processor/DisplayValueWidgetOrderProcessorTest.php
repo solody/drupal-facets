@@ -110,7 +110,6 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
     $this->assertEquals(['sort' => 'ASC'], $config);
   }
 
-
   /**
    * Tests build.
    */

@@ -87,7 +87,6 @@ class UrlProcessorHandlerTest extends UnitTestCase {
     $this->assertEquals(FALSE, $processor->isLocked());
   }
 
-
   /**
    * Sets up a container.
    */

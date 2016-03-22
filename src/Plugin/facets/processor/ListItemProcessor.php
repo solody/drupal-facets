@@ -31,7 +31,6 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
    */
   private $configManager;
 
-
   /**
    * {@inheritdoc}
    */

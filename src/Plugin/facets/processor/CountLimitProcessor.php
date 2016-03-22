@@ -79,7 +79,6 @@ class CountLimitProcessor extends ProcessorPluginBase implements BuildProcessorI
     return parent::validateConfigurationForm($form, $form_state, $facet);
   }
 
-
   /**
    * {@inheritdoc}
    */
