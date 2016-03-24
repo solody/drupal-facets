@@ -341,6 +341,8 @@ class FacetForm extends EntityForm {
       $view->setDisplay($display);
       $view->display_handler->overrideOption('cache', ['type' => 'none']);
       $view->save();
+
+      $display_plugin = $view->getDisplay()->getPluginId();
     }
 
     if ($is_new) {
@@ -348,6 +350,10 @@ class FacetForm extends EntityForm {
         $message = $this->t('Facet %name has been created. Go to the <a href=":block_overview">Block overview page</a> to place the new block in the desired region.', ['%name' => $facet->getName(), ':block_overview' => \Drupal::urlGenerator()->generateFromRoute('block.admin_display')]);
         drupal_set_message($message);
         $form_state->setRedirect('entity.facets_facet.display_form', ['facets_facet' => $facet->id()]);
+      }
+
+      if (isset($view_id) && $display_plugin === 'block') {
+        $facet->setOnlyVisibleWhenFacetSourceIsVisible(FALSE);
       }
     }
     else {

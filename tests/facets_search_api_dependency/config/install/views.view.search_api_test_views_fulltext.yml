@@ -187,6 +187,13 @@ display:
     position: 1
     display_options:
       path: search-api-test-fulltext
+  block_1:
+    display_plugin: block
+    id: block_1
+    display_title: Block
+    position: 2
+    display_options:
+      display_extenders: {  }
 label: 'Search API Test Fulltext search view'
 module: views
 id: search_api_test_view

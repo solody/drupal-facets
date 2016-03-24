@@ -9,9 +9,12 @@ use Drupal\facets\FacetSource\FacetSourceDeriverBase;
 /**
  * Derives a facet source plugin definition for every Search API view.
  *
- * @see \Drupal\facets\Plugin\facets\facet_source\SearchApiViewsPage
+ * This facet source only supports views that have a search api index as a base,
+ * and only those displays that are a block or a page.
+ *
+ * @see \Drupal\facets\Plugin\facets\facet_source\SearchApiViews
  */
-class SearchApiViewsPageDeriver extends FacetSourceDeriverBase {
+class SearchApiViewsDeriver extends FacetSourceDeriverBase {
 
   /**
    * {@inheritdoc}
@@ -36,16 +39,27 @@ class SearchApiViewsPageDeriver extends FacetSourceDeriverBase {
         // Hardcoded usage of Search API views, for now.
         if (strpos($view->get('base_table'), 'search_api_index') !== FALSE) {
           $displays = $view->get('display');
-          foreach ($displays as $name => $display_info) {
-            if ($display_info['display_plugin'] == "page") {
-              $machine_name = $view->id() . PluginBase::DERIVATIVE_SEPARATOR . $name;
+          foreach ($displays as $display_id => $display_info) {
 
+            // We only support pages and blocks because those are the ones that
+            // we've tested. They are also the only ones that support for
+            // ::isRenderedInCurrentRequest() and ::getPath().
+            if (in_array($display_info['display_plugin'], ['page', 'block'])) {
+              $machine_name = $view->id() . PluginBase::DERIVATIVE_SEPARATOR . $display_id;
+
+              $label_arguments = [
+                '%view_name' => $view->label(),
+                '%display_title' => $display_info['display_title'],
+                '%display_type' => $display_info['display_plugin'],
+              ];
               $plugin_derivatives[$machine_name] = [
                 'id' => $base_plugin_id . PluginBase::DERIVATIVE_SEPARATOR . $machine_name,
-                'label' => $this->t('Search API view: %view_name, display: %display_title', ['%view_name' => $view->label(), '%display_title' => $display_info['display_title']]),
+                'label' => $this->t('Search API view: %view_name, display: %display_title (%display_type)',
+                  $label_arguments
+                ),
                 'description' => $this->t('Provides a facet source.'),
                 'view_id' => $view->id(),
-                'view_display' => $name,
+                'view_display' => $display_id,
               ] + $base_plugin_definition;
 
               $sources[] = $this->t(

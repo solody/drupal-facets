@@ -69,8 +69,8 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    /** @var Request $request */
-    $request = $container->get('request_stack')->getCurrentRequest();
+    /** @var \Symfony\Component\HttpFoundation\Request $request */
+    $request = $container->get('request_stack')->getMasterRequest();
     return new static($configuration, $plugin_id, $plugin_definition, $request);
   }
 

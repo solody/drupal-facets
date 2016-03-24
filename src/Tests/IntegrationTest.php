@@ -86,15 +86,13 @@ class IntegrationTest extends WebTestBase {
     // Verify that facet blocks appear as expected.
     $this->assertFacetBlocksAppear();
 
-    // Show the facet only when the facet source is visible.
-    // @TODO Only for SearchApiViewsPage for the moment.
+    // Verify that the facet only shows when the facet source is visible.
     $this->setOptionShowOnlyWhenFacetSourceVisible($facet_name);
     $this->goToDeleteFacetPage($facet_name);
     $this->assertNoText('item');
     $this->assertNoText('article');
 
     // Do not show the block on empty behaviors.
-    // Remove data from index.
     $this->clearIndex();
     $this->drupalGet('search-api-test-fulltext');
 
@@ -114,6 +112,58 @@ class IntegrationTest extends WebTestBase {
     // Delete the facet and make sure the overview is empty again.
     $this->deleteUnusedFacet($facet_name);
     $this->checkEmptyOverview();
+  }
+
+  /**
+   * Tests that a block view also works.
+   */
+  public function testBlockView() {
+    $facet_name = "Block view facet";
+    $facet_id = 'bvf';
+
+    // Add a new facet.
+    $facet_add_page = '/admin/config/search/facets/add-facet';
+    $this->drupalGet($facet_add_page);
+
+    $form_values = [
+      'id' => $facet_id,
+      'status' => 1,
+      'url_alias' => $facet_id,
+      'name' => $facet_name,
+      'weight' => 2,
+      'facet_source_id' => 'search_api_views:search_api_test_view:block_1',
+      'facet_source_configs[search_api_views:search_api_test_view:block_1][field_identifier]' => 'type',
+    ];
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:block_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+
+    $facet = Facet::load($facet_id);
+    $this->assertEqual($facet_name, $facet->label());
+    $this->assertEqual(FALSE, $facet->getOnlyVisibleWhenFacetSourceIsVisible());
+
+    // Place the views block in the footer of all pages.
+    $block_settings = [
+      'region' => 'footer',
+      'id' => 'view_block',
+    ];
+    $this->drupalPlaceBlock('views_block:search_api_test_view-block_1', $block_settings);
+
+    // By default, the view should show all entities.
+    $this->drupalGet('<front>');
+    $this->assertText('Displaying 5 search results', 'The search view displays the correct number of results.');
+    $this->assertText('Fulltext test index', 'The search view displays the correct number of results.');
+
+    // Create and place a block for the test facet.
+    $this->createFacetBlock($facet_id);
+
+    // Verify that the facet results are correct displayed.
+    $this->drupalGet('<front>');
+    $this->assertText('item');
+    $this->assertText('article');
+
+    // Click the item link, and test that filtering of results actually works.
+    $this->clickLink('item');
+    $this->assertText('Displaying 3 search results', 'The search view displays the correct number of results.');
   }
 
   /**
@@ -576,6 +626,10 @@ class IntegrationTest extends WebTestBase {
     // The list overview has Field: field_name as description. This tests on the
     // absence of that.
     $this->assertNoText('Field:');
+
+    // Check that the expected facet sources are shown.
+    $this->assertText('search_api_views:search_api_test_view:block_1');
+    $this->assertText('search_api_views:search_api_test_view:page_1');
   }
 
   /**

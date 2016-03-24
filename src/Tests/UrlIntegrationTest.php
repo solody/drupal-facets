@@ -87,7 +87,7 @@ class UrlIntegrationTest extends WebTestBase {
 
     // Go to the only enabled facet source's config and change the filter key.
     $this->drupalGet('admin/config/search/facets');
-    $this->clickLink($this->t('Configure'));
+    $this->clickLink($this->t('Configure'), 1);
 
     $edit = [
       'filter_key' => 'y',
@@ -110,7 +110,7 @@ class UrlIntegrationTest extends WebTestBase {
     // Go to the only enabled facet source's config and change the url
     // processor.
     $this->drupalGet('admin/config/search/facets');
-    $this->clickLink($this->t('Configure'));
+    $this->clickLink($this->t('Configure'), 1);
 
     $edit = [
       'filter_key' => 'y',

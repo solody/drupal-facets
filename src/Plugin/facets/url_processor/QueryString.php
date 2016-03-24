@@ -63,7 +63,7 @@ class QueryString extends UrlProcessorPluginBase {
 
     $request = $this->request;
     if ($facet->getFacetSource()->getPath()) {
-      $request = Request::create('/' . $facet->getFacetSource()->getPath());
+      $request = Request::create($facet->getFacetSource()->getPath());
     }
     $url = Url::createFromRequest($request);
     $url->setOption('attributes', ['rel' => 'nofollow']);
