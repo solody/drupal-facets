@@ -153,7 +153,15 @@ class QueryString extends UrlProcessorPluginBase {
 
     // Explode the active params on the separator.
     foreach ($active_params as $param) {
-      list($key, $value) = explode(self::SEPARATOR, $param, 2);
+      $explosion = explode(self::SEPARATOR, $param);
+      $key = array_shift($explosion);
+      $value = '';
+      while (count($explosion) > 0) {
+        $value .= array_shift($explosion);
+        if (count($explosion) > 0) {
+          $value .= self::SEPARATOR;
+        }
+      }
       if (!isset($this->activeFilters[$key])) {
         $this->activeFilters[$key] = [$value];
       }
