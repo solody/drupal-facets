@@ -45,7 +45,7 @@ class IntegrationTest extends WebTestBase {
     $facet_id = 'test_facet_name';
     $facet_name = 'Test Facet Name';
 
-    // Check if the overview is empty. = ;
+    // Check if the overview is empty.
     $this->checkEmptyOverview();
 
     // Add a new facet and edit it.
@@ -103,8 +103,7 @@ class IntegrationTest extends WebTestBase {
    * Tests the date integration.
    */
   public function testDate() {
-
-    $facet_name =  'Tardigrade';
+    $facet_name = 'Tardigrade';
     $facet_id = 'tardigrade';
 
     $this->addFacet($facet_id, $facet_name, 'created');
@@ -163,11 +162,11 @@ class IntegrationTest extends WebTestBase {
   /**
    * Creates a new facet.
    *
-   * @param $id
+   * @param string $id
    *   The facet's id.
-   * @param $name
+   * @param string $name
    *   The facet's name.
-   * @param $type
+   * @param string $type
    *   The field type.
    */
   public function addFacet($id, $name, $type) {
@@ -373,7 +372,7 @@ class IntegrationTest extends WebTestBase {
    * @param string $facet_name
    *   The name of the facet.
    */
-  public function editFacetCheck($facet_id,$facet_name) {
+  public function editFacetCheck($facet_id, $facet_name) {
     $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/edit';
 
     // Go to the facet edit page and make sure "edit facet %facet" is present.
