@@ -70,6 +70,13 @@ class QueryString extends UrlProcessorPluginBase {
 
     /** @var \Drupal\facets\Result\ResultInterface[] $results */
     foreach ($results as &$result) {
+      // Flag if children filter params need to be removed.
+      $remove_children = FALSE;
+      // Sets the url for children.
+      if ($children = $result->getChildren()) {
+        $this->buildUrls($facet, $children);
+      }
+
       $filter_string = $this->urlAlias . self::SEPARATOR . $result->getRawValue();
       $result_get_params = clone $get_params;
 
@@ -78,6 +85,10 @@ class QueryString extends UrlProcessorPluginBase {
       if ($result->isActive()) {
         foreach ($filter_params as $key => $filter_param) {
           if ($filter_param == $filter_string) {
+            $remove_children = TRUE;
+            unset($filter_params[$key]);
+          }
+          elseif ($remove_children) {
             unset($filter_params[$key]);
           }
         }
@@ -142,7 +153,7 @@ class QueryString extends UrlProcessorPluginBase {
 
     // Explode the active params on the separator.
     foreach ($active_params as $param) {
-      list($key, $value) = explode(self::SEPARATOR, $param);
+      list($key, $value) = explode(self::SEPARATOR, $param, 2);
       if (!isset($this->activeFilters[$key])) {
         $this->activeFilters[$key] = [$value];
       }

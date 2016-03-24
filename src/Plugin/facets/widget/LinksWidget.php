@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facets\FacetInterface;
+use Drupal\facets\Result\ResultInterface;
 use Drupal\facets\Widget\WidgetInterface;
 
 /**
@@ -46,7 +47,7 @@ class LinksWidget implements WidgetInterface {
         $items[] = $text;
       }
       else {
-        $items[] = new Link($text, $result->getUrl());
+        $items[] = $this->buildListItems($result, $show_numbers);
       }
     }
 
@@ -61,6 +62,107 @@ class LinksWidget implements WidgetInterface {
       ],
     ];
     return $build;
+  }
+
+  /**
+   * Builds a renderable array of result items.
+   *
+   * @param \Drupal\facets\Result\ResultInterface $result
+   *   A result item.
+   * @param bool $show_numbers
+   *   A boolean that's true when the numbers should be shown.
+   *
+   * @return array|Link|string
+   *   A renderable array of the result or a link when the result has no
+   *   children.
+   */
+  protected function buildListItems(ResultInterface $result, $show_numbers) {
+    if ($children = $result->getChildren()) {
+      $link = $this->prepareLink($result, $show_numbers);
+
+      $children_markup = [];
+      foreach ($children as $child) {
+        $children_markup[] = $this->buildChildren($child, $show_numbers);
+      }
+
+      $items = [
+        '#markup' => $link->toString(),
+        '#wrapper_attributes' => [
+          'class' => ['expanded'],
+        ],
+        'children' => [$children_markup],
+      ];
+
+    }
+    else {
+      $items = $this->prepareLink($result, $show_numbers);
+    }
+
+    return $items;
+  }
+
+  /**
+   * Returns the text or link for an item.
+   *
+   * @param \Drupal\facets\Result\ResultInterface $result
+   *   A result item.
+   * @param bool $show_numbers
+   *   A boolean that's true when the numbers should be shown.
+   *
+   * @return Link|string
+   *   The item, can be a link or just the text.
+   */
+  protected function prepareLink(ResultInterface $result, $show_numbers) {
+    $text = $result->getDisplayValue();
+
+    if ($show_numbers && $result->getCount()) {
+      $text .= ' (' . $result->getCount() . ')';
+    }
+    if ($result->isActive()) {
+      $text = '(-) ' . $text;
+    }
+
+    if (is_null($result->getUrl())) {
+      $link = $text;
+    }
+    else {
+      $link = new Link($text, $result->getUrl());
+    }
+
+    return $link;
+  }
+
+  /**
+   * Builds a renderable array of a result.
+   *
+   * @param \Drupal\facets\Result\ResultInterface $child
+   *   A result item.
+   * @param bool $show_numbers
+   *   A boolean that's true when the numbers should be shown.
+   *
+   * @return array|Link|string
+   *   A renderable array of the result.
+   */
+  protected function buildChildren(ResultInterface $child, $show_numbers) {
+    $text = $child->getDisplayValue();
+    if ($show_numbers && $child->getCount()) {
+      $text .= ' (' . $child->getCount() . ')';
+    }
+    if ($child->isActive()) {
+      $text = '(-) ' . $text;
+    }
+
+    if (!is_null($child->getUrl())) {
+      $link = new Link($text, $child->getUrl());
+      $text = $link->toString();
+    }
+
+    return [
+      '#markup' => $text,
+      '#wrapper_attributes' => [
+        'class' => ['leaf'],
+      ],
+    ];
   }
 
   /**

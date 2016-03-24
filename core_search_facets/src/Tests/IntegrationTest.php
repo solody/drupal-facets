@@ -2,12 +2,16 @@
 
 namespace Drupal\core_search_facets\Tests;
 
+use Drupal\facets\Tests\ExampleContentTrait;
+
 /**
  * Tests the admin UI with the core search facet source.
  *
  * @group core_search_facets
  */
 class IntegrationTest extends WebTestBase {
+
+  use ExampleContentTrait;
 
   /**
    * The block entities used by this test.
@@ -30,22 +34,22 @@ class IntegrationTest extends WebTestBase {
 
     // Make absolutely sure the ::$blocks variable doesn't pass information
     // along between tests.
-    $this->blocks = NULL;
+    $this->blocks = [];
   }
 
   /**
    * Tests various operations via the Facets' admin UI.
    */
   public function testFramework() {
-    $facet_name = "Test Facet name";
-    $facet_id = 'test_facet_name';
 
-    // Check if the overview is empty.
+    $facet_id = 'test_facet_name';
+    $facet_name = 'Test Facet Name';
+
+    // Check if the overview is empty. = ;
     $this->checkEmptyOverview();
 
     // Add a new facet and edit it.
-    $this->addFacet($facet_name);
-    $this->editFacet($facet_name);
+    $this->addFacet($facet_id, $facet_name, 'type');
 
     // Create and place a block for "Test Facet name" facet.
     $this->createFacetBlock($facet_id);
@@ -58,16 +62,16 @@ class IntegrationTest extends WebTestBase {
     // Verify that facet blocks appear as expected.
     $this->assertFacetBlocksAppear();
 
-    $this->setShowAmountOfResults($facet_name, TRUE);
+    $this->setShowAmountOfResults($facet_id, TRUE);
 
     // Verify that the number of results per item.
     $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
-    $this->assertLink('page (10)');
+    $this->assertLink('page (19)');
     $this->assertLink('article (10)');
 
     // Verify that the label is correct for a clicked link.
-    $this->clickLink('page (10)');
-    $this->assertLink('(-) page (10)');
+    $this->clickLink('page (19)');
+    $this->assertLink('(-) page (19)');
 
     // Do not show the block on empty behaviors.
     // Truncate the search_index table because, for the moment, we don't have
@@ -90,21 +94,106 @@ class IntegrationTest extends WebTestBase {
     $this->deleteBlock($facet_id);
 
     // Delete the facet and make sure the overview is empty again.
-    $this->deleteUnusedFacet($facet_name);
+    $this->deleteUnusedFacet($facet_id, $facet_name);
     $this->checkEmptyOverview();
+
+  }
+
+  /**
+   * Tests the date integration.
+   */
+  public function testDate() {
+
+    $facet_name =  'Tardigrade';
+    $facet_id = 'tardigrade';
+
+    $this->addFacet($facet_id, $facet_name, 'created');
+    $this->createFacetBlock($facet_id);
+    $this->setShowAmountOfResults($facet_id, TRUE);
+
+    // Assert date facets.
+    $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
+    $this->assertLink('February 2016 (9)');
+    $this->assertLink('March 2016 (10)');
+    $this->assertLink('April 2016 (10)');
+    $this->assertResponse(200);
+
+    $this->clickLink('March 2016 (10)');
+    $this->assertResponse(200);
+    $this->assertLink('March 8, 2016 (1)');
+    $this->assertLink('March 9, 2016 (2)');
+
+    $this->clickLink('March 9, 2016 (2)');
+    $this->assertResponse(200);
+    $this->assertLink('10 AM (1)');
+    $this->assertLink('12 PM (1)');
+
+    $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
+    $this->assertLink('April 2016 (10)');
+    $this->clickLink('April 2016 (10)');
+    $this->assertResponse(200);
+    $this->assertLink('April 1, 2016 (1)');
+    $this->assertLink('April 2, 2016 (1)');
+  }
+
+  /**
+   * Tests for CRUD operations.
+   */
+  public function testCrudFacet() {
+    $facet_name = "Test Facet name";
+    $facet_id = 'test_facet_name';
+
+    // Check if the overview is empty.
+    $this->checkEmptyOverview();
+
+    // Add a new facet and edit it.
+    $this->addFacetCheck($facet_id, $facet_name, 'type');
+    $this->editFacetCheck($facet_id, $facet_name);
+
+    // Create and place a block.
+    $this->createFacetBlock($facet_id);
+
+    // Delete the block.
+    $this->deleteBlock($facet_id);
+
+    // Delete the facet.
+    $this->deleteUnusedFacet($facet_id, $facet_name);
+  }
+
+  /**
+   * Creates a new facet.
+   *
+   * @param $id
+   *   The facet's id.
+   * @param $name
+   *   The facet's name.
+   * @param $type
+   *   The field type.
+   */
+  public function addFacet($id, $name, $type) {
+    $this->drupalGet('admin/config/search/facets/add-facet');
+    $form_values = [
+      'id' => $id,
+      'status' => 1,
+      'url_alias' => $id,
+      'name' => $name,
+      'weight' => 2,
+      'facet_source_id' => 'core_node_search:node_search',
+      'facet_source_configs[core_node_search:node_search][field_identifier]' => $type,
+    ];
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'core_node_search:node_search'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
   }
 
   /**
    * Configures the possibility to show the amount of results for facet blocks.
    *
-   * @param string $facet_name
-   *   The name of the facet.
+   * @param string $facet_id
+   *   The id of the facet.
    * @param bool|TRUE $show
    *   Boolean to determine if we want to show the amount of results.
    */
-  protected function setShowAmountOfResults($facet_name, $show = TRUE) {
-
-    $facet_id = $this->convertNameToMachineName($facet_name);
+  protected function setShowAmountOfResults($facet_id, $show = TRUE) {
 
     $facet_display_page = '/admin/config/search/facets/' . $facet_id . '/display';
 
@@ -157,14 +246,8 @@ class IntegrationTest extends WebTestBase {
    *   The id of the block.
    */
   protected function createFacetBlock($id) {
-    $block = [
-      'plugin_id' => 'facet_block:' . $id,
-      'settings' => [
-        'region' => 'footer',
-        'id' => str_replace('_', '-', $id),
-      ],
-    ];
-    $this->blocks[$id] = $this->drupalPlaceBlock($block['plugin_id'], $block['settings']);
+    $block_values = ['region' => 'footer', 'id' => str_replace('_', '-', $id)];
+    $this->blocks[$id] = $this->drupalPlaceBlock('facet_block:' . $id, $block_values);
   }
 
   /**
@@ -227,12 +310,14 @@ class IntegrationTest extends WebTestBase {
   /**
    * Tests adding a facet trough the interface.
    *
+   * @param string $facet_id
+   *   The id of the facet.
    * @param string $facet_name
    *   The name of the facet.
+   * @param string $type
+   *   The field type.
    */
-  protected function addFacet($facet_name) {
-    $facet_id = $this->convertNameToMachineName($facet_name);
-
+  protected function addFacetCheck($facet_id, $facet_name, $type) {
     // Go to the Add facet page and make sure that returns a 200.
     $facet_add_page = '/admin/config/search/facets/add-facet';
     $this->drupalGet($facet_add_page);
@@ -268,7 +353,7 @@ class IntegrationTest extends WebTestBase {
     // Fill in all fields and make sure the 'field is required' message is no
     // longer shown.
     $facet_source_form = [
-      'facet_source_configs[core_node_search:node_search][field_identifier]' => 'type',
+      'facet_source_configs[core_node_search:node_search][field_identifier]' => $type,
     ];
     $this->drupalPostForm(NULL, $form_values + $facet_source_form, $this->t('Save'));
     $this->assertNoText('field is required.');
@@ -283,12 +368,12 @@ class IntegrationTest extends WebTestBase {
   /**
    * Tests editing of a facet through the UI.
    *
+   * @param string $facet_id
+   *   The id of the facet.
    * @param string $facet_name
    *   The name of the facet.
    */
-  public function editFacet($facet_name) {
-    $facet_id = $this->convertNameToMachineName($facet_name);
-
+  public function editFacetCheck($facet_id,$facet_name) {
     $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/edit';
 
     // Go to the facet edit page and make sure "edit facet %facet" is present.
@@ -340,12 +425,12 @@ class IntegrationTest extends WebTestBase {
   /**
    * This deletes a facet through the UI.
    *
+   * @param string $facet_id
+   *   The id of the facet.
    * @param string $facet_name
    *   The name of the facet.
    */
-  protected function deleteUnusedFacet($facet_name) {
-    $facet_id = $this->convertNameToMachineName($facet_name);
-
+  protected function deleteUnusedFacet($facet_id, $facet_name) {
     $facet_delete_page = '/admin/config/search/facets/' . $facet_id . '/delete';
 
     // Go to the facet delete page and make the warning is shown.

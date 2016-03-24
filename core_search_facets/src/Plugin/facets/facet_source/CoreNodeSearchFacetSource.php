@@ -152,6 +152,11 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
       case 'entity_reference':
         $query_types['string'] = 'core_node_search_string';
         break;
+
+      case 'created':
+        $query_types['string'] = 'core_node_search_date';
+        break;
+
     }
 
     return $query_types;
@@ -230,6 +235,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
       'type' => $this->t('Content Type'),
       'uid' => $this->t('Author'),
       'langcode' => $this->t('Language'),
+      'created' => $this->t('Post date'),
     ];
   }
 
@@ -239,7 +245,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   public function getFacetQueryExtender() {
     if (!$this->facetQueryExtender) {
       $this->facetQueryExtender = db_select('search_index', 'i', array('target' => 'replica'))->extend('Drupal\core_search_facets\FacetsQuery');
-      $this->facetQueryExtender->join('node_field_data', 'n', 'n.nid = i.sid');
+      $this->facetQueryExtender->join('node_field_data', 'n', 'n.nid = i.sid AND n.langcode = i.langcode');
       $this->facetQueryExtender
          // ->condition('n.status', 1).
          ->addTag('node_access')

@@ -40,6 +40,9 @@ class Result implements ResultInterface {
    */
   protected $active = FALSE;
 
+
+  protected $children = [];
+
   /**
    * Constructs a new result value object.
    *
@@ -94,6 +97,13 @@ class Result implements ResultInterface {
   /**
    * {@inheritdoc}
    */
+  public function setCount($count) {
+    $this->count = $count;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setActiveState($active) {
     $this->active = $active;
   }
@@ -110,6 +120,20 @@ class Result implements ResultInterface {
    */
   public function setDisplayValue($display_value) {
     $this->displayValue = $display_value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setChildren(ResultInterface $children) {
+    $this->children[] = $children;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getChildren() {
+    return $this->children;
   }
 
 }

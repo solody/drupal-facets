@@ -74,4 +74,20 @@ interface ResultInterface {
    */
   public function setDisplayValue($display_value);
 
+  /**
+   * Sets children results.
+   *
+   * @param \Drupal\facets\Result\ResultInterface $children
+   *   The children to be added.
+   */
+  public function setChildren(ResultInterface $children);
+
+  /**
+   * Returns children results.
+   *
+   * @return \Drupal\facets\Result\ResultInterface $children
+   *   The children results.
+   */
+  public function getChildren();
+
 }
