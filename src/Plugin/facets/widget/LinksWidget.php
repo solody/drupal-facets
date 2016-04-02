@@ -85,14 +85,20 @@ class LinksWidget implements WidgetInterface {
         $children_markup[] = $this->buildChildren($child, $show_numbers);
       }
 
-      $items = [
-        '#markup' => $link->toString(),
-        '#wrapper_attributes' => [
-          'class' => ['expanded'],
-        ],
-        'children' => [$children_markup],
-      ];
-
+      if ($link instanceof Link) {
+        $items = $link->toRenderable();
+        $items['#wrapper_attibutes'] = ['class' => ['expanded']];
+        $items['children'] = [$children_markup];
+      }
+      else {
+        $items = [
+          '#markup' => $link,
+          '#wrapper_attributes' => [
+            'class' => ['expanded'],
+          ],
+          'children' => [$children_markup],
+        ];
+      }
     }
     else {
       $items = $this->prepareLink($result, $show_numbers);
@@ -154,15 +160,19 @@ class LinksWidget implements WidgetInterface {
 
     if (!is_null($child->getUrl())) {
       $link = new Link($text, $child->getUrl());
-      $text = $link->toString();
+      $link = $link->toRenderable();
+      $link['#wrapper_attributes'] = ['class' => ['leaf']];
+    }
+    else {
+      $link = [
+        '#markup' => $text,
+        '#wrapper_attributes' => [
+          'class' => ['leaf'],
+        ],
+      ];
     }
 
-    return [
-      '#markup' => $text,
-      '#wrapper_attributes' => [
-        'class' => ['leaf'],
-      ],
-    ];
+    return $link;
   }
 
   /**
