@@ -3,6 +3,7 @@
 namespace Drupal\core_search_facets\Tests;
 
 use Drupal\facets\Tests\ExampleContentTrait;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests the admin UI with the core search facet source.
@@ -100,9 +101,9 @@ class IntegrationTest extends WebTestBase {
   }
 
   /**
-   * Tests the date integration.
+   * Tests the "Post date" facets.
    */
-  public function testDate() {
+  public function testPostDate() {
     $facet_name = 'Tardigrade';
     $facet_id = 'tardigrade';
 
@@ -133,6 +134,38 @@ class IntegrationTest extends WebTestBase {
     $this->assertResponse(200);
     $this->assertLink('April 1, 2016 (1)');
     $this->assertLink('April 2, 2016 (1)');
+  }
+
+  /**
+   * Tests the "Updated date" facets.
+   */
+  public function testUpdatedDate() {
+    $facet_name = 'Tardigrade';
+    $facet_id = 'tardigrade';
+
+    $this->addFacet($facet_id, $facet_name, 'changed');
+    $this->createFacetBlock($facet_id);
+    $this->setShowAmountOfResults($facet_id, TRUE);
+
+    // Update the changed date. The nodes were created on February/March 2016
+    // and the changed date is December 2016.
+    $node = Node::load(1);
+    $changed_date = new \DateTime('December 3 2016 1PM');
+    $node->changed = $changed_date->format('U');
+    $node->save();
+
+    // Index the content.
+    \Drupal::service('plugin.manager.search')->createInstance('node_search')->updateIndex();
+    search_update_totals();
+
+    $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
+    $this->assertLink('December 2016 (1)');
+    $this->clickLink('December 2016 (1)');
+    $this->assertResponse(200);
+    $this->assertLink('December 3, 2016 (1)');
+    $this->clickLink('December 3, 2016 (1)');
+    $this->assertResponse(200);
+
   }
 
   /**

@@ -154,6 +154,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
         break;
 
       case 'created':
+      case 'changed':
         $query_types['string'] = 'core_node_search_date';
         break;
 
@@ -236,6 +237,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
       'uid' => $this->t('Author'),
       'langcode' => $this->t('Language'),
       'created' => $this->t('Post date'),
+      'changed' => $this->t('Updated date'),
     ];
   }
 
