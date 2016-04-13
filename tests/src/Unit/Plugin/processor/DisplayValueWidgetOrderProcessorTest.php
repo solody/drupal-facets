@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
+use Drupal\Component\Transliteration\TransliterationInterface;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\processor\DisplayValueWidgetOrderProcessor;
 use Drupal\facets\Processor\ProcessorPluginManager;
@@ -46,7 +47,13 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
       new Result('2', '2', 22),
     ];
 
-    $this->processor = new DisplayValueWidgetOrderProcessor([], 'display_value_widget_order', []);
+    $transliteration = $this
+      ->getMockBuilder(TransliterationInterface::class)
+      ->getMock();
+    $transliteration->method('removeDiacritics')->willReturnCallback(function ($value) {
+      return str_replace('Ä', 'A', $value);
+    });
+    $this->processor = new DisplayValueWidgetOrderProcessor([], 'display_value_widget_order', [], $transliteration);
   }
 
   /**
@@ -94,12 +101,14 @@ class DisplayValueWidgetOrderProcessorTest extends UnitTestCase {
     $original = [
       new Result('bb_test', 'Test AA', 10),
       new Result('aa_test', 'Test BB', 10),
+      new Result('ab_test', 'Test ÄB', 10),
     ];
 
     $sorted_results = $this->processor->sortResults($original, 'DESC');
 
     $this->assertEquals('Test BB', $sorted_results[0]->getDisplayValue());
-    $this->assertEquals('Test AA', $sorted_results[1]->getDisplayValue());
+    $this->assertEquals('Test ÄB', $sorted_results[1]->getDisplayValue());
+    $this->assertEquals('Test AA', $sorted_results[2]->getDisplayValue());
   }
 
   /**
