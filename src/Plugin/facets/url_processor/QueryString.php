@@ -70,8 +70,6 @@ class QueryString extends UrlProcessorPluginBase {
 
     /** @var \Drupal\facets\Result\ResultInterface[] $results */
     foreach ($results as &$result) {
-      // Flag if children filter params need to be removed.
-      $remove_children = FALSE;
       // Sets the url for children.
       if ($children = $result->getChildren()) {
         $this->buildUrls($facet, $children);
@@ -85,10 +83,6 @@ class QueryString extends UrlProcessorPluginBase {
       if ($result->isActive()) {
         foreach ($filter_params as $key => $filter_param) {
           if ($filter_param == $filter_string) {
-            $remove_children = TRUE;
-            unset($filter_params[$key]);
-          }
-          elseif ($remove_children) {
             unset($filter_params[$key]);
           }
         }
@@ -112,7 +106,7 @@ class QueryString extends UrlProcessorPluginBase {
         }
       }
 
-      $result_get_params->set($this->filterKey, $filter_params);
+      $result_get_params->set($this->filterKey, array_values($filter_params));
 
       $url = clone $url;
       $url->setOption('query', $result_get_params->all());
