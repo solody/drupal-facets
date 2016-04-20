@@ -58,6 +58,10 @@ class QueryString extends UrlProcessorPluginBase {
     // First get the current list of get parameters.
     $get_params = $this->request->query;
 
+    // When adding/removing a filter the number of pages may have changed,
+    // possibly resulting in an invalid page parameter.
+    $get_params->remove('page');
+
     // Set the url alias from the the facet object.
     $this->urlAlias = $facet->getUrlAlias();
 
