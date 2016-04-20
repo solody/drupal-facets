@@ -91,11 +91,11 @@ class FacetsQuery extends SearchQuery {
     // Adds subquery to group the results in the r table.
     $subquery = db_select($this->query, 'r')
       ->fields('r', array('value'))
-      ->groupBy('r.value')
-      ->orderBy('count', 'DESC');
+      ->groupBy('r.value');
 
     // Adds COUNT() expression to get facet counts.
     $subquery->addExpression('COUNT(r.value)', 'count');
+    $subquery->orderBy('count', 'DESC');
 
     // Executes the subquery.
     return $subquery->execute();
