@@ -44,7 +44,7 @@ class LinksWidget implements WidgetInterface {
       }
 
       if (is_null($result->getUrl())) {
-        $items[] = $text;
+        $items[] = ['#markup' => $text];
       }
       else {
         $items[] = $this->buildListItems($result, $show_numbers);
@@ -72,37 +72,38 @@ class LinksWidget implements WidgetInterface {
    * @param bool $show_numbers
    *   A boolean that's true when the numbers should be shown.
    *
-   * @return array|Link|string
-   *   A renderable array of the result or a link when the result has no
-   *   children.
+   * @return array
+   *   A renderable array of the result.
    */
   protected function buildListItems(ResultInterface $result, $show_numbers) {
+
+    $classes = ['facet-item'];
+
     if ($children = $result->getChildren()) {
-      $link = $this->prepareLink($result, $show_numbers);
+      $items = $this->prepareLink($result, $show_numbers);
 
       $children_markup = [];
       foreach ($children as $child) {
         $children_markup[] = $this->buildChildren($child, $show_numbers);
       }
 
-      if ($link instanceof Link) {
-        $items = $link->toRenderable();
-        $items['#wrapper_attibutes'] = ['class' => ['expanded']];
-        $items['children'] = [$children_markup];
-      }
-      else {
-        $items = [
-          '#markup' => $link,
-          '#wrapper_attributes' => [
-            'class' => ['expanded'],
-          ],
-          'children' => [$children_markup],
-        ];
+      $classes[] = 'expanded';
+      $items['children'] = [$children_markup];
+
+      if ($result->isActive()) {
+        $items['#attributes'] = ['class' => 'active-trail'];
       }
     }
     else {
       $items = $this->prepareLink($result, $show_numbers);
+
+      if ($result->isActive()) {
+        $items['#attributes'] = ['class' => 'is-active'];
+      }
     }
+
+    $items['#wrapper_attributes'] = ['class' => $classes];
+
 
     return $items;
   }
@@ -115,8 +116,8 @@ class LinksWidget implements WidgetInterface {
    * @param bool $show_numbers
    *   A boolean that's true when the numbers should be shown.
    *
-   * @return Link|string
-   *   The item, can be a link or just the text.
+   * @return array
+   *   The item, as a renderable array.
    */
   protected function prepareLink(ResultInterface $result, $show_numbers) {
     $text = $result->getDisplayValue();
@@ -129,10 +130,11 @@ class LinksWidget implements WidgetInterface {
     }
 
     if (is_null($result->getUrl())) {
-      $link = $text;
+      $link = ['#markup' => $text];
     }
     else {
       $link = new Link($text, $result->getUrl());
+      $link = $link->toRenderable();
     }
 
     return $link;
@@ -146,7 +148,7 @@ class LinksWidget implements WidgetInterface {
    * @param bool $show_numbers
    *   A boolean that's true when the numbers should be shown.
    *
-   * @return array|Link|string
+   * @return array
    *   A renderable array of the result.
    */
   protected function buildChildren(ResultInterface $child, $show_numbers) {
@@ -160,19 +162,15 @@ class LinksWidget implements WidgetInterface {
 
     if (!is_null($child->getUrl())) {
       $link = new Link($text, $child->getUrl());
-      $link = $link->toRenderable();
-      $link['#wrapper_attributes'] = ['class' => ['leaf']];
+      $item = $link->toRenderable();
     }
     else {
-      $link = [
-        '#markup' => $text,
-        '#wrapper_attributes' => [
-          'class' => ['leaf'],
-        ],
-      ];
+      $item = ['#markup' => $text];
     }
 
-    return $link;
+    $item['#wrapper_attributes'] = ['class' => ['leaf']];
+
+    return $item;
   }
 
   /**

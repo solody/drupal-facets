@@ -66,8 +66,10 @@ class LinksWidgetTest extends UnitTestCase {
 
     $expected_links = ['Llama (10)', 'Badger (20)', 'Duck (15)', 'Alpaca (9)'];
     foreach ($expected_links as $index => $value) {
-      $this->assertInstanceOf('\Drupal\Core\Link', $output['#items'][$index]);
-      $this->assertEquals($value, $output['#items'][$index]->getText());
+      $this->assertInternalType('array', $output['#items'][$index]);
+      $this->assertEquals($value, $output['#items'][$index]['#title']);
+      $this->assertEquals('link', $output['#items'][$index]['#type']);
+      $this->assertEquals(['facet-item'], $output['#items'][$index]['#wrapper_attributes']['class']);
     }
   }
 
@@ -95,8 +97,13 @@ class LinksWidgetTest extends UnitTestCase {
       '(-) Alpaca (9)',
     ];
     foreach ($expected_links as $index => $value) {
-      $this->assertInstanceOf('\Drupal\Core\Link', $output['#items'][$index]);
-      $this->assertEquals($value, $output['#items'][$index]->getText());
+      $this->assertInternalType('array', $output['#items'][$index]);
+      $this->assertEquals($value, $output['#items'][$index]['#title']);
+      $this->assertEquals('link', $output['#items'][$index]['#type']);
+      if ($index === 0 || $index === 3) {
+        $this->assertEquals('is-active', $output['#items'][$index]['#attributes']['class']);
+      }
+      $this->assertEquals(['facet-item'], $output['#items'][$index]['#wrapper_attributes']['class']);
     }
   }
 
@@ -118,8 +125,13 @@ class LinksWidgetTest extends UnitTestCase {
 
     $expected_links = ['Llama', '(-) Badger', 'Duck', 'Alpaca'];
     foreach ($expected_links as $index => $value) {
-      $this->assertInstanceOf('\Drupal\Core\Link', $output['#items'][$index]);
-      $this->assertEquals($value, $output['#items'][$index]->getText());
+      $this->assertInternalType('array', $output['#items'][$index]);
+      $this->assertEquals($value, $output['#items'][$index]['#title']);
+      $this->assertEquals('link', $output['#items'][$index]['#type']);
+      if ($index === 1) {
+        $this->assertEquals('is-active', $output['#items'][$index]['#attributes']['class']);
+      }
+      $this->assertEquals(['facet-item'], $output['#items'][$index]['#wrapper_attributes']['class']);
     }
 
     // Enable the 'show_numbers' setting again to make sure that the switch
@@ -138,9 +150,54 @@ class LinksWidgetTest extends UnitTestCase {
       'Alpaca (9)',
     ];
     foreach ($expected_links as $index => $value) {
-      $this->assertInstanceOf('\Drupal\Core\Link', $output['#items'][$index]);
-      $this->assertEquals($value, $output['#items'][$index]->getText());
+      $this->assertInternalType('array', $output['#items'][$index]);
+      $this->assertEquals($value, $output['#items'][$index]['#title']);
+      $this->assertEquals('link', $output['#items'][$index]['#type']);
+      if ($index === 1) {
+        $this->assertEquals('is-active', $output['#items'][$index]['#attributes']['class']);
+      }
+      $this->assertEquals(['facet-item'], $output['#items'][$index]['#wrapper_attributes']['class']);
     }
+  }
+
+  /**
+   * Tests for links widget with children.
+   */
+  public function testChildren() {
+    $original_results = $this->originalResults;
+
+    $child = new Result('snake', 'Snake', 5);
+    $original_results[1]->setActiveState(TRUE);
+    $original_results[1]->setChildren($child);
+
+    $facet = new Facet([], 'facet');
+    $facet->setResults($original_results);
+    $facet->setWidgetConfigs(['show_numbers' => 1]);
+
+    $output = $this->widget->build($facet);
+
+    $this->assertInternalType('array', $output);
+    $this->assertCount(4, $output['#items']);
+
+    $expected_links = [
+      'Llama (10)',
+      '(-) Badger (20)',
+      'Duck (15)',
+      'Alpaca (9)',
+    ];
+    foreach ($expected_links as $index => $value) {
+      $this->assertInternalType('array', $output['#items'][$index]);
+      $this->assertEquals($value, $output['#items'][$index]['#title']);
+      $this->assertEquals('link', $output['#items'][$index]['#type']);
+      if ($index === 1) {
+        $this->assertEquals('active-trail', $output['#items'][$index]['#attributes']['class']);
+        $this->assertEquals(['facet-item', 'expanded'], $output['#items'][$index]['#wrapper_attributes']['class']);
+      }
+      else {
+        $this->assertEquals(['facet-item'], $output['#items'][$index]['#wrapper_attributes']['class']);
+      }
+    }
+
   }
 
 }
