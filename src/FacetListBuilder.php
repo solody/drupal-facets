@@ -196,7 +196,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       }
     }
 
-    return $list + parent::render();
+    return $list;
   }
 
   /**
