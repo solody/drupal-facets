@@ -99,7 +99,7 @@ class ListItemProcessorTest extends UnitTestCase {
       'weights' => [],
       'settings' => [],
     ]);
-    /** @var \Drupal\facets\Result\Result[] $module_field_facet- */
+    /* @var \Drupal\facets\Result\Result[] $module_field_facet- */
     $module_field_results = $processor->build($module_field_facet, $this->results);
 
     $this->assertCount(3, $module_field_results);
@@ -123,11 +123,14 @@ class ListItemProcessorTest extends UnitTestCase {
       ->method('getSetting')
       ->willReturnMap([
         ['allowed_values_function', ''],
-        ['allowed_values', [
-          1 => 'blue whale',
-          2 => 'lynx',
-          3 => 'dog-wolf-lion',
-        ]],
+        [
+          'allowed_values',
+          [
+            1 => 'blue whale',
+            2 => 'lynx',
+            3 => 'dog-wolf-lion',
+          ],
+        ],
       ]);
 
     $entity_field_manager = $this->getMockBuilder(EntityFieldManager::class)
