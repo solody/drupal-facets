@@ -23,6 +23,13 @@ class LinksWidget implements WidgetInterface {
   use StringTranslationTrait;
 
   /**
+   * A flag that indicates if we should display the numbers.
+   *
+   * @var bool
+   */
+  protected $showNumbers = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet) {
@@ -31,23 +38,15 @@ class LinksWidget implements WidgetInterface {
     $items = [];
 
     $configuration = $facet->getWidgetConfigs();
-    $show_numbers = empty($configuration['show_numbers']) ? FALSE : (bool) $configuration['show_numbers'];
+    $this->showNumbers = empty($configuration['show_numbers']) ? FALSE : (bool) $configuration['show_numbers'];
 
     foreach ($results as $result) {
-      // Get the link.
-      $text = $result->getDisplayValue();
-      if ($show_numbers) {
-        $text .= ' (' . $result->getCount() . ')';
-      }
-      if ($result->isActive()) {
-        $text = '(-) ' . $text;
-      }
-
       if (is_null($result->getUrl())) {
+        $text = $this->extractText($result);
         $items[] = ['#markup' => $text];
       }
       else {
-        $items[] = $this->buildListItems($result, $show_numbers);
+        $items[] = $this->buildListItems($result);
       }
     }
 
@@ -69,22 +68,20 @@ class LinksWidget implements WidgetInterface {
    *
    * @param \Drupal\facets\Result\ResultInterface $result
    *   A result item.
-   * @param bool $show_numbers
-   *   A boolean that's true when the numbers should be shown.
    *
    * @return array
    *   A renderable array of the result.
    */
-  protected function buildListItems(ResultInterface $result, $show_numbers) {
+  protected function buildListItems(ResultInterface $result) {
 
     $classes = ['facet-item'];
 
     if ($children = $result->getChildren()) {
-      $items = $this->prepareLink($result, $show_numbers);
+      $items = $this->prepareLink($result);
 
       $children_markup = [];
       foreach ($children as $child) {
-        $children_markup[] = $this->buildChildren($child, $show_numbers);
+        $children_markup[] = $this->buildChildren($child);
       }
 
       $classes[] = 'expanded';
@@ -95,7 +92,7 @@ class LinksWidget implements WidgetInterface {
       }
     }
     else {
-      $items = $this->prepareLink($result, $show_numbers);
+      $items = $this->prepareLink($result);
 
       if ($result->isActive()) {
         $items['#attributes'] = ['class' => 'is-active'];
@@ -103,7 +100,6 @@ class LinksWidget implements WidgetInterface {
     }
 
     $items['#wrapper_attributes'] = ['class' => $classes];
-
 
     return $items;
   }
@@ -113,21 +109,12 @@ class LinksWidget implements WidgetInterface {
    *
    * @param \Drupal\facets\Result\ResultInterface $result
    *   A result item.
-   * @param bool $show_numbers
-   *   A boolean that's true when the numbers should be shown.
    *
    * @return array
    *   The item, as a renderable array.
    */
-  protected function prepareLink(ResultInterface $result, $show_numbers) {
-    $text = $result->getDisplayValue();
-
-    if ($show_numbers && $result->getCount()) {
-      $text .= ' (' . $result->getCount() . ')';
-    }
-    if ($result->isActive()) {
-      $text = '(-) ' . $text;
-    }
+  protected function prepareLink(ResultInterface $result) {
+    $text = $this->extractText($result);
 
     if (is_null($result->getUrl())) {
       $link = ['#markup' => $text];
@@ -145,20 +132,12 @@ class LinksWidget implements WidgetInterface {
    *
    * @param \Drupal\facets\Result\ResultInterface $child
    *   A result item.
-   * @param bool $show_numbers
-   *   A boolean that's true when the numbers should be shown.
    *
    * @return array
    *   A renderable array of the result.
    */
-  protected function buildChildren(ResultInterface $child, $show_numbers) {
-    $text = $child->getDisplayValue();
-    if ($show_numbers && $child->getCount()) {
-      $text .= ' (' . $child->getCount() . ')';
-    }
-    if ($child->isActive()) {
-      $text = '(-) ' . $text;
-    }
+  protected function buildChildren(ResultInterface $child) {
+    $text = $this->extractText($child);
 
     if (!is_null($child->getUrl())) {
       $link = new Link($text, $child->getUrl());
@@ -198,6 +177,26 @@ class LinksWidget implements WidgetInterface {
    */
   public function getQueryType($query_types) {
     return $query_types['string'];
+  }
+
+  /**
+   * Extracts the text for a result to display in the UI.
+   *
+   * @param \Drupal\facets\Result\ResultInterface $result
+   *   The result to extract the text for.
+   *
+   * @return string
+   *   The text to display.
+   */
+  protected function extractText(ResultInterface $result) {
+    $text = $result->getDisplayValue();
+    if ($this->showNumbers && $result->getCount()) {
+      $text .= ' (' . $result->getCount() . ')';
+    }
+    if ($result->isActive()) {
+      $text = '(-) ' . $text;
+    }
+    return $text;
   }
 
 }
