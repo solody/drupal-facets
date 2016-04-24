@@ -20,7 +20,7 @@ interface ProcessorInterface extends ConfigurablePluginInterface, PluginInspecti
   /**
    * Processing stage: post_query.
    */
-  const STAGE_POST_QUERY = 'post query';
+  const STAGE_POST_QUERY = 'post_query';
 
   /**
    * Processing stage: build.

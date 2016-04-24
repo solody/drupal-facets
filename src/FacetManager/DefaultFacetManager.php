@@ -9,6 +9,7 @@ use Drupal\facets\Exception\InvalidProcessorException;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginManager;
 use Drupal\facets\Processor\BuildProcessorInterface;
+use Drupal\facets\Processor\PostQueryProcessorInterface;
 use Drupal\facets\Processor\PreQueryProcessorInterface;
 use Drupal\facets\Processor\ProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginManager;
@@ -204,6 +205,18 @@ class DefaultFacetManager {
 
       $this->processedFacetSources[$facetsource_id] = TRUE;
     }
+
+    foreach ($this->facets as $facet) {
+      foreach ($facet->getProcessorsByStage(ProcessorInterface::STAGE_POST_QUERY) as $processor) {
+        /** @var \Drupal\facets\processor\PostQueryProcessorInterface $post_query_processor */
+        $post_query_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], ['facet' => $facet]);
+        if (!$post_query_processor instanceof PostQueryProcessorInterface) {
+          throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a post_query definition but doesn't implement the required PostQueryProcessor interface", ['@processor' => $processor->getPluginDefinition()['id']]));
+        }
+        $post_query_processor->postQuery($facet);
+      }
+    }
+
   }
 
   /**
@@ -216,7 +229,6 @@ class DefaultFacetManager {
     if (empty($this->facets)) {
       $this->facets = $this->getEnabledFacets();
       foreach ($this->facets as $facet) {
-
         foreach ($facet->getProcessorsByStage(ProcessorInterface::STAGE_PRE_QUERY) as $processor) {
           /** @var PreQueryProcessorInterface $pre_query_processor */
           $pre_query_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], ['facet' => $facet]);
@@ -283,7 +295,7 @@ class DefaultFacetManager {
       /** @var \Drupal\facets\Processor\BuildProcessorInterface $build_processor */
       $build_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], ['facet' => $facet]);
       if (!$build_processor instanceof BuildProcessorInterface) {
-        throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a build definition but doesn't implement the required BuildProcessorInterface interface", ['@processor' => $processor['processor_id']]));
+        throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a build definition but doesn't implement the required BuildProcessorInterface interface", ['@processor' => $processor->getPluginDefinition()['id']]));
       }
       $results = $build_processor->build($facet, $results);
     }
