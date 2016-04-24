@@ -3,6 +3,7 @@
 namespace Drupal\facets\Plugin\facets\processor;
 
 use Drupal\Core\Config\ConfigManagerInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
@@ -32,12 +33,21 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
   private $configManager;
 
   /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  private $entityFieldManager;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigManagerInterface $config_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigManagerInterface $config_manager, EntityFieldManagerInterface $entity_field_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->configManager = $config_manager;
+
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -48,7 +58,8 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('config.manager')
+      $container->get('config.manager'),
+      $container->get('entity_field.manager')
     );
   }
 
@@ -67,8 +78,22 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
       $entity = str_replace('entity:', '', $field->getDatasourceId());
     }
 
+    // If it's an entity base field, we find it in the field definitions.
+    // We don't have access to the bundle via SearchApiFacetSourceInterface, so
+    // we check the entity's base fields only.
+    $base_fields = $this->entityFieldManager->getFieldDefinitions($entity, '');
+
+    // This only works for configurable fields.
     $config_entity_name = sprintf('field.storage.%s.%s', $entity, $field_identifier);
-    if ($field = $this->configManager->loadConfigEntityByName($config_entity_name)) {
+
+    if (isset($base_fields[$field_identifier])) {
+      $field = $base_fields[$field_identifier];
+    }
+    elseif ($this->configManager->loadConfigEntityByName($config_entity_name) !== NULL) {
+      $field = $this->configManager->loadConfigEntityByName($config_entity_name);
+    }
+
+    if ($field) {
       $function = $field->getSetting('allowed_values_function');
 
       if (empty($function)) {
@@ -87,6 +112,7 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
         }
       }
     }
+
     return $results;
   }
 
