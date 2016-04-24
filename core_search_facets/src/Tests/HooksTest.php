@@ -8,7 +8,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 /**
  * Tests integration of hooks.
  *
- * @group core_search_facets
+ * @group facets
  */
 class HooksTest extends WebTestBase {
 

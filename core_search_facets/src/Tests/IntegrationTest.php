@@ -8,7 +8,7 @@ use Drupal\node\Entity\Node;
 /**
  * Tests the admin UI with the core search facet source.
  *
- * @group core_search_facets
+ * @group facets
  */
 class IntegrationTest extends WebTestBase {
 
