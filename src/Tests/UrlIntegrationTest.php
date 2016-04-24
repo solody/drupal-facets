@@ -54,9 +54,7 @@ class UrlIntegrationTest extends WebTestBase {
     $form_values = [
       'id' => $id,
       'status' => 1,
-      'url_alias' => $id,
       'name' => $name,
-      'weight' => 3,
       'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
       'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
     ];
@@ -136,7 +134,6 @@ class UrlIntegrationTest extends WebTestBase {
    */
   public function testColonValue() {
     $id = 'water_bear';
-    $url_alias = 'bear';
     $name = 'Water bear';
 
     $facet_add_page = 'admin/config/search/facets/add-facet';
@@ -147,9 +144,7 @@ class UrlIntegrationTest extends WebTestBase {
     $form_values = [
       'id' => $id,
       'status' => 1,
-      'url_alias' => $url_alias,
       'name' => $name,
-      'weight' => 1,
       'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
       'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'keywords',
     ];
@@ -187,7 +182,7 @@ class UrlIntegrationTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Make sure 'test:colon' is active.
-    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'bear:test:colon']]);
+    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'water_bear:test:colon']]);
     $this->assertUrl($url);
     $this->assertLink('(-) test:colon');
     $this->assertLink('orange');

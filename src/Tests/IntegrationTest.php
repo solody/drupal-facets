@@ -128,9 +128,7 @@ class IntegrationTest extends WebTestBase {
     $form_values = [
       'id' => $facet_id,
       'status' => 1,
-      'url_alias' => $facet_id,
       'name' => $facet_name,
-      'weight' => 2,
       'facet_source_id' => 'search_api_views:search_api_test_view:block_1',
       'facet_source_configs[search_api_views:search_api_test_view:block_1][field_identifier]' => 'type',
     ];
@@ -212,6 +210,7 @@ class IntegrationTest extends WebTestBase {
 
     $facet_add_page = '/admin/config/search/facets/add-facet';
     $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/edit';
+    $facet_display_page = '/admin/config/search/facets/' . $facet_id . '/display';
 
     $this->drupalGet($facet_add_page);
     $this->assertResponse(200);
@@ -222,13 +221,8 @@ class IntegrationTest extends WebTestBase {
       'status' => 1,
       'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
       'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
-      'weight' => 4,
     ];
     $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertText($this->t('The name of the facet for usage in URLs field is required.'));
-
-    $form_values['url_alias'] = 'test';
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertRaw(t('Facet %name has been created.', ['%name' => $facet_name]));
 
@@ -239,11 +233,11 @@ class IntegrationTest extends WebTestBase {
     $this->assertLink('article');
 
     $this->clickLink('item');
-    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'test:item']]);
+    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'ab_facet:item']]);
     $this->assertUrl($url);
 
-    $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['url_alias' => 'llama'], $this->t('Save'));
+    $this->drupalGet($facet_display_page);
+    $this->drupalPostForm(NULL, ['facet_settings[url_alias]' => 'llama'], $this->t('Save'));
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertLink('item');
@@ -398,7 +392,6 @@ class IntegrationTest extends WebTestBase {
       'name' => 'name 1',
       'id' => 'name 1',
       'status' => 1,
-      'url_alias' => 'name',
     ];
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
@@ -407,28 +400,10 @@ class IntegrationTest extends WebTestBase {
       'name' => 'name 1',
       'id' => 'name:&1',
       'status' => 1,
-      'url_alias' => 'name',
     ];
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
 
-    $form_values = [
-      'name' => 'name 1',
-      'id' => 'name_1',
-      'status' => 1,
-      'url_alias' => 'name:1',
-    ];
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
-
-    $form_values = [
-      'name' => 'name 1',
-      'id' => 'name_1',
-      'status' => 1,
-      'url_alias' => 'name_1',
-    ];
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertNoText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
   }
 
   /**
@@ -650,29 +625,26 @@ class IntegrationTest extends WebTestBase {
       'name' => '',
       'id' => $facet_id,
       'status' => 1,
-      'url_alias' => $facet_id,
     ];
 
     // Try filling out the form, but without having filled in a name for the
     // facet to test for form errors.
     $this->drupalPostForm($facet_add_page, $form_values, $this->t('Save'));
-    $this->assertText($this->t('Facet name field is required.'));
+    $this->assertText($this->t('Name field is required.'));
     $this->assertText($this->t('Facet source field is required.'));
-    $this->assertText($this->t('The weight of the facet field is required.'));
 
     // Make sure that when filling out the name, the form error disappears.
     $form_values['name'] = $facet_name;
-    $form_values['weight'] = 15;
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertNoText($this->t('Facet name field is required.'));
+    $this->assertNoText($this->t('Name field is required.'));
 
     // Configure the facet source by selecting one of the Search API views.
     $this->drupalGet($facet_add_page);
     $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
 
-    // The facet field is still required.
+    // The field is still required.
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertText($this->t('Facet field field is required.'));
+    $this->assertText($this->t('Field field is required.'));
 
     // Fill in all fields and make sure the 'field is required' message is no
     // longer shown.
@@ -705,9 +677,7 @@ class IntegrationTest extends WebTestBase {
     $form_values = [
       'name' => $facet_name,
       'id' => $facet_id,
-      'url_alias' => $facet_id,
       'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'weight' => 7,
     ];
 
     $facet_source_configs['facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]'] = $facet_type;

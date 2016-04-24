@@ -328,6 +328,18 @@ class FacetDisplayForm extends EntityForm {
       '#default_value' => $facet->getShowOnlyOneResult(),
     ];
 
+    $form['facet_settings']['url_alias'] = [
+      '#type' => 'machine_name',
+      '#title' => $this->t('Url alias'),
+      '#default_value' => $facet->getUrlAlias(),
+      '#maxlength' => 50,
+      '#required' => TRUE,
+      '#machine_name' => [
+        'exists' => [\Drupal::service('entity_type.manager')->getStorage('facets_facet'), 'load'],
+        'source' => ['name'],
+      ],
+    ];
+
     $empty_behavior_config = $facet->getEmptyBehavior();
     $form['facet_settings']['empty_behavior'] = [
       '#type' => 'radios',
@@ -366,6 +378,14 @@ class FacetDisplayForm extends EntityForm {
       '#title' => $this->t('Exclude'),
       '#description' => $this->t('Make the search exclude selected facets, instead of restricting it to them.'),
       '#default_value' => $facet->getExclude(),
+    ];
+
+    $form['facet_settings']['weight'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Weight'),
+      '#default_value' => $facet->getWeight(),
+      '#maxlength' => 4,
+      '#required' => TRUE,
     ];
 
     $form['weights'] = array(
@@ -522,6 +542,8 @@ class FacetDisplayForm extends EntityForm {
     }
 
     $facet->setWidget($form_state->getValue('widget'));
+    $facet->setUrlAlias($form_state->getValue(['facet_settings', 'url_alias']));
+    $facet->setWeight((int) $form_state->getValue(['facet_settings', 'weight']));
     $facet->setWidgetConfigs($form_state->getValue('widget_configs'));
     $facet->setOnlyVisibleWhenFacetSourceIsVisible($form_state->getValue(['facet_settings', 'only_visible_when_facet_source_is_visible']));
     $facet->setShowOnlyOneResult($form_state->getValue(['facet_settings', 'show_only_one_result']));

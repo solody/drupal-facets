@@ -207,9 +207,7 @@ class IntegrationTest extends WebTestBase {
     $form_values = [
       'id' => $id,
       'status' => 1,
-      'url_alias' => $id,
       'name' => $name,
-      'weight' => 2,
       'facet_source_id' => 'core_node_search:node_search',
       'facet_source_configs[core_node_search:node_search][field_identifier]' => $type,
     ];
@@ -359,14 +357,12 @@ class IntegrationTest extends WebTestBase {
       'name' => '',
       'id' => $facet_id,
       'status' => 1,
-      'url_alias' => $facet_id,
-      'weight' => 4,
     ];
 
     // Try filling out the form, but without having filled in a name for the
     // facet to test for form errors.
     $this->drupalPostForm($facet_add_page, $form_values, $this->t('Save'));
-    $this->assertText($this->t('Facet name field is required.'));
+    $this->assertText($this->t('Name field is required.'));
     $this->assertText($this->t('Facet source field is required.'));
 
     // Make sure that when filling out the name, the form error disappears.
@@ -380,7 +376,7 @@ class IntegrationTest extends WebTestBase {
 
     // The facet field is still required.
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertText($this->t('Facet field field is required.'));
+    $this->assertText($this->t('Field field is required.'));
 
     // Fill in all fields and make sure the 'field is required' message is no
     // longer shown.

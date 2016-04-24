@@ -108,9 +108,7 @@ trait ExampleContentTrait {
     $form_values = [
       'id' => $id,
       'status' => 1,
-      'url_alias' => $id,
       'name' => $name,
-      'weight' => 2,
       'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
       'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => $field,
     ];

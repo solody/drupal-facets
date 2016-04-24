@@ -66,8 +66,8 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
     $form['field_identifier'] = [
       '#type' => 'select',
       '#options' => $this->getFields(),
-      '#title' => $this->t('Facet field'),
-      '#description' => $this->t('Choose the indexed field.'),
+      '#title' => $this->t('Field'),
+      '#description' => $this->t('The field from the selected facet source which contains the data to build a facet for.'),
       '#required' => TRUE,
       '#default_value' => $this->facet->getFieldIdentifier(),
     ];

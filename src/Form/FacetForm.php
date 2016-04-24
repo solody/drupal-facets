@@ -122,6 +122,8 @@ class FacetForm extends EntityForm {
 
     $this->buildEntityForm($form, $form_state, $this->getEntity());
 
+    $form['#attached']['library'][] = 'facets/drupal.facets.edit-facet';
+
     return $form;
   }
 
@@ -143,41 +145,10 @@ class FacetForm extends EntityForm {
       return;
     }
 
-    $form['name'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Facet name'),
-      '#description' => $this->t('Enter the displayed name for the facet.'),
-      '#default_value' => $facet->label(),
-      '#required' => TRUE,
-    ];
-
-    $form['id'] = [
-      '#type' => 'machine_name',
-      '#default_value' => $facet->id(),
-      '#maxlength' => 50,
-      '#required' => TRUE,
-      '#machine_name' => [
-        'exists' => [$this->getFacetStorage(), 'load'],
-        'source' => ['name'],
-      ],
-    ];
-
-    $form['url_alias'] = [
-      '#type' => 'machine_name',
-      '#title' => $this->t('The name of the facet for usage in URLs'),
-      '#default_value' => $facet->getUrlAlias(),
-      '#maxlength' => 50,
-      '#required' => TRUE,
-      '#machine_name' => [
-        'exists' => [$this->getFacetStorage(), 'load'],
-        'source' => ['name'],
-      ],
-    ];
-
     $form['facet_source_id'] = [
       '#type' => 'select',
       '#title' => $this->t('Facet source'),
-      '#description' => $this->t('Select the source where this facet can find its fields.'),
+      '#description' => $this->t('The source where this facet can find its fields.'),
       '#options' => $facet_sources,
       '#default_value' => $facet->getFacetSourceId(),
       '#required' => TRUE,
@@ -210,12 +181,23 @@ class FacetForm extends EntityForm {
     ];
     $this->buildFacetSourceConfigForm($form, $form_state);
 
-    $form['weight'] = [
-      '#type' => 'number',
-      '#title' => $this->t('The weight of the facet'),
-      '#default_value' => $facet->getWeight(),
-      '#maxlength' => 4,
+    $form['name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Name'),
+      '#description' => $this->t('The administrative name used for this facet.'),
+      '#default_value' => $facet->label(),
       '#required' => TRUE,
+    ];
+
+    $form['id'] = [
+      '#type' => 'machine_name',
+      '#default_value' => $facet->id(),
+      '#maxlength' => 50,
+      '#required' => TRUE,
+      '#machine_name' => [
+        'exists' => [$this->getFacetStorage(), 'load'],
+        'source' => ['name'],
+      ],
     ];
 
     $form['status'] = [
@@ -258,6 +240,7 @@ class FacetForm extends EntityForm {
 
       if ($config_form = $facet_source->buildConfigurationForm([], $form_state)) {
         $form['facet_source_configs'][$facet_source_id]['#type'] = 'container';
+        $form['facet_source_configs'][$facet_source_id]['#attributes'] = ['class' => ['facet-source-field-wrapper']];
         $form['facet_source_configs'][$facet_source_id]['#title'] = $this->t('%plugin settings', ['%plugin' => $facet_source->getPluginDefinition()['label']]);
         $form['facet_source_configs'][$facet_source_id] += $config_form;
       }
@@ -311,13 +294,13 @@ class FacetForm extends EntityForm {
 
       // Set a default widget for new facets.
       $facet->setWidget('links');
+      $facet->setUrlAlias($form_state->getValue('id'));
+      $facet->setWeight(0);
 
       // Set default empty behaviour.
       $facet->setEmptyBehavior(['behavior' => 'none']);
       $facet->setOnlyVisibleWhenFacetSourceIsVisible(TRUE);
     }
-
-    $facet->setWeight((int) $form_state->getValue('weight'));
 
     $facet_source_id = $form_state->getValue('facet_source_id');
     if (!is_null($facet_source_id) && $facet_source_id !== '') {
