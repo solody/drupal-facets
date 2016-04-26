@@ -66,10 +66,10 @@ class LinksWidgetTest extends UnitTestCase {
     $this->assertCount(4, $output['#items']);
 
     $expected_links = [
-     $this->buildLinkAssertion('Llama', 10),
-     $this->buildLinkAssertion('Badger', 20),
-     $this->buildLinkAssertion('Duck', 15),
-     $this->buildLinkAssertion('Alpaca', 9),
+      $this->buildLinkAssertion('Llama', 10),
+      $this->buildLinkAssertion('Badger', 20),
+      $this->buildLinkAssertion('Duck', 15),
+      $this->buildLinkAssertion('Alpaca', 9),
     ];
     foreach ($expected_links as $index => $value) {
       $this->assertInternalType('array', $output['#items'][$index]);
@@ -215,7 +215,7 @@ class LinksWidgetTest extends UnitTestCase {
   /**
    * Build a formattable markup object to use in the other tests.
    *
-   * @param $text
+   * @param string $text
    *   Text to display.
    * @param int $count
    *   Number of results.
@@ -237,4 +237,5 @@ class LinksWidgetTest extends UnitTestCase {
     }
     return $text;
   }
+
 }
