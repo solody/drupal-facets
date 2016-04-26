@@ -67,12 +67,12 @@ class IntegrationTest extends WebTestBase {
 
     // Verify that the number of results per item.
     $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
-    $this->assertLink('page (19)');
-    $this->assertLink('article (10)');
+    $this->assertRaw('page <span class="facet-count">(19)</span>');
+    $this->assertRaw('article <span class="facet-count">(10)</span>');
 
     // Verify that the label is correct for a clicked link.
-    $this->clickLink('page (19)');
-    $this->assertLink('(-) page (19)');
+    $this->clickLinkPartialName('page');
+    $this->assertRaw('<span class="facet-deactivate">(-)</span> page <span class="facet-count">(19)</span>');
 
     // Do not show the block on empty behaviors.
     // Truncate the search_index table because, for the moment, we don't have
@@ -113,27 +113,27 @@ class IntegrationTest extends WebTestBase {
 
     // Assert date facets.
     $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
-    $this->assertLink('February 2016 (9)');
-    $this->assertLink('March 2016 (10)');
-    $this->assertLink('April 2016 (10)');
+    $this->assertRaw('February 2016 <span class="facet-count">(9)</span>');
+    $this->assertRaw('March 2016 <span class="facet-count">(10)</span>');
+    $this->assertRaw('April 2016 <span class="facet-count">(10)</span>');
     $this->assertResponse(200);
 
-    $this->clickLink('March 2016 (10)');
+    $this->clickLinkPartialName('March 2016');
     $this->assertResponse(200);
-    $this->assertLink('March 8, 2016 (1)');
-    $this->assertLink('March 9, 2016 (2)');
+    $this->assertRaw('March 8, 2016 <span class="facet-count">(1)</span>');
+    $this->assertRaw('March 9, 2016 <span class="facet-count">(2)</span>');
 
-    $this->clickLink('March 9, 2016 (2)');
+    $this->clickLinkPartialName('March 9');
     $this->assertResponse(200);
-    $this->assertLink('10 AM (1)');
-    $this->assertLink('12 PM (1)');
+    $this->assertRaw('10 AM <span class="facet-count">(1)</span>');
+    $this->assertRaw('12 PM <span class="facet-count">(1)</span>');
 
     $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
-    $this->assertLink('April 2016 (10)');
-    $this->clickLink('April 2016 (10)');
+    $this->assertRaw('April 2016 <span class="facet-count">(10)</span>');
+    $this->clickLinkPartialName('April 2016');
     $this->assertResponse(200);
-    $this->assertLink('April 1, 2016 (1)');
-    $this->assertLink('April 2, 2016 (1)');
+    $this->assertRaw('April 1, 2016 <span class="facet-count">(1)</span>');
+    $this->assertRaw('April 2, 2016 <span class="facet-count">(1)</span>');
   }
 
   /**
@@ -159,11 +159,11 @@ class IntegrationTest extends WebTestBase {
     search_update_totals();
 
     $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
-    $this->assertLink('December 2016 (1)');
-    $this->clickLink('December 2016 (1)');
+    $this->assertRaw('December 2016 <span class="facet-count">(1)</span>');
+    $this->clickLinkPartialName('December 2016');
     $this->assertResponse(200);
-    $this->assertLink('December 3, 2016 (1)');
-    $this->clickLink('December 3, 2016 (1)');
+    $this->assertRaw('December 3, 2016 <span class="facet-count">(1)</span>');
+    $this->clickLinkPartialName('December 3, 2016');
     $this->assertResponse(200);
 
   }

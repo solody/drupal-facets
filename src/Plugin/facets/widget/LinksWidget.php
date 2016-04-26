@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\widget;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -189,12 +190,12 @@ class LinksWidget implements WidgetInterface {
    *   The text to display.
    */
   protected function extractText(ResultInterface $result) {
-    $text = $result->getDisplayValue();
+    $text = new FormattableMarkup('@text', ['@text' => $result->getDisplayValue(), '@count' => $result->getCount()]);
     if ($this->showNumbers && $result->getCount()) {
-      $text .= ' (' . $result->getCount() . ')';
+      $text->string .= ' <span class="facet-count">(@count)</span>';
     }
     if ($result->isActive()) {
-      $text = '(-) ' . $text;
+      $text->string = '<span class="facet-deactivate">(-)</span> ' . $text->string;
     }
     return $text;
   }

@@ -353,7 +353,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertLink('article');
 
     $this->clickLink('item');
-    $this->assertLink('(-) item');
+    $this->assertRaw('<span class="facet-deactivate">(-)</span> item');
     $this->assertNoLink('article');
 
     $this->drupalGet($facet_edit_page);
@@ -363,7 +363,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertLink('article');
 
     $this->clickLink('item');
-    $this->assertLink('(-) item');
+    $this->assertRaw('<span class="facet-deactivate">(-)</span> item');
     $this->assertLink('article');
   }
 
@@ -429,7 +429,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertLink('item');
 
     $this->clickLink('item');
-    $this->assertLink('(-) item');
+    $this->assertRaw('<span class="facet-deactivate">(-)</span> item');
     $this->assertText('foo baz');
     $this->assertText('bar baz');
     $this->assertNoText('foo bar baz');
@@ -445,7 +445,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertLink('item');
 
     $this->clickLink('item');
-    $this->assertLink('(-) item');
+    $this->assertRaw('<span class="facet-deactivate">(-)</span> item');
     $this->assertText('foo bar baz');
     $this->assertText('foo test');
     $this->assertText('bar');
@@ -474,13 +474,13 @@ class IntegrationTest extends WebTestBase {
 
     $this->clickLink('grape');
     $this->assertText('Displaying 3 search results');
-    $this->assertLink('(-) grape');
+    $this->assertRaw('<span class="facet-deactivate">(-)</span> grape');
     $this->assertLink('orange');
 
     $this->clickLink('orange');
     $this->assertText('Displaying 3 search results');
     $this->assertLink('grape');
-    $this->assertLink('(-) orange');
+    $this->assertRaw('<span class="facet-deactivate">(-)</span> orange');
   }
 
   /**

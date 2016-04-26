@@ -180,7 +180,7 @@ class WidgetIntegrationTest extends WebTestBase {
     $this->assertLink('article');
 
     $this->clickLink('item');
-    $this->assertLink('(-) item');
+    $this->assertRaw('<span class="facet-deactivate">(-)</span> item');
   }
 
   /**
@@ -267,8 +267,8 @@ class WidgetIntegrationTest extends WebTestBase {
 
     // Go back to the same view and check that links now display the count.
     $this->drupalGet('search-api-test-fulltext');
-    $this->assertLink('item (3)');
-    $this->assertLink('article (2)');
+    $this->assertRaw('item <span class="facet-count">(3)</span>');
+    $this->assertRaw('article <span class="facet-count">(2)</span>');
 
     $this->drupalGet($facet_edit_page);
     $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_configs[show_numbers]' => FALSE], $this->t('Save'));

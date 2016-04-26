@@ -129,8 +129,8 @@ trait ExampleContentTrait {
    *   Another string.
    */
   protected function assertStringPosition($x, $y) {
-    $this->assertText($x);
-    $this->assertText($y);
+    $this->assertRaw($x);
+    $this->assertRaw($y);
 
     $x_position = strpos($this->getRawContent(), $x);
     $y_position = strpos($this->getRawContent(), $y);

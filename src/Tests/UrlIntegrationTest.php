@@ -184,7 +184,7 @@ class UrlIntegrationTest extends WebTestBase {
     // Make sure 'test:colon' is active.
     $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'water_bear:test:colon']]);
     $this->assertUrl($url);
-    $this->assertLink('(-) test:colon');
+    $this->assertRaw('<span class="facet-deactivate">(-)</span> test:colon');
     $this->assertLink('orange');
     $this->assertLink('banana');
   }
@@ -204,7 +204,7 @@ class UrlIntegrationTest extends WebTestBase {
     $this->clickLink('item');
 
     $this->assertResponse(200);
-    $this->assertLink('(-) item');
+    $this->assertRaw('<span class="facet-deactivate">(-)</span> item');
     $this->assertLink('article');
     $this->assertUrl($url);
   }

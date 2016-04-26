@@ -158,8 +158,9 @@ class ProcessorIntegrationTest extends WebTestBase {
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 10 search results');
-    $this->assertText('grape (6)');
+    $this->assertRaw('grape <span class="facet-count">(6)');
     $this->assertNoText('apple (4)');
+    $this->assertNoRaw('apple <span class="facet-count">(4)');
 
     $form = [
       'widget_configs[show_numbers]' => TRUE,
@@ -286,7 +287,7 @@ class ProcessorIntegrationTest extends WebTestBase {
 
     $this->drupalGet('search-api-test-fulltext');
     $this->clickLink('strawberry');
-    $this->assertStringPosition('(-) strawberry', 'grape');
+    $this->assertStringPosition('<span class="facet-deactivate">(-)</span> strawberry', 'grape');
 
     $form = [
       'facet_sorting[active_widget_order][status]' => TRUE,
@@ -296,7 +297,7 @@ class ProcessorIntegrationTest extends WebTestBase {
 
     $this->drupalGet('search-api-test-fulltext');
     $this->clickLink('strawberry');
-    $this->assertStringPosition('grape', '(-) strawberry');
+    $this->assertStringPosition('grape', '<span class="facet-deactivate">(-)</span> strawberry');
 
     $form = [
       'facet_sorting[active_widget_order][status]' => FALSE,
