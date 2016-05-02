@@ -2,55 +2,65 @@
 
 namespace Drupal\facets\Form;
 
+use Drupal\Core\Config\Config;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\facets\FacetInterface;
-use Drupal\facets\FacetSource\FacetSourcePluginManager;
+use Drupal\facets\Processor\ProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginManager;
-use Drupal\views\Views;
+use Drupal\facets\UrlProcessor\UrlProcessorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\facets\Widget\WidgetPluginManager;
+use Drupal\facets\Processor\WidgetOrderProcessorInterface;
 
 /**
- * Provides a form for creating and editing facets.
+ * Provides a form for configuring the processors of a facet.
  */
 class FacetForm extends EntityForm {
 
   /**
-   * The facet storage.
+   * The facet being configured.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\facets\FacetInterface
    */
-  protected $facetStorage;
+  protected $facet;
 
   /**
-   * The plugin manager for facet sources.
+   * The entity manager.
    *
-   * @var \Drupal\facets\FacetSource\FacetSourcePluginManager
+   * @var \Drupal\Core\Entity\EntityTypeManager
    */
-  protected $facetSourcePluginManager;
+  protected $entityTypeManager;
 
   /**
-   * The plugin manager for processors.
+   * The processor manager.
    *
    * @var \Drupal\facets\Processor\ProcessorPluginManager
    */
   protected $processorPluginManager;
 
   /**
-   * Constructs a FacetForm object.
+   * The plugin manager for widgets.
+   *
+   * @var \Drupal\facets\Widget\WidgetPluginManager
+   */
+  protected $widgetPluginManager;
+
+  /**
+   * Constructs an FacetDisplayForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   The entity manager.
-   * @param \Drupal\facets\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager
-   *   The plugin manager for facet sources.
    * @param \Drupal\facets\Processor\ProcessorPluginManager $processor_plugin_manager
-   *   The plugin manager for processors.
+   *   The processor plugin manager.
+   * @param \Drupal\facets\Widget\WidgetPluginManager $widget_plugin_manager
+   *   The plugin manager for widgets.
    */
-  public function __construct(EntityTypeManager $entity_type_manager, FacetSourcePluginManager $facet_source_plugin_manager, ProcessorPluginManager $processor_plugin_manager) {
-    $this->facetStorage = $entity_type_manager->getStorage('facets_facet');
-    $this->facetSourcePluginManager = $facet_source_plugin_manager;
+  public function __construct(EntityTypeManager $entity_type_manager, ProcessorPluginManager $processor_plugin_manager, WidgetPluginManager $widget_plugin_manager) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->processorPluginManager = $processor_plugin_manager;
+    $this->widgetPluginManager = $widget_plugin_manager;
   }
 
   /**
@@ -60,191 +70,401 @@ class FacetForm extends EntityForm {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
     $entity_type_manager = $container->get('entity_type.manager');
 
-    /** @var \Drupal\facets\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
-    $facet_source_plugin_manager = $container->get('plugin.manager.facets.facet_source');
-
     /** @var \Drupal\facets\Processor\ProcessorPluginManager $processor_plugin_manager */
     $processor_plugin_manager = $container->get('plugin.manager.facets.processor');
 
-    return new static($entity_type_manager, $facet_source_plugin_manager, $processor_plugin_manager);
-  }
+    /** @var \Drupal\facets\Widget\WidgetPluginManager $widget_plugin_manager */
+    $widget_plugin_manager = $container->get('plugin.manager.facets.widget');
 
-  /**
-   * Retrieves the facet storage controller.
-   *
-   * @return \Drupal\Core\Entity\EntityStorageInterface
-   *   The facet storage controller.
-   */
-  protected function getFacetStorage() {
-    return $this->facetStorage ?: \Drupal::service('entity_type.manager')->getStorage('facets_facet');
-  }
-
-  /**
-   * Returns the facet source plugin manager.
-   *
-   * @return \Drupal\facets\FacetSource\FacetSourcePluginManager
-   *   The facet source plugin manager.
-   */
-  protected function getFacetSourcePluginManager() {
-    return $this->facetSourcePluginManager ?: \Drupal::service('plugin.manager.facets.facet_source');
-  }
-
-  /**
-   * Returns the processor plugin manager.
-   *
-   * @return \Drupal\facets\Processor\ProcessorPluginManager
-   *   The processor plugin manager.
-   */
-  protected function getProcessorPluginManager() {
-    return $this->processorPluginManager ?: \Drupal::service('plugin.manager.facets.processor');
+    return new static($entity_type_manager, $processor_plugin_manager, $widget_plugin_manager);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, FormStateInterface $form_state) {
-    // If the form is being rebuilt, rebuild the entity with the current form
-    // values.
-    if ($form_state->isRebuilding()) {
-      $this->entity = $this->buildEntity($form, $form_state);
-    }
-
-    $form = parent::form($form, $form_state);
-
-    // Set the page title according to whether we are creating or editing the
-    // facet.
-    if ($this->getEntity()->isNew()) {
-      $form['#title'] = $this->t('Add facet');
-    }
-    else {
-      $form['#title'] = $this->t('Edit facet %label', ['%label' => $this->getEntity()->label()]);
-    }
-
-    $this->buildEntityForm($form, $form_state, $this->getEntity());
-
-    $form['#attached']['library'][] = 'facets/drupal.facets.edit-facet';
-
-    return $form;
+  public function getBaseFormId() {
+    return NULL;
   }
 
   /**
-   * Builds the form for editing and creating a facet.
+   * Returns the widget plugin manager.
    *
-   * @param \Drupal\facets\FacetInterface $facet
-   *   The facets facet entity that is being created or edited.
+   * @return \Drupal\facets\Widget\WidgetPluginManager
+   *   The widget plugin manager.
    */
-  public function buildEntityForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
-
-    $facet_sources = [];
-    foreach ($this->getFacetSourcePluginManager()->getDefinitions() as $facet_source_id => $definition) {
-      $facet_sources[$definition['id']] = !empty($definition['label']) ? $definition['label'] : $facet_source_id;
-    }
-
-    if (count($facet_sources) == 0) {
-      $form['#markup'] = $this->t('You currently have no facet sources defined. You should start by adding a facet source before creating facets.');
-      return;
-    }
-
-    $form['facet_source_id'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Facet source'),
-      '#description' => $this->t('The source where this facet can find its fields.'),
-      '#options' => $facet_sources,
-      '#default_value' => $facet->getFacetSourceId(),
-      '#required' => TRUE,
-      '#ajax' => [
-        'trigger_as' => ['name' => 'facet_source_configure'],
-        'callback' => '::buildAjaxFacetSourceConfigForm',
-        'wrapper' => 'facets-facet-sources-config-form',
-        'method' => 'replace',
-        'effect' => 'fade',
-      ],
-    ];
-    $form['facet_source_configs'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'id' => 'facets-facet-sources-config-form',
-      ],
-      '#tree' => TRUE,
-    ];
-    $form['facet_source_configure_button'] = [
-      '#type' => 'submit',
-      '#name' => 'facet_source_configure',
-      '#value' => $this->t('Configure facet source'),
-      '#limit_validation_errors' => [['facet_source_id']],
-      '#submit' => ['::submitAjaxFacetSourceConfigForm'],
-      '#ajax' => [
-        'callback' => '::buildAjaxFacetSourceConfigForm',
-        'wrapper' => 'facets-facet-sources-config-form',
-      ],
-      '#attributes' => ['class' => ['js-hide']],
-    ];
-    $this->buildFacetSourceConfigForm($form, $form_state);
-
-    $form['name'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Name'),
-      '#description' => $this->t('The administrative name used for this facet.'),
-      '#default_value' => $facet->label(),
-      '#required' => TRUE,
-    ];
-
-    $form['id'] = [
-      '#type' => 'machine_name',
-      '#default_value' => $facet->id(),
-      '#maxlength' => 50,
-      '#required' => TRUE,
-      '#machine_name' => [
-        'exists' => [$this->getFacetStorage(), 'load'],
-        'source' => ['name'],
-      ],
-    ];
-
-    $form['status'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enabled'),
-      '#description' => $this->t('Only enabled facets can be displayed.'),
-      '#default_value' => $facet->status(),
-    ];
+  protected function getWidgetPluginManager() {
+    return $this->widgetPluginManager ?: \Drupal::service('plugin.manager.facets.widget');
   }
 
   /**
-   * Handles form submissions for the facet source subform.
-   */
-  public function submitAjaxFacetSourceConfigForm($form, FormStateInterface $form_state) {
-    $form_state->setValue('id', NULL);
-    $form_state->setRebuild();
-  }
-
-  /**
-   * Handles changes to the selected facet sources.
-   */
-  public function buildAjaxFacetSourceConfigForm(array $form, FormStateInterface $form_state) {
-    return $form['facet_source_configs'];
-  }
-
-  /**
-   * Builds the configuration forms for all possible facet sources.
+   * Builds the configuration forms for all selected widgets.
    *
    * @param array $form
    *   An associative array containing the initial structure of the plugin form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the complete form.
    */
-  public function buildFacetSourceConfigForm(array &$form, FormStateInterface $form_state) {
-    $facet_source_id = $this->getEntity()->getFacetSourceId();
+  public function buildWidgetConfigForm(array &$form, FormStateInterface $form_state) {
+    $widget = $form_state->getValue('widget') ?: $this->entity->getWidget();
 
-    if (!is_null($facet_source_id) && $facet_source_id !== '') {
-      /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
-      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
+    if (!is_null($widget) && $widget !== '') {
+      $widget_instance = $this->getWidgetPluginManager()->createInstance($widget);
+      // @todo Create, use and save SubFormState already here, not only in
+      //   validate(). Also, use proper subset of $form for first parameter?
+      $config = $this->config('facets.facet.' . $this->entity->id());
+      if ($config_form = $widget_instance->buildConfigurationForm([], $form_state, ($config instanceof Config) ? $config : NULL)) {
+        $form['widget_configs']['#type'] = 'fieldset';
+        $form['widget_configs']['#title'] = $this->t('%widget settings', ['%widget' => $this->getWidgetPluginManager()->getDefinition($widget)['label']]);
 
-      if ($config_form = $facet_source->buildConfigurationForm([], $form_state)) {
-        $form['facet_source_configs'][$facet_source_id]['#type'] = 'container';
-        $form['facet_source_configs'][$facet_source_id]['#attributes'] = ['class' => ['facet-source-field-wrapper']];
-        $form['facet_source_configs'][$facet_source_id]['#title'] = $this->t('%plugin settings', ['%plugin' => $facet_source->getPluginDefinition()['label']]);
-        $form['facet_source_configs'][$facet_source_id] += $config_form;
+        $form['widget_configs'] += $config_form;
+      }
+      else {
+        $form['widget_configs']['#type'] = 'container';
+        $form['widget_configs']['#open'] = TRUE;
+        $form['widget_configs']['widget_information_dummy'] = [
+          '#type' => 'hidden',
+          '#value' => '1',
+          '#default_value' => '1',
+        ];
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function form(array $form, FormStateInterface $form_state) {
+    $form['#attached']['library'][] = 'facets/drupal.facets.admin_css';
+
+    /** @var \Drupal\facets\FacetInterface $facet */
+    $facet = $this->entity;
+
+    $widget_options = [];
+    foreach ($this->getWidgetPluginManager()->getDefinitions() as $widget_id => $definition) {
+      $widget_options[$widget_id] = !empty($definition['label']) ? $definition['label'] : $widget_id;
+    }
+    $form['widget'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Widget'),
+      '#description' => $this->t('The widget used for displaying this facet.'),
+      '#options' => $widget_options,
+      '#default_value' => $facet->getWidget(),
+      '#required' => TRUE,
+      '#ajax' => [
+        'trigger_as' => ['name' => 'widget_configure'],
+        'callback' => '::buildAjaxWidgetConfigForm',
+        'wrapper' => 'facets-widget-config-form',
+        'method' => 'replace',
+        'effect' => 'fade',
+      ],
+    ];
+    $form['widget_configs'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'facets-widget-config-form',
+      ],
+      '#tree' => TRUE,
+    ];
+    $form['widget_configure_button'] = [
+      '#type' => 'submit',
+      '#name' => 'widget_configure',
+      '#value' => $this->t('Configure widget'),
+      '#limit_validation_errors' => [['widget']],
+      '#submit' => ['::submitAjaxWidgetConfigForm'],
+      '#ajax' => [
+        'callback' => '::buildAjaxWidgetConfigForm',
+        'wrapper' => 'facets-widget-config-form',
+      ],
+      '#attributes' => ['class' => ['js-hide']],
+    ];
+    $this->buildWidgetConfigForm($form, $form_state);
+
+    // Retrieve lists of all processors, and the stages and weights they have.
+    if (!$form_state->has('processors')) {
+      $all_processors = $facet->getProcessors(FALSE);
+      $sort_processors = function (ProcessorInterface $a, ProcessorInterface $b) {
+        return strnatcasecmp((string) $a->getPluginDefinition()['label'], (string) $b->getPluginDefinition()['label']);
+      };
+      uasort($all_processors, $sort_processors);
+    }
+    else {
+      $all_processors = $form_state->get('processors');
+    }
+    $enabled_processors = $facet->getProcessors(TRUE);
+
+    $stages = $this->processorPluginManager->getProcessingStages();
+    $processors_by_stage = array();
+    foreach ($stages as $stage => $definition) {
+      $processors_by_stage[$stage] = $facet->getProcessorsByStage($stage, FALSE);
+    }
+
+    $form['#tree'] = TRUE;
+    $form['#attached']['library'][] = 'facets/drupal.facets.index-active-formatters';
+    $form['#title'] = $this->t('Edit %label facet', array('%label' => $facet->label()));
+
+    // Add the list of all other processors with checkboxes to enable/disable
+    // them.
+    $form['facet_settings'] = array(
+      '#type' => 'fieldset',
+      '#title' => $this->t('Facet settings'),
+      '#attributes' => array(
+        'class' => array(
+          'search-api-status-wrapper',
+        ),
+      ),
+    );
+    foreach ($all_processors as $processor_id => $processor) {
+      if (!($processor instanceof WidgetOrderProcessorInterface) && !($processor instanceof UrlProcessorInterface)) {
+        $clean_css_id = Html::cleanCssIdentifier($processor_id);
+        $form['facet_settings'][$processor_id]['status'] = array(
+          '#type' => 'checkbox',
+          '#title' => (string) $processor->getPluginDefinition()['label'],
+          '#default_value' => $processor->isLocked() || !empty($enabled_processors[$processor_id]),
+          '#description' => $processor->getDescription(),
+          '#attributes' => array(
+            'class' => array(
+              'search-api-processor-status-' . $clean_css_id,
+            ),
+            'data-id' => $clean_css_id,
+          ),
+          '#disabled' => $processor->isLocked(),
+          '#access' => !$processor->isHidden(),
+        );
+
+        $processor_form_state = new SubFormState(
+          $form_state,
+          ['facet_settings', $processor_id, 'settings']
+        );
+        $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facet);
+        if ($processor_form) {
+          $form['facet_settings'][$processor_id]['settings'] = array(
+            '#type' => 'details',
+            '#title' => $this->t('%processor settings', ['%processor' => (string) $processor->getPluginDefinition()['label']]),
+            '#open' => TRUE,
+            '#attributes' => array(
+              'class' => array(
+                'facets-processor-settings-' . Html::cleanCssIdentifier($processor_id),
+                'facets-processor-settings-facet',
+                'facets-processor-settings',
+              ),
+            ),
+            '#states' => array(
+              'visible' => array(
+                ':input[name="facet_settings[' . $processor_id . '][status]"]' => array('checked' => TRUE),
+              ),
+            ),
+          );
+          $form['facet_settings'][$processor_id]['settings'] += $processor_form;
+        }
+      }
+    }
+    // Add the list of widget sort processors with checkboxes to enable/disable
+    // them.
+    $form['facet_sorting'] = array(
+      '#type' => 'fieldset',
+      '#title' => $this->t('Facet sorting'),
+      '#attributes' => array(
+        'class' => array(
+          'search-api-status-wrapper',
+        ),
+      ),
+    );
+    foreach ($all_processors as $processor_id => $processor) {
+      if ($processor instanceof WidgetOrderProcessorInterface) {
+        $clean_css_id = Html::cleanCssIdentifier($processor_id);
+        $form['facet_sorting'][$processor_id]['status'] = array(
+          '#type' => 'checkbox',
+          '#title' => (string) $processor->getPluginDefinition()['label'],
+          '#default_value' => $processor->isLocked() || !empty($enabled_processors[$processor_id]),
+          '#description' => $processor->getDescription(),
+          '#attributes' => array(
+            'class' => array(
+              'search-api-processor-status-' . $clean_css_id,
+            ),
+            'data-id' => $clean_css_id,
+          ),
+          '#disabled' => $processor->isLocked(),
+          '#access' => !$processor->isHidden(),
+        );
+
+        $processor_form_state = new SubFormState(
+          $form_state,
+          array('facet_sorting', $processor_id, 'settings')
+        );
+        $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facet);
+        if ($processor_form) {
+          $form['facet_sorting'][$processor_id]['settings'] = array(
+            '#type' => 'container',
+            '#open' => TRUE,
+            '#attributes' => array(
+              'class' => array(
+                'facets-processor-settings-' . Html::cleanCssIdentifier($processor_id),
+                'facets-processor-settings-sorting',
+                'facets-processor-settings',
+              ),
+            ),
+            '#states' => array(
+              'visible' => array(
+                ':input[name="facet_sorting[' . $processor_id . '][status]"]' => array('checked' => TRUE),
+              ),
+            ),
+          );
+          $form['facet_sorting'][$processor_id]['settings'] += $processor_form;
+        }
+      }
+    }
+
+    $form['facet_settings']['only_visible_when_facet_source_is_visible'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Hide facet when facet source is not rendered'),
+      '#description' => $this->t('When checked, this facet will only be rendered when the facet source is rendered.  If you want to show facets on other pages too, you need to uncheck this setting.'),
+      '#default_value' => $facet->getOnlyVisibleWhenFacetSourceIsVisible(),
+    ];
+
+    $form['facet_settings']['show_only_one_result'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Make sure only one result can be shown.'),
+      '#description' => $this->t('When checked, this will make sure that only one result can be selected for this facet at one time.'),
+      '#default_value' => $facet->getShowOnlyOneResult(),
+    ];
+
+    $form['facet_settings']['url_alias'] = [
+      '#type' => 'machine_name',
+      '#title' => $this->t('Url alias'),
+      '#default_value' => $facet->getUrlAlias(),
+      '#maxlength' => 50,
+      '#required' => TRUE,
+      '#machine_name' => [
+        'exists' => [\Drupal::service('entity_type.manager')->getStorage('facets_facet'), 'load'],
+        'source' => ['name'],
+      ],
+    ];
+
+    $empty_behavior_config = $facet->getEmptyBehavior();
+    $form['facet_settings']['empty_behavior'] = [
+      '#type' => 'radios',
+      '#title' => t('Empty facet behavior'),
+      '#default_value' => $empty_behavior_config['behavior'] ?: 'none',
+      '#options' => ['none' => t('Do not display facet'), 'text' => t('Display text')],
+      '#description' => $this->t('The action to take when a facet has no items.'),
+      '#required' => TRUE,
+    ];
+    $form['facet_settings']['empty_behavior_container'] = [
+      '#type' => 'container',
+      '#states' => array(
+        'visible' => array(
+          ':input[name="facet_settings[empty_behavior]"]' => array('value' => 'text'),
+        ),
+      ),
+    ];
+    $form['facet_settings']['empty_behavior_container']['empty_behavior_text'] = [
+      '#type' => 'text_format',
+      '#title' => $this->t('Empty text'),
+      '#format' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text_format'] : 'plain_text',
+      '#editor' => TRUE,
+      '#default_value' => isset($empty_behavior_config['text_format']) ? $empty_behavior_config['text'] : '',
+    ];
+
+    $form['facet_settings']['query_operator'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Operator'),
+      '#options' => ['OR' => $this->t('OR'), 'AND' => $this->t('AND')],
+      '#description' => $this->t('AND filters are exclusive and narrow the result set. OR filters are inclusive and widen the result set.'),
+      '#default_value' => $facet->getQueryOperator(),
+    ];
+
+    $form['facet_settings']['exclude'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Exclude'),
+      '#description' => $this->t('Make the search exclude selected facets, instead of restricting it to them.'),
+      '#default_value' => $facet->getExclude(),
+    ];
+
+    $form['facet_settings']['weight'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Weight'),
+      '#default_value' => $facet->getWeight(),
+      '#maxlength' => 4,
+      '#required' => TRUE,
+    ];
+
+    $form['weights'] = array(
+      '#type' => 'details',
+      '#title' => t('Advanced settings'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+    );
+
+    $form['weights']['order'] = ['#markup' => "<h3>" . t('Processor order') . "</h3>"];
+
+    // Order enabled processors per stage, create all the containers for the
+    // different stages.
+    foreach ($stages as $stage => $description) {
+      $form['weights'][$stage] = array(
+        '#type' => 'fieldset',
+        '#title' => $description['label'],
+        '#attributes' => array(
+          'class' => array(
+            'search-api-stage-wrapper',
+            'search-api-stage-wrapper-' . Html::cleanCssIdentifier($stage),
+          ),
+        ),
+      );
+      $form['weights'][$stage]['order'] = array(
+        '#type' => 'table',
+      );
+      $form['weights'][$stage]['order']['#tabledrag'][] = array(
+        'action' => 'order',
+        'relationship' => 'sibling',
+        'group' => 'search-api-processor-weight-' . Html::cleanCssIdentifier($stage),
+      );
+    }
+
+    $processor_settings = $facet->getProcessorConfigs();
+
+    // Fill in the containers previously created with the processors that are
+    // enabled on the facet.
+    foreach ($processors_by_stage as $stage => $processors) {
+      /** @var \Drupal\facets\Processor\ProcessorInterface $processor */
+      foreach ($processors as $processor_id => $processor) {
+        $weight = isset($processor_settings[$processor_id]['weights'][$stage])
+          ? $processor_settings[$processor_id]['weights'][$stage]
+          : $processor->getDefaultWeight($stage);
+        if ($processor->isHidden()) {
+          $form['processors'][$processor_id]['weights'][$stage] = array(
+            '#type' => 'value',
+            '#value' => $weight,
+          );
+          continue;
+        }
+        $form['weights'][$stage]['order'][$processor_id]['#attributes']['class'][] = 'draggable';
+        $form['weights'][$stage]['order'][$processor_id]['#attributes']['class'][] = 'search-api-processor-weight--' . Html::cleanCssIdentifier($processor_id);
+        $form['weights'][$stage]['order'][$processor_id]['#weight'] = $weight;
+        $form['weights'][$stage]['order'][$processor_id]['label']['#plain_text'] = (string) $processor->getPluginDefinition()['label'];
+        $form['weights'][$stage]['order'][$processor_id]['weight'] = array(
+          '#type' => 'weight',
+          '#title' => $this->t('Weight for processor %title', array('%title' => (string) $processor->getPluginDefinition()['label'])),
+          '#title_display' => 'invisible',
+          '#default_value' => $weight,
+          '#parents' => array('processors', $processor_id, 'weights', $stage),
+          '#attributes' => array(
+            'class' => array(
+              'search-api-processor-weight-' . Html::cleanCssIdentifier($stage),
+            ),
+          ),
+        );
+      }
+    }
+
+    // Add vertical tabs containing the settings for the processors. Tabs for
+    // disabled processors are hidden with JS magic, but need to be included in
+    // case the processor is enabled.
+    $form['processor_settings'] = array(
+      '#title' => $this->t('Processor settings'),
+      '#type' => 'vertical_tabs',
+    );
+
+    return $form;
   }
 
   /**
@@ -253,11 +473,32 @@ class FacetForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    $facet_source_id = $form_state->getValue('facet_source_id');
-    if (!is_null($facet_source_id) && $facet_source_id !== '') {
-      /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
-      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
-      $facet_source->validateConfigurationForm($form, $form_state);
+    /** @var \Drupal\facets\FacetInterface $facet */
+    $facet = $this->entity;
+
+    $values = $form_state->getValues();
+    /** @var \Drupal\facets\Processor\ProcessorInterface[] $processors */
+    $processors = $facet->getProcessors(FALSE);
+
+    // Iterate over all processors that have a form and are enabled.
+    foreach ($form['facet_settings'] as $processor_id => $processor_form) {
+      if (!empty($values['processors'][$processor_id])) {
+        $processor_form_state = new SubFormState(
+          $form_state,
+          array('facet_settings', $processor_id, 'settings')
+        );
+        $processors[$processor_id]->validateConfigurationForm($form['facet_settings'][$processor_id], $processor_form_state, $facet);
+      }
+    }
+    // Iterate over all sorting processors that have a form and are enabled.
+    foreach ($form['facet_sorting'] as $processor_id => $processor_form) {
+      if (!empty($values['processors'][$processor_id])) {
+        $processor_form_state = new SubFormState(
+          $form_state,
+          array('facet_sorting', $processor_id, 'settings')
+        );
+        $processors[$processor_id]->validateConfigurationForm($form['facet_sorting'][$processor_id], $processor_form_state, $facet);
+      }
     }
   }
 
@@ -265,96 +506,99 @@ class FacetForm extends EntityForm {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
+    $values = $form_state->getValues();
 
+    // Store processor settings.
+    // @todo Go through all available processors, enable/disable with method on
+    //   processor plugin to allow reaction.
     /** @var \Drupal\facets\FacetInterface $facet */
-    $facet = $this->getEntity();
-    $is_new = $facet->isNew();
-    if ($is_new) {
-      // On facet creation, enable all locked processors by default, using their
-      // default settings.
-      $stages = $this->getProcessorPluginManager()->getProcessingStages();
-      $processors_definitions = $this->getProcessorPluginManager()->getDefinitions();
+    $facet = $this->entity;
 
-      foreach ($processors_definitions as $processor_id => $processor) {
-        if (isset($processor['locked']) && $processor['locked'] == TRUE) {
-          $weights = [];
-          foreach ($stages as $stage_id => $stage) {
-            if (isset($processor['stages'][$stage_id])) {
-              $weights[$stage_id] = $processor['stages'][$stage_id];
-            }
-          }
-          $facet->addProcessor([
-            'processor_id' => $processor_id,
-            'weights' => $weights,
-            'settings' => [],
-          ]);
-        }
+    /** @var \Drupal\facets\Processor\ProcessorInterface $processor */
+    $processors = $facet->getProcessors(FALSE);
+    foreach ($processors as $processor_id => $processor) {
+      $form_container_key = $processor instanceof WidgetOrderProcessorInterface ? 'facet_sorting' : 'facet_settings';
+      if (empty($values[$form_container_key][$processor_id]['status'])) {
+        $facet->removeProcessor($processor_id);
+        continue;
       }
-
-      // Set a default widget for new facets.
-      $facet->setWidget('links');
-      $facet->setUrlAlias($form_state->getValue('id'));
-      $facet->setWeight(0);
-
-      // Set default empty behaviour.
-      $facet->setEmptyBehavior(['behavior' => 'none']);
-      $facet->setOnlyVisibleWhenFacetSourceIsVisible(TRUE);
+      $new_settings = array(
+        'processor_id' => $processor_id,
+        'weights' => array(),
+        'settings' => array(),
+      );
+      if (!empty($values['processors'][$processor_id]['weights'])) {
+        $new_settings['weights'] = $values['processors'][$processor_id]['weights'];
+      }
+      if (isset($form[$form_container_key][$processor_id]['settings'])) {
+        $processor_form_state = new SubFormState(
+          $form_state,
+          array($form_container_key, $processor_id, 'settings')
+        );
+        $processor->submitConfigurationForm($form[$form_container_key][$processor_id]['settings'], $processor_form_state, $facet);
+        $new_settings['settings'] = $processor->getConfiguration();
+      }
+      $facet->addProcessor($new_settings);
     }
 
-    $facet_source_id = $form_state->getValue('facet_source_id');
-    if (!is_null($facet_source_id) && $facet_source_id !== '') {
-      /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
-      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
-      $facet_source->submitConfigurationForm($form, $form_state);
+    $facet->setWidget($form_state->getValue('widget'));
+    $facet->setUrlAlias($form_state->getValue(['facet_settings', 'url_alias']));
+    $facet->setWeight((int) $form_state->getValue(['facet_settings', 'weight']));
+    $facet->setWidgetConfigs($form_state->getValue('widget_configs'));
+    $facet->setOnlyVisibleWhenFacetSourceIsVisible($form_state->getValue(['facet_settings', 'only_visible_when_facet_source_is_visible']));
+    $facet->setShowOnlyOneResult($form_state->getValue(['facet_settings', 'show_only_one_result']));
+
+    $empty_behavior_config = [];
+    $empty_behavior = $form_state->getValue(['facet_settings', 'empty_behavior']);
+    $empty_behavior_config['behavior'] = $empty_behavior;
+    if ($empty_behavior == 'text') {
+      $empty_behavior_config['text_format'] = $form_state->getValue([
+        'facet_settings',
+        'empty_behavior_container',
+        'empty_behavior_text',
+        'format',
+      ]);
+      $empty_behavior_config['text'] = $form_state->getValue([
+        'facet_settings',
+        'empty_behavior_container',
+        'empty_behavior_text',
+        'value',
+      ]);
     }
+    $facet->setEmptyBehavior($empty_behavior_config);
+
+    $facet->setQueryOperator($form_state->getValue(['facet_settings', 'query_operator']));
+
+    $facet->setExclude($form_state->getValue(['facet_settings', 'exclude']));
+
     $facet->save();
+    drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
+  }
 
-    // Ensure that the caching of the view display is disabled, so the search
-    // correctly returns the facets. Only apply this when the facet source is
-    // actually a view by exploding on :.
-    list($type,) = explode(':', $facet_source_id);
+  /**
+   * Handles form submissions for the widget subform.
+   */
+  public function submitAjaxWidgetConfigForm($form, FormStateInterface $form_state) {
+    $form_state->setRebuild();
+  }
 
-    if ($type === 'search_api_views') {
-      list(, $view_id, $display) = explode(':', $facet_source_id);
-    }
-
-    if (isset($view_id)) {
-      $view = Views::getView($view_id);
-      $view->setDisplay($display);
-      $view->display_handler->overrideOption('cache', ['type' => 'none']);
-      $view->save();
-
-      $display_plugin = $view->getDisplay()->getPluginId();
-    }
-
-    if ($is_new) {
-      if (\Drupal::moduleHandler()->moduleExists('block')) {
-        $message = $this->t('Facet %name has been created. Go to the <a href=":block_overview">Block overview page</a> to place the new block in the desired region.', ['%name' => $facet->getName(), ':block_overview' => \Drupal::urlGenerator()->generateFromRoute('block.admin_display')]);
-        drupal_set_message($message);
-        $form_state->setRedirect('entity.facets_facet.display_form', ['facets_facet' => $facet->id()]);
-      }
-
-      if (isset($view_id) && $display_plugin === 'block') {
-        $facet->setOnlyVisibleWhenFacetSourceIsVisible(FALSE);
-      }
-    }
-    else {
-      drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
-      $form_state->setRedirect('entity.facets_facet.edit_form', ['facets_facet' => $facet->id()]);
-    }
-
-    // Clear Drupal cache for blocks to reflect recent changes.
-    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
-
-    return $facet;
+  /**
+   * Handles changes to the selected widgets.
+   */
+  public function buildAjaxWidgetConfigForm(array $form, FormStateInterface $form_state) {
+    return $form['widget_configs'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function delete(array $form, FormStateInterface $form_state) {
-    $form_state->setRedirect('entity.facets_facet.delete_form', ['facets_facet' => $this->getEntity()->id()]);
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $actions = parent::actions($form, $form_state);
+
+    // We don't have a "delete" action here.
+    unset($actions['delete']);
+
+    return $actions;
   }
 
 }

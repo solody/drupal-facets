@@ -36,11 +36,11 @@ class FacetListBuilder extends ConfigEntityListBuilder {
           'url' => $entity->toUrl('edit-form'),
         );
       }
-      if ($entity->access('update') && $entity->hasLinkTemplate('display-form')) {
-        $operations['display'] = array(
-          'title' => $this->t('Display'),
+      if ($entity->access('update') && $entity->hasLinkTemplate('settings-form')) {
+        $operations['settings'] = array(
+          'title' => $this->t('Facet settings'),
           'weight' => 20,
-          'url' => $entity->toUrl('display-form'),
+          'url' => $entity->toUrl('settings-form'),
         );
       }
       if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {

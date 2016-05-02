@@ -35,10 +35,10 @@ entity.facets_facet.delete_form:
   requirements:
     _entity_access: 'facets_facet.delete'
 
-entity.facets_facet.display_form:
-  path: '/admin/config/search/facets/{facets_facet}/display'
+entity.facets_facet.settings_form:
+  path: '/admin/config/search/facets/{facets_facet}/settings'
   defaults:
-    _entity_form: 'facets_facet.display'
+    _entity_form: 'facets_facet.settings'
   requirements:
     _entity_access: 'facets_facet.edit'
 

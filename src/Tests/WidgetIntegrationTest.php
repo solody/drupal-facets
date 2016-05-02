@@ -232,7 +232,7 @@ class WidgetIntegrationTest extends WebTestBase {
     $id = 'links_widget';
     $name = '>.Facet &* Links';
     $facet_add_page = 'admin/config/search/facets/add-facet';
-    $facet_edit_page = 'admin/config/search/facets/' . $id . '/display';
+    $facet_edit_page = 'admin/config/search/facets/' . $id . '/edit';
 
     $this->drupalGet($facet_add_page);
 

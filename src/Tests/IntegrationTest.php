@@ -182,20 +182,17 @@ class IntegrationTest extends WebTestBase {
     // Add a new facet.
     $this->addFacet($facet_name);
 
-    $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/edit';
+    $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/settings';
 
     // Go to the facet edit page and make sure "edit facet %facet" is present.
     $this->drupalGet($facet_edit_page);
     $this->assertResponse(200);
-    $this->assertRaw($this->t('Edit facet @facet', ['@facet' => $facet_name]));
+    $this->assertRaw($this->t('Facet settings for @facet facet', ['@facet' => $facet_name]));
 
     // Change the machine name to a new name and check that the redirected page
     // is the correct url.
     $form = ['id' => $new_facet_id];
     $this->drupalPostForm($facet_edit_page, $form, $this->t('Save'));
-
-    $expected_url = '/admin/config/search/facets/' . $new_facet_id . '/edit';
-    $this->assertUrl($expected_url);
   }
 
   /**
@@ -210,7 +207,6 @@ class IntegrationTest extends WebTestBase {
 
     $facet_add_page = '/admin/config/search/facets/add-facet';
     $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/edit';
-    $facet_display_page = '/admin/config/search/facets/' . $facet_id . '/display';
 
     $this->drupalGet($facet_add_page);
     $this->assertResponse(200);
@@ -236,7 +232,7 @@ class IntegrationTest extends WebTestBase {
     $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'ab_facet:item']]);
     $this->assertUrl($url);
 
-    $this->drupalGet($facet_display_page);
+    $this->drupalGet($facet_edit_page);
     $this->drupalPostForm(NULL, ['facet_settings[url_alias]' => 'llama'], $this->t('Save'));
 
     $this->drupalGet('search-api-test-fulltext');
@@ -336,7 +332,7 @@ class IntegrationTest extends WebTestBase {
   public function testAndOrFacet() {
     $facet_name = 'test & facet';
     $facet_id = 'test_facet';
-    $facet_edit_page = 'admin/config/search/facets/' . $facet_id . '/display';
+    $facet_edit_page = 'admin/config/search/facets/' . $facet_id . '/edit';
 
     $this->drupalLogin($this->adminUser);
     $this->addFacet($facet_name);
@@ -412,7 +408,7 @@ class IntegrationTest extends WebTestBase {
   public function testExcludeFacet() {
     $facet_name = 'test & facet';
     $facet_id = 'test_facet';
-    $facet_edit_page = 'admin/config/search/facets/' . $facet_id . '/display';
+    $facet_edit_page = 'admin/config/search/facets/' . $facet_id . '/edit';
 
     $this->addFacet($facet_name);
     $this->createFacetBlock($facet_id);
@@ -463,7 +459,7 @@ class IntegrationTest extends WebTestBase {
     $this->addFacet($facet_name, 'keywords');
     $this->createFacetBlock($facet_id);
 
-    $this->drupalGet($facet_edit_page . '/display');
+    $this->drupalGet($facet_edit_page . '/edit');
     $edit = ['facet_settings[show_only_one_result]' => TRUE];
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
 
@@ -554,7 +550,7 @@ class IntegrationTest extends WebTestBase {
   protected function setEmptyBehaviorFacetText($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
-    $facet_display_page = '/admin/config/search/facets/' . $facet_id . '/display';
+    $facet_display_page = '/admin/config/search/facets/' . $facet_id . '/edit';
 
     // Go to the facet edit page and make sure "edit facet %facet" is present.
     $this->drupalGet($facet_display_page);
@@ -578,8 +574,8 @@ class IntegrationTest extends WebTestBase {
   protected function setOptionShowOnlyWhenFacetSourceVisible($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
-    $facet_display_page = '/admin/config/search/facets/' . $facet_id . '/display';
-    $this->drupalGet($facet_display_page);
+    $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/edit';
+    $this->drupalGet($facet_edit_page);
     $this->assertResponse(200);
 
     $edit = [
@@ -657,7 +653,7 @@ class IntegrationTest extends WebTestBase {
 
     // Make sure that the redirection to the display page is correct.
     $this->assertRaw(t('Facet %name has been created.', ['%name' => $facet_name]));
-    $this->assertUrl('admin/config/search/facets/' . $facet_id . '/display');
+    $this->assertUrl('admin/config/search/facets/' . $facet_id . '/edit');
 
     $this->drupalGet('admin/config/search/facets');
   }
@@ -704,12 +700,12 @@ class IntegrationTest extends WebTestBase {
   protected function editFacet($facet_name) {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
-    $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/edit';
+    $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/settings';
 
     // Go to the facet edit page and make sure "edit facet %facet" is present.
     $this->drupalGet($facet_edit_page);
     $this->assertResponse(200);
-    $this->assertRaw($this->t('Edit facet @facet', ['@facet' => $facet_name]));
+    $this->assertRaw($this->t('Facet settings for @facet facet', ['@facet' => $facet_name]));
 
     // Change the facet name to add in "-2" to test editing of a facet works.
     $form_values = ['name' => $facet_name . ' - 2'];
@@ -721,7 +717,7 @@ class IntegrationTest extends WebTestBase {
 
     // Make sure the "-2" suffix is still on the facet when editing a facet.
     $this->drupalGet($facet_edit_page);
-    $this->assertRaw($this->t('Edit facet @facet', ['@facet' => $facet_name . ' - 2']));
+    $this->assertRaw($this->t('Facet settings for @facet facet', ['@facet' => $facet_name . ' - 2']));
 
     // Edit the form and change the facet's name back to the initial name.
     $form_values = ['name' => $facet_name];

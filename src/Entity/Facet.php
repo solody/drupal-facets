@@ -15,9 +15,9 @@ use Drupal\facets\FacetInterface;
  *     "storage" = "Drupal\Core\Config\Entity\ConfigEntityStorage",
  *     "list_builder" = "Drupal\facets\FacetListBuilder",
  *     "form" = {
- *       "default" = "Drupal\facets\Form\FacetForm",
+ *       "default" = "Drupal\facets\Form\FacetSettingsForm",
  *       "edit" = "Drupal\facets\Form\FacetForm",
- *       "display" = "Drupal\facets\Form\FacetDisplayForm",
+ *       "settings" = "Drupal\facets\Form\FacetSettingsForm",
  *       "delete" = "Drupal\facets\Form\FacetDeleteConfirmForm",
  *     },
  *   },
@@ -52,7 +52,7 @@ use Drupal\facets\FacetInterface;
  *     "canonical" = "/admin/config/search/facets",
  *     "add-form" = "/admin/config/search/facets/add-facet",
  *     "edit-form" = "/admin/config/search/facets/{facets_facet}/edit",
- *     "display-form" = "/admin/config/search/facets/{facets_facet}/display",
+ *     "settings-form" = "/admin/config/search/facets/{facets_facet}/settings",
  *     "delete-form" = "/admin/config/search/facets/{facets_facet}/delete",
  *   }
  * )

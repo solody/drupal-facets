@@ -43,7 +43,7 @@ class ProcessorIntegrationTest extends WebTestBase {
 
     // Go to the processors form and check that the count limit processor is not
     // checked.
-    $this->drupalGet('admin/config/search/facets/' . $facet_id . '/display');
+    $this->drupalGet('admin/config/search/facets/' . $facet_id . '/edit');
     $this->assertNoFieldChecked('edit-facet-settings-count-limit-status');
 
     $form = ['facet_settings[count_limit][status]' => TRUE];
@@ -94,7 +94,7 @@ class ProcessorIntegrationTest extends WebTestBase {
   public function testProcessorIntegration() {
     $facet_name = "Vicuña";
     $facet_id = "vicuna";
-    $this->editForm = 'admin/config/search/facets/' . $facet_id . '/display';
+    $this->editForm = 'admin/config/search/facets/' . $facet_id . '/edit';
 
     $this->createFacet($facet_name, $facet_id, 'keywords');
     $this->createFacetBlock($facet_id);
@@ -119,7 +119,7 @@ class ProcessorIntegrationTest extends WebTestBase {
   public function testSortingWidgets() {
     $facet_name = "Huacaya alpaca";
     $facet_id = "huacaya_alpaca";
-    $this->editForm = 'admin/config/search/facets/' . $facet_id . '/display';
+    $this->editForm = 'admin/config/search/facets/' . $facet_id . '/edit';
 
     $this->createFacet($facet_name, $facet_id, 'keywords');
     $this->createFacetBlock($facet_id);
