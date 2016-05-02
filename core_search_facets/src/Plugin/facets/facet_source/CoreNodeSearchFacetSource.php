@@ -211,7 +211,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
     /** @var \Drupal\Field\FieldConfigInterface $field */
     foreach ($fields as $field) {
       // Verify if the target type is allowed for entity reference fields,
-      // otherwise verify the field type(i.e. integer, float...).
+      // otherwise verify the field type (that is, integer, float...).
       $target_is_allowed = in_array($field->getFieldStorageDefinition()->getSetting('target_type'), $allowed_field_types);
       $field_is_allowed = in_array($field->getFieldStorageDefinition()->getType(), $allowed_field_types);
       if ($target_is_allowed || $field_is_allowed) {

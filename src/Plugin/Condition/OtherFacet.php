@@ -66,8 +66,8 @@ class OtherFacet extends ConditionPluginBase implements ContainerFactoryPluginIn
    * @param \Drupal\facets\FacetManager\DefaultFacetManager $facet_manager
    *   The default facet manager class.
    * @param array $configuration
-   *   The plugin configuration, i.e. an array with configuration values keyed
-   *   by configuration option name. The special key 'context' may be used to
+   *   The plugin configuration, an array with configuration values keyed by
+   *   configuration option name. The special key 'context' may be used to
    *   initialize the defined contexts by setting it to an array of context
    *   values keyed by context names.
    * @param string $plugin_id

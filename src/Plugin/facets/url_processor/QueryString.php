@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @FacetsUrlProcessor(
  *   id = "query_string",
  *   label = @Translation("Query string"),
- *   description = @Translation("Query string is the default Facets URL processor, and uses GET parameters, e.g. ?f[0]=brand:drupal&f[1]=color:blue")
+ *   description = @Translation("Query string is the default Facets URL processor, and uses GET parameters, for example ?f[0]=brand:drupal&f[1]=color:blue")
  * )
  */
 class QueryString extends UrlProcessorPluginBase {
