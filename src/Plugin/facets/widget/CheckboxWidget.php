@@ -2,11 +2,8 @@
 
 namespace Drupal\facets\Plugin\facets\widget;
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facets\FacetInterface;
-use Drupal\facets\Form\CheckboxWidgetForm;
-use Drupal\facets\Widget\WidgetInterface;
+use Drupal\facets\Result\ResultInterface;
 
 /**
  * The checkbox / radios widget.
@@ -17,44 +14,61 @@ use Drupal\facets\Widget\WidgetInterface;
  *   description = @Translation("A configurable widget that shows a list of checkboxes"),
  * )
  */
-class CheckboxWidget implements WidgetInterface {
+class CheckboxWidget extends LinksWidget {
 
-  use StringTranslationTrait;
+  /**
+   * The facet the widget is being built for.
+   *
+   * @var \Drupal\facets\FacetInterface
+   */
+  protected $facet;
 
   /**
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet) {
-    $form_builder = \Drupal::getContainer()->get('form_builder');
-    $form_object = new CheckboxWidgetForm($facet);
-    return $form_builder->getForm($form_object);
-  }
+    $this->facet = $facet;
 
-  /**
-   * {@inheritdoc}
-   */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state, $config) {
+    /** @var \Drupal\facets\Result\Result[] $results */
+    $results = $facet->getResults();
+    $items = [];
 
-    $form['show_numbers'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Show the amount of results'),
-    ];
+    $configuration = $facet->getWidgetConfigs();
+    $this->showNumbers = empty($configuration['show_numbers']) ? FALSE : (bool) $configuration['show_numbers'];
 
-    if (!is_null($config)) {
-      $widget_configs = $config->get('widget_configs');
-      if (isset($widget_configs['show_numbers'])) {
-        $form['show_numbers']['#default_value'] = $widget_configs['show_numbers'];
+    foreach ($results as $result) {
+      if (is_null($result->getUrl())) {
+        $text = $this->extractText($result);
+        $items[] = ['#markup' => $text];
+      }
+      else {
+        $items[] = $this->buildListItems($result);
       }
     }
 
-    return $form;
+    $build = [
+      '#theme' => 'item_list',
+      '#items' => $items,
+      '#attributes' => ['class' => ['js-facets-checkbox-links']],
+      '#cache' => [
+        'contexts' => [
+          'url.path',
+          'url.query_args',
+        ],
+      ],
+    ];
+    $build['#attached']['library'][] = 'facets/drupal.facets.checkbox-widget';
+
+    return $build;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getQueryType($query_types) {
-    return $query_types['string'];
+  protected function buildListItems(ResultInterface $result) {
+    $items = parent::buildListItems($result);
+    $items['#attributes']['data-facet-id'] = $this->facet->getUrlAlias() . '-' . $result->getRawValue();
+    return $items;
   }
 
 }

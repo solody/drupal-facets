@@ -14,10 +14,17 @@ drupal.facets.edit-facet:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/jquery.once
 
 drupal.facets.admin_css:
   version: VERSION
   css:
     theme:
       css/facets.admin.css: {}
+
+drupal.facets.checkbox-widget:
+  version: VERSION
+  js:
+    js/checkbox-widget.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal

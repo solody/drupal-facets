@@ -2,12 +2,12 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\widget\CheckboxWidget;
 use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Unit test for widget.
@@ -49,35 +49,63 @@ class CheckboxWidgetTest extends UnitTestCase {
     }
     $this->originalResults = $original_results;
 
-    $form_builder = $this->getMockBuilder('\Drupal\Core\Form\FormBuilder')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $form_builder->expects($this->once())
-      ->method('getForm')
-      ->willReturn('build');
-
-    $string_translation = $this->getMockBuilder('\Drupal\Core\StringTranslation\TranslationManager')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $container_builder = new ContainerBuilder();
-    $container_builder->set('form_builder', $form_builder);
-    $container_builder->set('string_translation', $string_translation);
-    \Drupal::setContainer($container_builder);
-
     $this->widget = new CheckboxWidget();
   }
 
   /**
-   * Tests widget with default settings.
+   * Tests widget without filters.
    */
-  public function testDefaultSettings() {
+  public function testNoFilterResults() {
     $facet = new Facet([], 'facet');
     $facet->setResults($this->originalResults);
-    $facet->setFieldIdentifier('test_field');
+    $facet->setWidgetConfigs(['show_numbers' => 1]);
 
-    $built_form = $this->widget->build($facet);
-    $this->assertEquals('build', $built_form);
+    $output = $this->widget->build($facet);
+
+    $this->assertInternalType('array', $output);
+    $this->assertCount(4, $output['#items']);
+
+    $this->assertEquals(['js-facets-checkbox-links'], $output['#attributes']['class']);
+
+    $expected_links = [
+      $this->buildLinkAssertion('Llama', 10),
+      $this->buildLinkAssertion('Badger', 20),
+      $this->buildLinkAssertion('Duck', 15),
+      $this->buildLinkAssertion('Alpaca', 9),
+    ];
+    foreach ($expected_links as $index => $value) {
+      $this->assertInternalType('array', $output['#items'][$index]);
+      $this->assertEquals($value, $output['#items'][$index]['#title']);
+      $this->assertInstanceOf(FormattableMarkup::class, $output['#items'][$index]['#title']);
+      $this->assertEquals('link', $output['#items'][$index]['#type']);
+      $this->assertEquals(['facet-item'], $output['#items'][$index]['#wrapper_attributes']['class']);
+    }
+  }
+
+  /**
+   * Build a formattable markup object to use in the other tests.
+   *
+   * @param string $text
+   *   Text to display.
+   * @param int $count
+   *   Number of results.
+   * @param bool $active
+   *   Link is active.
+   * @param bool $show_numbers
+   *   Numbers are displayed.
+   *
+   * @return \Drupal\Component\Render\FormattableMarkup
+   *   Formattable markup object for link.
+   */
+  private function buildLinkAssertion($text, $count = 0, $active = FALSE, $show_numbers = TRUE) {
+    $text = new FormattableMarkup('@text', ['@text' => $text, '@count' => $count]);
+    if ($show_numbers !== FALSE) {
+      $text->string .= ' <span class="facet-count">(@count)</span>';
+    }
+    if ($active) {
+      $text->string = '<span class="facet-deactivate">(-)</span> ' . $text->string;
+    }
+    return $text;
   }
 
 }
