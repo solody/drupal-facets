@@ -47,28 +47,7 @@ class UrlIntegrationTest extends WebTestBase {
   public function testUrlIntegration() {
     $id = 'facet';
     $name = '&^Facet@#1';
-    $facet_add_page = 'admin/config/search/facets/add-facet';
-
-    $this->drupalGet($facet_add_page);
-
-    $form_values = [
-      'id' => $id,
-      'status' => 1,
-      'name' => $name,
-      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
-    ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-
-    $block_values = [
-      'plugin_id' => 'facet_block:' . $id,
-      'settings' => [
-        'region' => 'footer',
-        'id' => str_replace('_', '-', $id),
-      ],
-    ];
-    $this->drupalPlaceBlock($block_values['plugin_id'], $block_values['settings']);
+    $this->createFacet($name, $id);
 
     $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'facet:item']]);
     $this->checkClickedFacetUrl($url);
@@ -135,28 +114,7 @@ class UrlIntegrationTest extends WebTestBase {
   public function testColonValue() {
     $id = 'water_bear';
     $name = 'Water bear';
-
-    $facet_add_page = 'admin/config/search/facets/add-facet';
-
-    // Create the facet.
-    $this->drupalGet($facet_add_page);
-
-    $form_values = [
-      'id' => $id,
-      'status' => 1,
-      'name' => $name,
-      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'keywords',
-    ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-
-    // Create / place the block.
-    $block_settings = [
-      'region' => 'footer',
-      'id' => str_replace('_', '-', $id),
-    ];
-    $this->drupalPlaceBlock('facet_block:' . $id, $block_settings);
+    $this->createFacet($name, $id, 'keywords');
 
     // Add a new entity that has a colon in one of it's keywords.
     $entity_test_storage = \Drupal::entityTypeManager()

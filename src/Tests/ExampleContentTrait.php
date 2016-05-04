@@ -15,7 +15,7 @@ trait ExampleContentTrait {
    *
    * @var \Drupal\entity_test\Entity\EntityTest[]
    */
-  protected $entities = array();
+  protected $entities = [];
 
   /**
    * Sets up the necessary bundles on the test entity type.
@@ -88,32 +88,6 @@ trait ExampleContentTrait {
     /** @var \Drupal\search_api\IndexInterface $index */
     $index = Index::load($index_id);
     return $index->indexItems();
-  }
-
-  /**
-   * Add a facet trough the UI.
-   *
-   * @param string $name
-   *   The facet name.
-   * @param string $id
-   *   The facet id.
-   * @param string $field
-   *   The facet field.
-   */
-  protected function createFacet($name, $id, $field = 'type') {
-    $facet_add_page = 'admin/config/search/facets/add-facet';
-
-    $this->drupalGet($facet_add_page);
-
-    $form_values = [
-      'id' => $id,
-      'status' => 1,
-      'name' => $name,
-      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => $field,
-    ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
   }
 
   /**

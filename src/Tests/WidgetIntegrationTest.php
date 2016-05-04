@@ -39,34 +39,14 @@ class WidgetIntegrationTest extends WebTestBase {
   }
 
   /**
-   * Tests various url integration things.
+   * Tests checkbox widget.
    */
   public function testCheckboxWidget() {
     $id = 't';
     $name = 'Facet & checkbox~';
-    $facet_add_page = 'admin/config/search/facets/add-facet';
-
-    $this->drupalGet($facet_add_page);
-
-    $form_values = [
-      'id' => $id,
-      'status' => 1,
-      'name' => $name,
-      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
-    ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->createFacet($name, $id);
+    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
     $this->drupalPostForm(NULL, ['widget' => 'checkbox'], $this->t('Save'));
-
-    $block_values = [
-      'plugin_id' => 'facet_block:' . $id,
-      'settings' => [
-        'region' => 'footer',
-        'id' => str_replace('_', '-', $id),
-      ],
-    ];
-    $this->drupalPlaceBlock($block_values['plugin_id'], $block_values['settings']);
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertLink('item');
@@ -79,29 +59,9 @@ class WidgetIntegrationTest extends WebTestBase {
   public function testLinksWidget() {
     $id = 'links_widget';
     $name = '>.Facet &* Links';
-    $facet_add_page = 'admin/config/search/facets/add-facet';
-
-    $this->drupalGet($facet_add_page);
-
-    $form_values = [
-      'id' => $id,
-      'status' => 1,
-      'name' => $name,
-      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
-    ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->createFacet($name, $id);
+    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
     $this->drupalPostForm(NULL, ['widget' => 'links'], $this->t('Save'));
-
-    $block_values = [
-      'plugin_id' => 'facet_block:' . $id,
-      'settings' => [
-        'region' => 'footer',
-        'id' => str_replace('_', '-', $id),
-      ],
-    ];
-    $this->drupalPlaceBlock($block_values['plugin_id'], $block_values['settings']);
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertLink('item');
@@ -117,29 +77,9 @@ class WidgetIntegrationTest extends WebTestBase {
   public function testSelectWidget() {
     $id = 'select_widget';
     $name = 'Select';
-    $facet_add_page = 'admin/config/search/facets/add-facet';
-
-    $this->drupalGet($facet_add_page);
-
-    $form_values = [
-      'id' => $id,
-      'status' => 1,
-      'name' => $name,
-      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
-    ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->createFacet($name, $id);
+    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
     $this->drupalPostForm(NULL, ['widget' => 'select'], $this->t('Save'));
-
-    $block_values = [
-      'plugin_id' => 'facet_block:' . $id,
-      'settings' => [
-        'region' => 'footer',
-        'id' => str_replace('_', '-', $id),
-      ],
-    ];
-    $this->drupalPlaceBlock($block_values['plugin_id'], $block_values['settings']);
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertField('edit-type', 'Dropdown is visible.');
@@ -159,30 +99,9 @@ class WidgetIntegrationTest extends WebTestBase {
   public function testLinksShowHideCount() {
     $id = 'links_widget';
     $name = '>.Facet &* Links';
-    $facet_add_page = 'admin/config/search/facets/add-facet';
     $facet_edit_page = 'admin/config/search/facets/' . $id . '/edit';
 
-    $this->drupalGet($facet_add_page);
-
-    $form_values = [
-      'id' => $id,
-      'status' => 1,
-      'name' => $name,
-      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
-    ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->drupalPostForm(NULL, ['widget' => 'links'], $this->t('Save'));
-
-    $block_values = [
-      'plugin_id' => 'facet_block:' . $id,
-      'settings' => [
-        'region' => 'footer',
-        'id' => str_replace('_', '-', $id),
-      ],
-    ];
-    $this->drupalPlaceBlock($block_values['plugin_id'], $block_values['settings']);
+    $this->createFacet($name, $id);
 
     // Go to the view and check that the facet links are shown with their
     // default settings.

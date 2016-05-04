@@ -13,13 +13,6 @@ use Drupal\facets\Entity\Facet;
 class IntegrationTest extends WebTestBase {
 
   /**
-   * The block entities used by this test.
-   *
-   * @var \Drupal\block\BlockInterface[]
-   */
-  protected $blocks;
-
-  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -37,7 +30,7 @@ class IntegrationTest extends WebTestBase {
   }
 
   /**
-   * Tests Facets' permissions.
+   * Tests permissions.
    */
   public function testOverviewPermissions() {
     $facet_overview = '/admin/config/search/facets';
@@ -76,7 +69,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertText('Displaying 5 search results', 'The search view displays the correct number of results.');
 
     // Create and place a block for "Test Facet name" facet.
-    $this->createFacetBlock($facet_id);
+    $this->blocks[$facet_id] = $this->createBlock($facet_id);
 
     // Verify that the facet results are correct.
     $this->drupalGet('search-api-test-fulltext');
@@ -152,7 +145,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertText('Fulltext test index', 'The search view displays the correct number of results.');
 
     // Create and place a block for the test facet.
-    $this->createFacetBlock($facet_id);
+    $this->blocks[$facet_id] = $this->createBlock($facet_id);
 
     // Verify that the facet results are correct displayed.
     $this->drupalGet('<front>');
@@ -170,14 +163,9 @@ class IntegrationTest extends WebTestBase {
    * @see https://www.drupal.org/node/2629504
    */
   public function testRenameFacet() {
-
-    // Set names.
     $facet_id = 'ab_facet';
     $new_facet_id = 'facet__ab';
     $facet_name = 'ab>Facet';
-
-    // Make sure we're logged in with a user that has sufficient permissions.
-    $this->drupalLogin($this->adminUser);
 
     // Add a new facet.
     $this->addFacet($facet_name);
@@ -201,28 +189,8 @@ class IntegrationTest extends WebTestBase {
   public function testUrlAlias() {
     $facet_id = 'ab_facet';
     $facet_name = 'ab>Facet';
-
-    // Make sure we're logged in with a user that has sufficient permissions.
-    $this->drupalLogin($this->adminUser);
-
-    $facet_add_page = '/admin/config/search/facets/add-facet';
     $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/edit';
-
-    $this->drupalGet($facet_add_page);
-    $this->assertResponse(200);
-
-    $form_values = [
-      'name' => $facet_name,
-      'id' => $facet_id,
-      'status' => 1,
-      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
-    ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertRaw(t('Facet %name has been created.', ['%name' => $facet_name]));
-
-    $this->createFacetBlock($facet_id);
+    $this->createFacet($facet_name, $facet_id);
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertLink('item');
@@ -250,15 +218,16 @@ class IntegrationTest extends WebTestBase {
   public function testFacetDependencies() {
     $facet_name = "DependableFacet";
     $facet_id = 'dependablefacet';
-    $this->addFacet($facet_name);
 
     $depending_facet_name = "DependingFacet";
     $depending_facet_id = "dependingfacet";
+
+    $this->addFacet($facet_name);
     $this->addFacet($depending_facet_name, 'keywords');
 
     // Create both facets as blocks and add them on the page.
-    $this->createFacetBlock($facet_id);
-    $this->createFacetBlock($depending_facet_id);
+    $this->blocks[$facet_id] = $this->createBlock($facet_id);
+    $this->blocks[$depending_facet_id] = $this->createBlock($depending_facet_id);
 
     // Go the the view and test that both facets are shown. Item and article
     // come from the DependableFacet, orange and grape come from DependingFacet.
@@ -334,15 +303,10 @@ class IntegrationTest extends WebTestBase {
     $facet_id = 'test_facet';
     $facet_edit_page = 'admin/config/search/facets/' . $facet_id . '/edit';
 
-    $this->drupalLogin($this->adminUser);
-    $this->addFacet($facet_name);
-    $this->createFacetBlock('test_facet');
+    $this->createFacet($facet_name, $facet_id);
 
     $this->drupalGet($facet_edit_page);
     $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'AND'], $this->t('Save'));
-
-    $this->insertExampleContent();
-    $this->assertEqual($this->indexItems($this->indexId), 5, '5 items were indexed.');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertLink('item');
@@ -364,7 +328,7 @@ class IntegrationTest extends WebTestBase {
   }
 
   /**
-   * Tests that we disallow unwanted values.
+   * Tests that we disallow unwanted values when creating a facet trough the UI.
    */
   public function testUnwantedValues() {
     // Go to the Add facet page and make sure that returns a 200.
@@ -409,9 +373,7 @@ class IntegrationTest extends WebTestBase {
     $facet_name = 'test & facet';
     $facet_id = 'test_facet';
     $facet_edit_page = 'admin/config/search/facets/' . $facet_id . '/edit';
-
-    $this->addFacet($facet_name);
-    $this->createFacetBlock($facet_id);
+    $this->createFacet($facet_name, $facet_id);
 
     $this->drupalGet($facet_edit_page);
     $this->assertNoFieldChecked('edit-facet-settings-exclude');
@@ -456,8 +418,7 @@ class IntegrationTest extends WebTestBase {
     $facet_id = 'spotted_wood_owl';
     $facet_edit_page = 'admin/config/search/facets/' . $facet_id;
 
-    $this->addFacet($facet_name, 'keywords');
-    $this->createFacetBlock($facet_id);
+    $this->createFacet($facet_name, $facet_id, 'keywords');
 
     $this->drupalGet($facet_edit_page . '/edit');
     $edit = ['facet_settings[show_only_one_result]' => TRUE];
@@ -485,60 +446,12 @@ class IntegrationTest extends WebTestBase {
   public function testWeight() {
     $facet_name = "Forest owlet";
     $id = "forest_owlet";
-    $this->addFacet($facet_name);
+    $this->createFacet($facet_name, $id);
 
     /** @var \Drupal\facets\FacetInterface $facet */
     $facet = Facet::load($id);
     $facet->setWeight(10);
     $this->assertEqual(10, $facet->getWeight());
-  }
-
-  /**
-   * Deletes a facet block by id.
-   *
-   * @param string $id
-   *   The id of the block.
-   */
-  protected function deleteBlock($id) {
-    $this->drupalGet('admin/structure/block/manage/' . $this->blocks[$id]->id(), array('query' => array('destination' => 'admin')));
-    $this->clickLink(t('Delete'));
-    $this->drupalPostForm(NULL, array(), t('Delete'));
-    $this->assertRaw(t('The block %name has been deleted.', array('%name' => $this->blocks[$id]->label())));
-  }
-
-  /**
-   * Asserts that a facet block does not appear.
-   */
-  protected function assertNoFacetBlocksAppear() {
-    foreach ($this->blocks as $block) {
-      $this->assertNoBlockAppears($block);
-    }
-  }
-
-  /**
-   * Asserts that a facet block appears.
-   */
-  protected function assertFacetBlocksAppear() {
-    foreach ($this->blocks as $block) {
-      $this->assertBlockAppears($block);
-    }
-  }
-
-  /**
-   * Creates a facet block by id.
-   *
-   * @param string $id
-   *   The id of the block.
-   */
-  protected function createFacetBlock($id) {
-    $block = [
-      'plugin_id' => 'facet_block:' . $id,
-      'settings' => [
-        'region' => 'footer',
-        'id' => str_replace('_', '-', $id),
-      ],
-    ];
-    $this->blocks[$id] = $this->drupalPlaceBlock($block['plugin_id'], $block['settings']);
   }
 
   /**

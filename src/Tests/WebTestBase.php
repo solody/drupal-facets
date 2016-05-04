@@ -14,6 +14,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
 
   use StringTranslationTrait;
   use ExampleContentTrait;
+  use BlockTestTrait;
 
   /**
    * Modules to enable for this test.

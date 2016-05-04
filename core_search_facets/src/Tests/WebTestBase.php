@@ -70,7 +70,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
     $field_storage->setTranslatable(TRUE);
     $field_storage->save();
 
-    // Adding 10 pages.
+    // Add 9 nodes of the type page.
     for ($i = 1; $i <= 9; $i++) {
       // Adding a different created time per language to avoid to have exactly
       // the same value per nid and langcode.
@@ -102,7 +102,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
       'langcode' => 'en',
     ));
 
-    // Adding 10 articles.
+    // Add 10 nodes of the type article.
     for ($i = 1; $i <= 10; $i++) {
       $created_time = new \DateTime('April ' . $i . ' 2016 ' . str_pad($i, 2, STR_PAD_LEFT, 0) . 'PM');
       $this->drupalCreateNode(array(
