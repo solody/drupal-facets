@@ -544,7 +544,7 @@ class SubFormState implements FormStateInterface {
    * {@inheritdoc}
    */
   public function setLimitValidationErrors($limit_validation_errors) {
-    $add_subkeys = function(array $path) {
+    $add_subkeys = function (array $path) {
       return array_merge($this->subKeys, $path);
     };
     $limit_validation_errors = array_map($add_subkeys, $limit_validation_errors);
