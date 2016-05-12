@@ -23,35 +23,11 @@ class CountWidgetOrderProcessor extends WidgetOrderPluginBase implements WidgetO
   /**
    * {@inheritdoc}
    */
-  public function sortResults(array $results, $order = 'ASC') {
-    if ($order === 'ASC') {
-      usort($results, 'self::sortCountAsc');
-    }
-    else {
-      usort($results, 'self::sortCountDesc');
-    }
-
-    return $results;
-  }
-
-  /**
-   * Sorts ascending.
-   */
-  protected static function sortCountAsc(Result $a, Result $b) {
+  public function sortResults(Result $a, Result $b) {
     if ($a->getCount() == $b->getCount()) {
       return 0;
     }
     return ($a->getCount() < $b->getCount()) ? -1 : 1;
-  }
-
-  /**
-   * Sorts descending.
-   */
-  protected static function sortCountDesc(Result $a, Result $b) {
-    if ($a->getCount() == $b->getCount()) {
-      return 0;
-    }
-    return ($a->getCount() > $b->getCount()) ? -1 : 1;
   }
 
 }

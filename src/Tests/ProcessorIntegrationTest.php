@@ -129,6 +129,91 @@ class ProcessorIntegrationTest extends WebTestBase {
   }
 
   /**
+   * Tests sorting of results.
+   */
+  public function testResultSorting() {
+    $id = 'burrowing_owl';
+    $name = 'Burrowing owl';
+
+    $this->createFacet($name, $id, 'keywords');
+
+    $values = [
+      'facet_sorting[display_value_widget_order][status]' => TRUE,
+      'widget_configs[show_numbers]' => TRUE,
+    ];
+    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
+    $this->drupalPostForm(NULL, $values, $this->t('Save'));
+
+    $expected_results = [
+      'apple',
+      'banana',
+      'grape',
+      'orange',
+      'strawberry',
+    ];
+
+    $this->drupalGet('search-api-test-fulltext');
+    foreach ($expected_results as $k => $link) {
+      if ($k > 0) {
+        $x = $expected_results[($k - 1)];
+        $y = $expected_results[$k];
+        $this->assertStringPosition($x, $y);
+      }
+    }
+
+    // Sort by count, then by display value.
+    $values['facet_sorting[count_widget_order][status]'] = TRUE;
+    $values['processors[count_widget_order][weights][build]'] = 1;
+    $values['facet_sorting[display_value_widget_order][status]'] = TRUE;
+    $values['processors[display_value_widget_order][weights][build]'] = 2;
+    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
+    $this->drupalPostForm(NULL, $values, $this->t('Save'));
+
+    $expected_results = [
+      'banana',
+      'apple',
+      'strawberry',
+      'grape',
+      'orange',
+    ];
+
+    $this->drupalGet('search-api-test-fulltext');
+    foreach ($expected_results as $k => $link) {
+      if ($k > 0) {
+        $x = $expected_results[($k - 1)];
+        $y = $expected_results[$k];
+        $this->assertStringPosition($x, $y);
+      }
+    }
+
+    $values['facet_sorting[display_value_widget_order][status]'] = TRUE;
+    $values['facet_sorting[count_widget_order][status]'] = TRUE;
+    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
+    $this->drupalPostForm(NULL, $values, $this->t('Save'));
+    $this->assertFieldChecked(
+      'edit-facet-sorting-display-value-widget-order-status'
+    );
+    $this->assertFieldChecked('edit-facet-sorting-count-widget-order-status');
+
+    $expected_results = [
+      'banana',
+      'apple',
+      'strawberry',
+      'grape',
+      'orange',
+    ];
+
+    $this->drupalGet('search-api-test-fulltext');
+    foreach ($expected_results as $k => $link) {
+      if ($k > 0) {
+        $x = $expected_results[($k - 1)];
+        $y = $expected_results[$k];
+        $this->assertStringPosition($x, $y);
+      }
+    }
+  }
+
+  /**
    * Tests the count limit processor.
    */
   protected function checkCountLimitProcessor() {

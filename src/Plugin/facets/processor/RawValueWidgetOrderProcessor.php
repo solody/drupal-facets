@@ -23,29 +23,8 @@ class RawValueWidgetOrderProcessor extends WidgetOrderPluginBase implements Widg
   /**
    * {@inheritdoc}
    */
-  public function sortResults(array $results, $order = 'ASC') {
-    if ($order === 'ASC') {
-      usort($results, 'self::sortRawValueAsc');
-    }
-    else {
-      usort($results, 'self::sortRawValueDesc');
-    }
-
-    return $results;
-  }
-
-  /**
-   * Sorts ascending.
-   */
-  protected static function sortRawValueAsc(Result $a, Result $b) {
+  public function sortResults(Result $a, Result $b) {
     return strnatcasecmp($a->getRawValue(), $b->getRawValue());
-  }
-
-  /**
-   * Sorts descending.
-   */
-  protected static function sortRawValueDesc(Result $a, Result $b) {
-    return strnatcasecmp($b->getRawValue(), $a->getRawValue());
   }
 
 }

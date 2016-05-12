@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\facets\Processor;
+use Drupal\facets\Result\Result;
 
 /**
  * Processor runs before the renderable array is created.
@@ -10,15 +11,14 @@ interface WidgetOrderProcessorInterface extends BuildProcessorInterface {
   /**
    * Orders results and return the new order of results.
    *
-   * @param \Drupal\facets\Result\Result[] $results
-   *   An array containing results.
-   * @param string $order
-   *   A string denoting the order in which we should sort, either 'ASC' or
-   *   'DESC'.
+   * @param \Drupal\facets\Result\Result $a
+   *   First result which should be compared.
+   * @param \Drupal\facets\Result\Result $b
+   *   Second result which should be compared.
    *
-   * @return \Drupal\facets\Result\Result[]
-   *   The same array that was passed in, ordered by $order
+   * @return int
+   *   -1, 0, or 1 depending which result
    */
-  public function sortResults(array $results, $order = 'ASC');
+  public function sortResults(Result $a, Result $b);
 
 }

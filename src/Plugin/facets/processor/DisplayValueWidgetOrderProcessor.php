@@ -53,29 +53,13 @@ class DisplayValueWidgetOrderProcessor extends WidgetOrderPluginBase implements 
   /**
    * {@inheritdoc}
    */
-  public function sortResults(array $results, $order = 'ASC') {
-    $transliteration = $this->transliteration;
-
-    if ($order === 'ASC') {
-      // Sorts ascending.
-      usort($results, function (Result $a, Result $b) use ($transliteration) {
-        return strnatcasecmp(
-          $transliteration->removeDiacritics($a->getDisplayValue()),
-          $transliteration->removeDiacritics($b->getDisplayValue())
-        );
-      });
+  public function sortResults(Result $a, Result $b) {
+    $a = $this->transliteration->removeDiacritics($a->getDisplayValue());
+    $b = $this->transliteration->removeDiacritics($b->getDisplayValue());
+    if ($a == $b) {
+      return 0;
     }
-    else {
-      // Sorts descending.
-      usort($results, function (Result $a, Result $b) use ($transliteration) {
-        return strnatcasecmp(
-          $transliteration->removeDiacritics($b->getDisplayValue()),
-          $transliteration->removeDiacritics($a->getDisplayValue())
-        );
-      });
-    }
-
-    return $results;
+    return strnatcasecmp($a, $b);
   }
 
 }

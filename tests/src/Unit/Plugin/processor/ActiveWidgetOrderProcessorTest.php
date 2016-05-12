@@ -2,12 +2,9 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
-use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\processor\ActiveWidgetOrderProcessor;
-use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Unit test for processor.
@@ -19,7 +16,7 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facets\processor\WidgetOrderProcessorInterface
+   * @var \Drupal\facets\Processor\WidgetOrderProcessorInterface
    */
   protected $processor;
 
@@ -55,74 +52,31 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
   }
 
   /**
-   * Tests sorting ascending.
+   * Tests sorting.
    */
-  public function testAscending() {
-    $sorted_results = $this->processor->sortResults($this->originalResults, 'ASC');
-    $expected_values = [TRUE, TRUE, TRUE, FALSE, FALSE];
-    foreach ($expected_values as $index => $value) {
-      $this->assertEquals($value, $sorted_results[$index]->isActive());
-    }
-  }
+  public function testSorting() {
+    $sort_value = $this->processor->sortResults($this->originalResults[0], $this->originalResults[1]);
+    $this->assertEquals(1, $sort_value);
 
-  /**
-   * Tests sorting descending.
-   */
-  public function testDescending() {
-    $sorted_results = $this->processor->sortResults($this->originalResults, 'DESC');
-    $expected_values = array_reverse([TRUE, TRUE, TRUE, FALSE, FALSE]);
-    foreach ($expected_values as $index => $value) {
-      $this->assertEquals($value, $sorted_results[$index]->isActive());
-    }
+    $sort_value = $this->processor->sortResults($this->originalResults[1], $this->originalResults[2]);
+    $this->assertEquals(0, $sort_value);
+
+    $sort_value = $this->processor->sortResults($this->originalResults[2], $this->originalResults[3]);
+    $this->assertEquals(0, $sort_value);
+
+    $sort_value = $this->processor->sortResults($this->originalResults[3], $this->originalResults[4]);
+    $this->assertEquals(-1, $sort_value);
+
+    $sort_value = $this->processor->sortResults($this->originalResults[3], $this->originalResults[3]);
+    $this->assertEquals(0, $sort_value);
   }
 
   /**
    * Tests configuration.
    */
-  public function testConfiguration() {
+  public function testDefaultConfiguration() {
     $config = $this->processor->defaultConfiguration();
     $this->assertEquals(['sort' => 'ASC'], $config);
-  }
-
-  /**
-   * Tests build.
-   */
-  public function testBuild() {
-    $processor_definitions = [
-      'active_widget_order' => [
-        'id' => 'active_widget_order',
-        'class' => 'Drupal\facets\Plugin\facets\processor\ActiveWidgetOrderProcessor',
-      ],
-    ];
-    $manager = $this->getMockBuilder(ProcessorPluginManager::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $manager->expects($this->once())
-      ->method('getDefinitions')
-      ->willReturn($processor_definitions);
-    $manager->expects($this->once())
-      ->method('createInstance')
-      ->willReturn($this->processor);
-
-    $container_builder = new ContainerBuilder();
-    $container_builder->set('plugin.manager.facets.processor', $manager);
-    \Drupal::setContainer($container_builder);
-
-    $facet = new Facet(
-      [
-        'id' => 'the_zoo',
-        'results' => $this->originalResults,
-        'processor_configs' => $processor_definitions,
-      ],
-      'facets_facet'
-    );
-    $built = $this->processor->build($facet, $this->originalResults);
-
-    $this->assertEquals(TRUE, $built[0]->isActive());
-    $this->assertEquals(TRUE, $built[1]->isActive());
-    $this->assertEquals(TRUE, $built[2]->isActive());
-    $this->assertEquals(FALSE, $built[3]->isActive());
-    $this->assertEquals(FALSE, $built[4]->isActive());
   }
 
 }
