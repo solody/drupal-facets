@@ -2,8 +2,6 @@
 
 namespace Drupal\facets\Tests;
 
-use Drupal\Core\Url;
-
 /**
  * Tests the overall functionality of the Facets admin UI.
  *
@@ -82,15 +80,9 @@ class WidgetIntegrationTest extends WebTestBase {
     $this->drupalPostForm(NULL, ['widget' => 'select'], $this->t('Save'));
 
     $this->drupalGet('search-api-test-fulltext');
-    $this->assertField('edit-type', 'Dropdown is visible.');
     $this->assertText('Displaying 5 search results');
-
-    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'select_widget:item']]);
-    $url->setAbsolute();
-
-    $this->drupalPostForm(NULL, ['type' => $url->toString()], $this->t('submit'));
-    $this->assertResponse(200);
-    $this->assertText('Displaying 3 search results');
+    $this->assertLink('item');
+    $this->assertLink('article');
   }
 
   /**

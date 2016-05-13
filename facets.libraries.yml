@@ -28,3 +28,13 @@ drupal.facets.checkbox-widget:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/jquery.once
+
+drupal.facets.dropdown-widget:
+  version: VERSION
+  js:
+    js/dropdown-widget.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
