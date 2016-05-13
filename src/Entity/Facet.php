@@ -167,13 +167,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $results = [];
 
   /**
-   * The results.
-   *
-   * @var \Drupal\facets\Result\ResultInterface[]
-   */
-  protected $unfiltered_results = [];
-
-  /**
    * An array of active values.
    *
    * @var string[]
@@ -565,20 +558,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
         }
       }
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setUnfilteredResults(array $all_results = []) {
-    $this->unfiltered_results = $all_results;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getUnfilteredResults() {
-    return $this->unfiltered_results;
   }
 
   /**

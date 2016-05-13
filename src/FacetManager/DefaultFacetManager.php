@@ -144,12 +144,7 @@ class DefaultFacetManager {
     foreach ($this->getFacetsByFacetSourceId($facetsource_id) as $facet) {
       /** @var \Drupal\facets\QueryType\QueryTypeInterface $query_type_plugin */
       $query_type_plugin = $this->queryTypePluginManager->createInstance($facet->getQueryType(), ['query' => $query, 'facet' => $facet]);
-      $unfiltered_results = $query_type_plugin->execute();
-
-      // Save unfiltered results in facet.
-      if (!is_null($unfiltered_results)) {
-        $facet->setUnfilteredResults($unfiltered_results);
-      }
+      $query_type_plugin->execute();
     }
   }
 

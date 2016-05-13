@@ -455,6 +455,47 @@ class IntegrationTest extends WebTestBase {
   }
 
   /**
+   * Tests calculations of facet count.
+   */
+  public function testFacetCountCalculations() {
+    $this->addFacet('Type');
+    $this->addFacet('Keywords', 'keywords');
+    $this->createBlock('type');
+    $this->createBlock('keywords');
+
+    $edit = ['widget' => 'links', 'widget_configs[show_numbers]' => '1'];
+    $this->drupalPostForm('admin/config/search/facets/keywords/edit', $edit, $this->t('Save'));
+    $this->drupalPostForm('admin/config/search/facets/type/edit', $edit, $this->t('Save'));
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 5 search results');
+    $this->assertText('article (2)');
+    $this->assertText('grape (3)');
+
+    // Make sure that after clicking on article, which has only 2 entities,
+    // there are only 2 items left in the results for other facets as well.
+    // In this case, that means we can't have 3 entities tagged with grape. Both
+    // remaining entities are tagged with grape and strawberry.
+    $this->clickLinkPartialName('article');
+    $this->assertNoText('grape (3)');
+    $this->assertText('grape (2)');
+    $this->assertText('strawberry (2)');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 5 search results');
+    $this->assertText('article (2)');
+    $this->assertText('grape (3)');
+
+    // Make sure that after clicking on grape, which has only 3 entities, there
+    // are only 3 items left in the results for other facets as well. In this
+    // case, that means 2 entities of type article and 1 item.
+    $this->clickLinkPartialName('grape');
+    $this->assertText('Displaying 3 search results');
+    $this->assertText('article (2)');
+    $this->assertText('item (1)');
+  }
+
+  /**
    * Configures empty behavior option to show a text on empty results.
    *
    * @param string $facet_name

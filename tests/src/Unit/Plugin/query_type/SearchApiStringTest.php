@@ -63,16 +63,6 @@ class SearchApiStringTest extends UnitTestCase {
       ['query_operator' => 'OR'],
       'facets_facet'
     );
-
-    $facet->setUnfilteredResults([
-      'field_animal' => [
-        ['count' => 9, 'filter' => 'unicorn'],
-        ['count' => 3, 'filter' => 'badger'],
-        ['count' => 7, 'filter' => 'narwhal'],
-        ['count' => 5, 'filter' => 'mushroom'],
-      ],
-    ]);
-
     $facet->setFieldIdentifier('field_animal');
 
     $original_results = [

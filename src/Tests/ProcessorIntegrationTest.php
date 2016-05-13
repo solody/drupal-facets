@@ -309,11 +309,11 @@ class ProcessorIntegrationTest extends WebTestBase {
   protected function checkHideNonNarrowingProcessor() {
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 10 search results');
-    $this->assertLink('grape');
+    $this->assertLink('apple');
 
-    $this->clickLink('grape');
-    $this->assertText('Displaying 6 search results');
-    $this->assertLink('orange');
+    $this->clickLink('apple');
+    $this->assertText('Displaying 4 search results');
+    $this->assertLink('grape');
 
     $form = [
       'facet_settings[hide_non_narrowing_result_processor][status]' => TRUE,
@@ -322,11 +322,11 @@ class ProcessorIntegrationTest extends WebTestBase {
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 10 search results');
-    $this->assertLink('grape');
+    $this->assertLink('apple');
 
-    $this->clickLink('grape');
-    $this->assertText('Displaying 6 search results');
-    $this->assertNoLink('orange');
+    $this->clickLink('apple');
+    $this->assertText('Displaying 4 search results');
+    $this->assertNoLink('grape');
 
     $form = [
       'facet_settings[hide_non_narrowing_result_processor][status]' => FALSE,
