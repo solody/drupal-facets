@@ -97,7 +97,7 @@ class DropdownWidgetTest extends UnitTestCase {
    * @return \Drupal\Component\Render\FormattableMarkup
    *   Formattable markup object for link.
    */
-  private function buildLinkAssertion($text, $count = 0, $active = FALSE, $show_numbers = TRUE) {
+  protected function buildLinkAssertion($text, $count = 0, $active = FALSE, $show_numbers = TRUE) {
     $text = new FormattableMarkup('@text', ['@text' => $text, '@count' => $count]);
     if ($show_numbers !== FALSE) {
       $text->string .= ' <span class="facet-count">(@count)</span>';
