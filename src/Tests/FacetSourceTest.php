@@ -49,6 +49,10 @@ class FacetSourceTest extends WebTestBase {
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
     $this->assertResponse(200);
 
+    $this->assertUrl('admin/config/search/facets');
+    $this->assertText('Facet source search_api_views:search_api_test_view:block_1 has been saved.');
+    $this->clickLink($this->t('Configure'));
+
     // Test that saving worked filter_key has the new value.
     $this->assertField('filter_key');
     $this->assertField('url_processor');
@@ -67,6 +71,10 @@ class FacetSourceTest extends WebTestBase {
     $this->assertField('url_processor');
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
     $this->assertResponse(200);
+
+    $this->assertUrl('admin/config/search/facets');
+    $this->assertText('Facet source search_api_views:search_api_test_view:block_1 has been saved.');
+    $this->clickLink($this->t('Configure'));
 
     // Test that saving worked and that the url processor has the new value.
     $this->assertField('filter_key');

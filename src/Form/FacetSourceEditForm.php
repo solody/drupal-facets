@@ -123,4 +123,14 @@ class FacetSourceEditForm extends EntityForm {
     return parent::buildForm($form, $form_state);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+    $facet_source = $this->getEntity();
+    drupal_set_message($this->t('Facet source %name has been saved.', ['%name' => $facet_source->label()]));
+    $form_state->setRedirect('facets.overview');
+  }
+
 }
