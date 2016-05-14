@@ -28,35 +28,8 @@ class CheckboxWidget extends LinksWidget {
    */
   public function build(FacetInterface $facet) {
     $this->facet = $facet;
-
-    /** @var \Drupal\facets\Result\Result[] $results */
-    $results = $facet->getResults();
-    $items = [];
-
-    $configuration = $facet->getWidgetConfigs();
-    $this->showNumbers = empty($configuration['show_numbers']) ? FALSE : (bool) $configuration['show_numbers'];
-
-    foreach ($results as $result) {
-      if (is_null($result->getUrl())) {
-        $text = $this->extractText($result);
-        $items[] = ['#markup' => $text];
-      }
-      else {
-        $items[] = $this->buildListItems($result);
-      }
-    }
-
-    $build = [
-      '#theme' => 'item_list',
-      '#items' => $items,
-      '#attributes' => ['class' => ['js-facets-checkbox-links']],
-      '#cache' => [
-        'contexts' => [
-          'url.path',
-          'url.query_args',
-        ],
-      ],
-    ];
+    $build = parent::build($facet);
+    $build['#attributes']['class'][] = 'js-facets-checkbox-links';
     $build['#attached']['library'][] = 'facets/drupal.facets.checkbox-widget';
 
     return $build;
@@ -67,7 +40,7 @@ class CheckboxWidget extends LinksWidget {
    */
   protected function buildListItems(ResultInterface $result) {
     $items = parent::buildListItems($result);
-    $items['#attributes']['data-facet-id'] = $this->facet->getUrlAlias() . '-' . $result->getRawValue();
+    $items['#attributes']['data-drupal-facet-item-id'] = $this->facet->getUrlAlias() . '-' . $result->getRawValue();
     return $items;
   }
 

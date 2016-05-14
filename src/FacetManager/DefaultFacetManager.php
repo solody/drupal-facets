@@ -327,7 +327,7 @@ class DefaultFacetManager {
     if (empty($facet->getResults())) {
       $empty_behavior = $facet->getEmptyBehavior();
       if ($empty_behavior['behavior'] == 'text') {
-        return ['#markup' => $empty_behavior['text']];
+        return [['#markup' => $empty_behavior['text']]];
       }
       else {
         return [];
@@ -338,7 +338,7 @@ class DefaultFacetManager {
     /** @var \Drupal\facets\Widget\WidgetInterface $widget */
     $widget = $this->widgetPluginManager->createInstance($facet->getWidget());
 
-    return $widget->build($facet);
+    return [$widget->build($facet)];
   }
 
   /**

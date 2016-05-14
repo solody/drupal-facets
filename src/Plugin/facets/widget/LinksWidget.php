@@ -54,6 +54,7 @@ class LinksWidget implements WidgetInterface {
     $build = [
       '#theme' => 'item_list',
       '#items' => $items,
+      '#attributes' => ['data-drupal-facet-id' => $facet->id()],
       '#cache' => [
         'contexts' => [
           'url.path',
@@ -61,6 +62,12 @@ class LinksWidget implements WidgetInterface {
         ],
       ],
     ];
+
+    if (!empty($configuration['soft_limit'])) {
+      $build['#attached']['library'][] = 'facets/soft-limit';
+      $build['#attached']['drupalSettings']['facets']['softLimit'][$facet->id()] = (int) $configuration['soft_limit'];
+    }
+
     return $build;
   }
 
@@ -155,20 +162,30 @@ class LinksWidget implements WidgetInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo This is inheriting nothing. We need a method on the interface and,
+   *   probably, a base class.
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, $config) {
+    $widget_configs = !is_null($config) ? $config->get('widget_configs') : [];
+    // Assure sane defaults.
+    // @todo This should be handled upstream, in facet entity. Facet schema
+    //   should be fixed and all configs should get sane defaults.
+    $widget_configs += ['show_numbers' => FALSE, 'soft_limit' => 0];
 
     $form['show_numbers'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show the amount of results'),
+      '#default_value' => $widget_configs['show_numbers'],
     ];
-
-    if (!is_null($config)) {
-      $widget_configs = $config->get('widget_configs');
-      if (isset($widget_configs['show_numbers'])) {
-        $form['show_numbers']['#default_value'] = $widget_configs['show_numbers'];
-      }
-    }
+    $options = [50, 40, 30, 20, 15, 10, 5, 3];
+    $form['soft_limit'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Soft limit'),
+      '#default_value' => $widget_configs['soft_limit'],
+      '#options' => [0 => $this->t('No limit')] + array_combine($options, $options),
+      '#description' => $this->t('Limits the number of displayed facets via JavaScript.'),
+    ];
 
     return $form;
   }

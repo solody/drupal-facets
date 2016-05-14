@@ -7,7 +7,7 @@
 
   "use strict";
 
-  Drupal.facets = {};
+  Drupal.facets = Drupal.facets || {};
   Drupal.behaviors.facetsCheckboxWidget = {
     attach: function (context, settings) {
       Drupal.facets.makeCheckboxes();
@@ -31,7 +31,7 @@
     var active = $link.hasClass('is-active');
     var description = $link.html();
     var href = $link.attr('href');
-    var id = $link.data('facet-id');
+    var id = $link.data('drupal-facet-item-id');
 
     var checkbox = $('<input type="checkbox" class="facets-checkbox" id="' + id + '" data-facetsredir="' + href + '" />');
     var label = $('<label for="' + id + '">' + description + '</label>');

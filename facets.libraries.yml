@@ -38,3 +38,11 @@ drupal.facets.dropdown-widget:
     - core/jquery
     - core/drupal
     - core/jquery.once
+soft-limit:
+  version: VERSION
+  js:
+    js/soft-limit.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupalSettings
