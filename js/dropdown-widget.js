@@ -7,7 +7,7 @@
 
   'use strict';
 
-  Drupal.facets = {};
+  Drupal.facets = Drupal.facets || {};
   Drupal.behaviors.facetsDropdownWidget = {
     attach: function (context, settings) {
       Drupal.facets.makeDropdown();
@@ -59,7 +59,7 @@
       $dropdown.prepend($default_option);
 
       // Append dropdown.
-      $(this).find('.content').html($dropdown);
+      $(this).html($dropdown);
     });
   };
 
