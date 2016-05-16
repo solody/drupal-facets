@@ -60,4 +60,11 @@ class FacetsProcessor extends Plugin {
    */
   public $stages;
 
+  /**
+   * Whether or not this processor is default enabled for new facets.
+   *
+   * @var bool
+   */
+  public $default_enabled;
+
 }

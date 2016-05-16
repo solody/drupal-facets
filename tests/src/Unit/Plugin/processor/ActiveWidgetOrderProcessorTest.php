@@ -76,7 +76,7 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
    */
   public function testDefaultConfiguration() {
     $config = $this->processor->defaultConfiguration();
-    $this->assertEquals(['sort' => 'ASC'], $config);
+    $this->assertEquals(['sort' => 'DESC'], $config);
   }
 
 }

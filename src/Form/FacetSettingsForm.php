@@ -277,7 +277,9 @@ class FacetSettingsForm extends EntityForm {
       $processors_definitions = $this->getProcessorPluginManager()->getDefinitions();
 
       foreach ($processors_definitions as $processor_id => $processor) {
-        if (isset($processor['locked']) && $processor['locked'] == TRUE) {
+        $is_locked = isset($processor['locked']) && $processor['locked'] == TRUE;
+        $is_default_enabled = isset($processor['default_enabled']) && $processor['default_enabled'] == TRUE;
+        if ($is_locked || $is_default_enabled) {
           $weights = [];
           foreach ($stages as $stage_id => $stage) {
             if (isset($processor['stages'][$stage_id])) {

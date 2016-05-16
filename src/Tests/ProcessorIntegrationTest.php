@@ -134,15 +134,16 @@ class ProcessorIntegrationTest extends WebTestBase {
   public function testResultSorting() {
     $id = 'burrowing_owl';
     $name = 'Burrowing owl';
+    $this->editForm = 'admin/config/search/facets/' . $id . '/edit';
 
     $this->createFacet($name, $id, 'keywords');
+    $this->disableAllFacetSorts();
 
     $values = [
       'facet_sorting[display_value_widget_order][status]' => TRUE,
       'widget_configs[show_numbers]' => TRUE,
     ];
-    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
-    $this->drupalPostForm(NULL, $values, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $values, $this->t('Save'));
 
     $expected_results = [
       'apple',
@@ -163,11 +164,12 @@ class ProcessorIntegrationTest extends WebTestBase {
 
     // Sort by count, then by display value.
     $values['facet_sorting[count_widget_order][status]'] = TRUE;
+    $values['facet_sorting[count_widget_order][settings][sort]'] = 'ASC';
     $values['processors[count_widget_order][weights][build]'] = 1;
     $values['facet_sorting[display_value_widget_order][status]'] = TRUE;
     $values['processors[display_value_widget_order][weights][build]'] = 2;
-    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
-    $this->drupalPostForm(NULL, $values, $this->t('Save'));
+    $this->disableAllFacetSorts();
+    $this->drupalPostForm($this->editForm, $values, $this->t('Save'));
 
     $expected_results = [
       'banana',
@@ -188,11 +190,9 @@ class ProcessorIntegrationTest extends WebTestBase {
 
     $values['facet_sorting[display_value_widget_order][status]'] = TRUE;
     $values['facet_sorting[count_widget_order][status]'] = TRUE;
-    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
-    $this->drupalPostForm(NULL, $values, $this->t('Save'));
-    $this->assertFieldChecked(
-      'edit-facet-sorting-display-value-widget-order-status'
-    );
+    $values['facet_sorting[count_widget_order][settings][sort]'] = 'ASC';
+    $this->drupalPostForm($this->editForm, $values, $this->t('Save'));
+    $this->assertFieldChecked('edit-facet-sorting-display-value-widget-order-status');
     $this->assertFieldChecked('edit-facet-sorting-count-widget-order-status');
 
     $expected_results = [
@@ -363,8 +363,10 @@ class ProcessorIntegrationTest extends WebTestBase {
    * Tests the active widget order.
    */
   protected function checkSortByActive() {
+    $this->disableAllFacetSorts();
     $form = [
       'facet_sorting[active_widget_order][status]' => TRUE,
+      'facet_sorting[active_widget_order][settings][sort]' => 'ASC',
     ];
     $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
 
@@ -392,9 +394,11 @@ class ProcessorIntegrationTest extends WebTestBase {
    * Tests the active widget order.
    */
   protected function checkSortByCount() {
+    $this->disableAllFacetSorts();
     $form = [
       'widget_configs[show_numbers]' => TRUE,
       'facet_sorting[count_widget_order][status]' => TRUE,
+      'facet_sorting[count_widget_order][settings][sort]' => 'ASC',
     ];
     $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
 
@@ -425,6 +429,7 @@ class ProcessorIntegrationTest extends WebTestBase {
    * Tests the display order.
    */
   protected function checkSortByDisplay() {
+    $this->disableAllFacetSorts();
     $form = ['facet_sorting[display_value_widget_order][status]' => TRUE];
     $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
 
@@ -450,6 +455,7 @@ class ProcessorIntegrationTest extends WebTestBase {
    * Tests the display order.
    */
   protected function checkSortByRaw() {
+    $this->disableAllFacetSorts();
     $form = [
       'facet_sorting[raw_value_widget_order][status]' => TRUE,
     ];
@@ -488,6 +494,22 @@ class ProcessorIntegrationTest extends WebTestBase {
       'id' => str_replace('_', '-', $id),
     ];
     $this->blocks[$id] = $this->drupalPlaceBlock($plugin_id, $settings);
+  }
+
+  /**
+   * Disables all sorting processors for a clean testing base.
+   */
+  protected function disableAllFacetSorts($path = FALSE) {
+    $settings = [
+      'facet_sorting[raw_value_widget_order][status]' => FALSE,
+      'facet_sorting[display_value_widget_order][status]' => FALSE,
+      'facet_sorting[count_widget_order][status]' => FALSE,
+      'facet_sorting[active_widget_order][status]' => FALSE,
+    ];
+    if (!$path) {
+      $path = $this->editForm;
+    }
+    $this->drupalPostForm($path, $settings, $this->t('Save'));
   }
 
 }

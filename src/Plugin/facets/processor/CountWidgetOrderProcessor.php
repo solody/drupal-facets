@@ -13,8 +13,9 @@ use Drupal\facets\Result\Result;
  *   id = "count_widget_order",
  *   label = @Translation("Sort by count"),
  *   description = @Translation("Sorts the widget results by count."),
+ *   default_enabled = TRUE,
  *   stages = {
- *     "build" = 50
+ *     "build" = 30
  *   }
  * )
  */
@@ -28,6 +29,13 @@ class CountWidgetOrderProcessor extends WidgetOrderPluginBase implements WidgetO
       return 0;
     }
     return ($a->getCount() < $b->getCount()) ? -1 : 1;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return ['sort' => 'DESC'];
   }
 
 }

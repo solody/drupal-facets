@@ -16,8 +16,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "display_value_widget_order",
  *   label = @Translation("Sort by display value"),
  *   description = @Translation("Sorts the widget results by display value."),
+ *   default_enabled = TRUE,
  *   stages = {
- *     "build" = 50
+ *     "build" = 40
  *   }
  * )
  */
