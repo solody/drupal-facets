@@ -33,7 +33,7 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements Widg
   /**
    * {@inheritdoc}
    */
-  public function build(FacetInterface $facet, array $results) {
+  public function sort(FacetInterface $facet, array $results) {
     $processors = $facet->getProcessors();
     $config = $processors[$this->getPluginId()];
 

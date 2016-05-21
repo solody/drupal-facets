@@ -15,7 +15,7 @@ use Drupal\facets\Result\Result;
  *   description = @Translation("Sorts the widget results by count."),
  *   default_enabled = TRUE,
  *   stages = {
- *     "build" = 30
+ *     "sort" = 30
  *   }
  * )
  */

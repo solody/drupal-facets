@@ -28,6 +28,11 @@ interface ProcessorInterface extends ConfigurablePluginInterface, PluginInspecti
   const STAGE_BUILD = 'build';
 
   /**
+   * Processing stage: sort.
+   */
+  const STAGE_SORT = 'sort';
+
+  /**
    * Adds a configuration form for this processor.
    *
    * @param array $form

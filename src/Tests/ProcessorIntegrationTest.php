@@ -165,9 +165,9 @@ class ProcessorIntegrationTest extends WebTestBase {
     // Sort by count, then by display value.
     $values['facet_sorting[count_widget_order][status]'] = TRUE;
     $values['facet_sorting[count_widget_order][settings][sort]'] = 'ASC';
-    $values['processors[count_widget_order][weights][build]'] = 1;
+    $values['processors[count_widget_order][weights][sort]'] = 1;
     $values['facet_sorting[display_value_widget_order][status]'] = TRUE;
-    $values['processors[display_value_widget_order][weights][build]'] = 2;
+    $values['processors[display_value_widget_order][weights][sort]'] = 2;
     $this->disableAllFacetSorts();
     $this->drupalPostForm($this->editForm, $values, $this->t('Save'));
 

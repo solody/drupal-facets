@@ -14,7 +14,7 @@ use Drupal\facets\Result\Result;
  *   label = @Translation("Sort by raw value"),
  *   description = @Translation("Sorts the widget results by raw value."),
  *   stages = {
- *     "build" = 50
+ *     "sort" = 50
  *   }
  * )
  */

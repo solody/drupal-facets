@@ -13,7 +13,6 @@ use Drupal\facets\Processor\PostQueryProcessorInterface;
 use Drupal\facets\Processor\PreQueryProcessorInterface;
 use Drupal\facets\Processor\ProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginManager;
-use Drupal\facets\Processor\WidgetOrderProcessorInterface;
 use Drupal\facets\QueryType\QueryTypePluginManager;
 use Drupal\facets\Widget\WidgetPluginManager;
 
@@ -287,31 +286,23 @@ class DefaultFacetManager {
     // @see \Drupal\facets\Processor\WidgetOrderProcessorInterface.
     $results = $facet->getResults();
 
-    $active_sorts = [];
-
-    // Load all processors, because getProcessorsByStage does not return the
-    // correct configuration for the processors.
-    // @todo: Fix when https://www.drupal.org/node/2722267 is fixed.
-    $processors = $facet->getProcessors();
     foreach ($facet->getProcessorsByStage(ProcessorInterface::STAGE_BUILD) as $processor) {
-      /** @var \Drupal\facets\Processor\BuildProcessorInterface $build_processor */
-      $build_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], ['facet' => $facet]);
-      if ($build_processor instanceof WidgetOrderProcessorInterface) {
-        // Sorting is handled last and together, to support nested sorts.
-        $active_sorts[] = $processors[$build_processor->getPluginId()];
+      if (!$processor instanceof BuildProcessorInterface) {
+        throw new InvalidProcessorException("The processor {$processor->getPluginDefinition()['id']} has a build definition but doesn't implement the required BuildProcessorInterface interface");
       }
-      else {
-        if (!$build_processor instanceof BuildProcessorInterface) {
-          throw new InvalidProcessorException("The processor {$processor->getPluginDefinition()['id']} has a build definition but doesn't implement the required BuildProcessorInterface interface");
-        }
-        $results = $build_processor->build($facet, $results);
-      }
+      $results = $processor->build($facet, $results);
     }
-    uasort($results, function ($a, $b) use ($active_sorts) {
+
+    // Trigger sort stage.
+    $active_sort_processors = [];
+    foreach ($facet->getProcessorsByStage(ProcessorInterface::STAGE_SORT) as $processor) {
+      $active_sort_processors[] = $processor;
+    }
+    uasort($results, function ($a, $b) use ($active_sort_processors) {
       $return = 0;
-      foreach ($active_sorts as $sort) {
-        if ($return = $sort->sortResults($a, $b)) {
-          if ($sort->getConfiguration()['sort'] == 'DESC') {
+      foreach ($active_sort_processors as $sort_processor) {
+        if ($return = $sort_processor->sortResults($a, $b)) {
+          if ($sort_processor->getConfiguration()['sort'] == 'DESC') {
             $return *= -1;
           }
           break;

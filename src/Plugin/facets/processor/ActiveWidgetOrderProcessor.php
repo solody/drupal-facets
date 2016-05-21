@@ -16,7 +16,7 @@ use Drupal\facets\Result\Result;
  *   description = @Translation("Sorts the widget results by active state."),
  *   default_enabled = TRUE,
  *   stages = {
- *     "build" = 20
+ *     "sort" = 20
  *   }
  * )
  */

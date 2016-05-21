@@ -52,6 +52,9 @@ class ProcessorPluginManager extends DefaultPluginManager {
       ProcessorInterface::STAGE_BUILD => array(
         'label' => $this->t('Build stage'),
       ),
+      ProcessorInterface::STAGE_SORT => array(
+        'label' => $this->t('Sort stage'),
+      ),
     );
   }
 
