@@ -60,6 +60,7 @@ class QueryString extends UrlProcessorPluginBase {
 
     // When adding/removing a filter the number of pages may have changed,
     // possibly resulting in an invalid page parameter.
+    $current_page = $get_params->get('page');
     $get_params->remove('page');
 
     // Set the url alias from the the facet object.
@@ -118,6 +119,8 @@ class QueryString extends UrlProcessorPluginBase {
       $result->setUrl($url);
     }
 
+    // Restore page parameter again. See https://www.drupal.org/node/2726455.
+    $get_params->set('page', $current_page);
     return $results;
   }
 
