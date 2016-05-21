@@ -628,14 +628,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * {@inheritdoc}
    */
   public function getProcessorsByStage($stage, $only_enabled = TRUE) {
-    $processors = $this->loadProcessors();
+    $processors = $this->getProcessors($only_enabled);
     $processor_settings = $this->getProcessorConfigs();
     $processor_weights = array();
 
-    // Get a list of all processors meeting the criteria (stage and, optionally,
-    // enabled) along with their effective weights (user-set or default).
+    // Get a list of all processors for given stage.
     foreach ($processors as $name => $processor) {
-      if ($processor->supportsStage($stage) && !($only_enabled && empty($processor_settings[$name]))) {
+      if ($processor->supportsStage($stage)) {
         if (!empty($processor_settings[$name]['weights'][$stage])) {
           $processor_weights[$name] = $processor_settings[$name]['weights'][$stage];
         }
