@@ -62,7 +62,7 @@ class QueryStringTest extends UnitTestCase {
    * Tests that the processor correctly throws an exception.
    */
   public function testCreate() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
 
     $request_stack = new RequestStack();
     $request = new Request();
@@ -79,7 +79,7 @@ class QueryStringTest extends UnitTestCase {
    * Tests with one active item.
    */
   public function testSetSingleActiveItem() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->setUrlAlias('test');
     $facet->setFieldIdentifier('test');
@@ -97,7 +97,7 @@ class QueryStringTest extends UnitTestCase {
    * Tests with multiple active items.
    */
   public function testSetMultipleActiveItems() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->setUrlAlias('test');
     $facet->setFieldIdentifier('test');
@@ -115,7 +115,7 @@ class QueryStringTest extends UnitTestCase {
    * Tests with an empty build.
    */
   public function testEmptyBuild() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setUrlAlias('test');
     $facet->setFacetSourceId('facet_source__dummy');
 
@@ -131,7 +131,7 @@ class QueryStringTest extends UnitTestCase {
    * Tests with default build.
    */
   public function testBuild() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setFieldIdentifier('test');
     $facet->setUrlAlias('test');
     $facet->setFacetSourceId('facet_source__dummy');
@@ -155,7 +155,7 @@ class QueryStringTest extends UnitTestCase {
    * Tests with an active item already from url.
    */
   public function testBuildWithActiveItem() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setFieldIdentifier('test');
     $facet->setUrlAlias('test');
     $facet->setFacetSourceId('facet_source__dummy');
@@ -203,7 +203,7 @@ class QueryStringTest extends UnitTestCase {
     $container->set('entity_type.manager', $em);
     \Drupal::setContainer($container);
 
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setFieldIdentifier('test');
     $facet->setFacetSourceId('facet_source__dummy');
     $facet->setUrlAlias('test');

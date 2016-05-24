@@ -48,7 +48,7 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
    */
   public function testNoFilterResults() {
 
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
 
     $filtered_results = $this->processor->build($facet, $this->originalResults);
@@ -71,7 +71,7 @@ class HideNonNarrowingResultProcessorTest extends UnitTestCase {
     $results = $this->originalResults;
     $results[2]->setActiveState(TRUE);
 
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($results);
 
     $filtered_results = $this->processor->build($facet, $results);

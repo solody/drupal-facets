@@ -41,7 +41,7 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
       new Result(1, 1, 5),
     ];
 
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($original_results);
 
     $expected_results = [

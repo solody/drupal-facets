@@ -77,7 +77,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
    * Tests no filtering happens.
    */
   public function testNoFilter() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->addProcessor([
       'processor_id' => 'exclude_specified_items',
@@ -100,7 +100,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
    * Tests filtering happens for string filter.
    */
   public function testStringFilter() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->addProcessor([
       'processor_id' => 'exclude_specified_items',
@@ -129,7 +129,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
    * @dataProvider provideRegexTests
    */
   public function testRegexFilter($regex, $expected_results) {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->addProcessor([
       'processor_id' => 'exclude_specified_items',

@@ -56,7 +56,7 @@ class LinksWidgetTest extends UnitTestCase {
    * Tests widget without filters.
    */
   public function testNoFilterResults() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->setWidgetConfigs(['show_numbers' => 1]);
 
@@ -88,7 +88,7 @@ class LinksWidgetTest extends UnitTestCase {
     $original_results[0]->setActiveState(TRUE);
     $original_results[3]->setActiveState(TRUE);
 
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($original_results);
     $facet->setWidgetConfigs(['show_numbers' => 1]);
 
@@ -121,7 +121,7 @@ class LinksWidgetTest extends UnitTestCase {
     $original_results = $this->originalResults;
     $original_results[1]->setActiveState(TRUE);
 
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($original_results);
     $facet->setWidgetConfigs(['show_numbers' => 0]);
 
@@ -182,7 +182,7 @@ class LinksWidgetTest extends UnitTestCase {
     $original_results[1]->setActiveState(TRUE);
     $original_results[1]->setChildren($child);
 
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($original_results);
     $facet->setWidgetConfigs(['show_numbers' => 1]);
 

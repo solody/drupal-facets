@@ -56,7 +56,7 @@ class CheckboxWidgetTest extends UnitTestCase {
    * Tests widget without filters.
    */
   public function testNoFilterResults() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->setWidgetConfigs(['show_numbers' => 1]);
 

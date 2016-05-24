@@ -71,7 +71,7 @@ class CountLimitProcessorTest extends UnitTestCase {
    * Tests no filtering happens.
    */
   public function testNoFilter() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->addProcessor([
       'processor_id' => 'count_limit',
@@ -92,7 +92,7 @@ class CountLimitProcessorTest extends UnitTestCase {
    * Tests no filtering happens.
    */
   public function testMinEqualsValue() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->addProcessor([
       'processor_id' => 'count_limit',
@@ -114,7 +114,7 @@ class CountLimitProcessorTest extends UnitTestCase {
    * Tests between minimum and maximum values.
    */
   public function testBetweenMinAndMaxValue() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->addProcessor([
       'processor_id' => 'count_limit',
@@ -140,7 +140,7 @@ class CountLimitProcessorTest extends UnitTestCase {
    * Tests maximum values.
    */
   public function testMaxValue() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->addProcessor([
       'processor_id' => 'count_limit',
@@ -170,7 +170,7 @@ class CountLimitProcessorTest extends UnitTestCase {
    * Tests filtering of results.
    */
   public function testFilterResults() {
-    $facet = new Facet([], 'facet');
+    $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->addProcessor([
       'processor_id' => 'count_limit',

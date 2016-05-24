@@ -91,7 +91,7 @@ class ListItemProcessorTest extends UnitTestCase {
     $processor = new ListItemProcessor([], $processor_id, [], $config_manager, $entity_field_manager);
 
     // Config entity field facet.
-    $module_field_facet = new Facet([], 'facet');
+    $module_field_facet = new Facet([], 'facets_facet');
     $module_field_facet->setFieldIdentifier('test_facet');
     $module_field_facet->setResults($this->results);
     $module_field_facet->addProcessor([
@@ -147,7 +147,7 @@ class ListItemProcessorTest extends UnitTestCase {
     $processor = new ListItemProcessor([], $processor_id, [], $config_manager, $entity_field_manager);
 
     // Base prop facet.
-    $base_prop_facet = new Facet([], 'facet');
+    $base_prop_facet = new Facet([], 'facets_facet');
     $base_prop_facet->setFieldIdentifier('test_facet_baseprop');
     $base_prop_facet->setResults($this->results);
     $base_prop_facet->addProcessor([
