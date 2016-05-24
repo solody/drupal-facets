@@ -33,17 +33,6 @@ abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements Widg
   /**
    * {@inheritdoc}
    */
-  public function sort(FacetInterface $facet, array $results) {
-    $processors = $facet->getProcessors();
-    $config = $processors[$this->getPluginId()];
-
-    // This should load the facet's config to find the ordering direction.
-    return $this->sortResults($results, $config->getConfiguration()['sort']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function defaultConfiguration() {
     return ['sort' => 'ASC'];
   }

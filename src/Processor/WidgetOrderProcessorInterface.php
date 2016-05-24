@@ -6,7 +6,7 @@ use Drupal\facets\Result\Result;
 /**
  * Processor runs before the renderable array is created.
  */
-interface WidgetOrderProcessorInterface extends SortProcessorInterface {
+interface WidgetOrderProcessorInterface {
 
   /**
    * Orders results and return the new order of results.
