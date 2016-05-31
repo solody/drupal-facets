@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Represents a facet source which represents the Search API views.
+ * A facet source to support node search pages.
  *
  * @FacetsFacetSource(
  *   id = "core_node_search",
