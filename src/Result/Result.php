@@ -22,9 +22,9 @@ class Result implements ResultInterface {
   /**
    * The facet count.
    *
-   * @var int
+   * @var int|FALSE
    */
-  protected $count;
+  protected $count = FALSE;
 
   /**
    * The Url object.

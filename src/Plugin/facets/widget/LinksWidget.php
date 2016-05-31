@@ -208,7 +208,7 @@ class LinksWidget implements WidgetInterface {
    */
   protected function extractText(ResultInterface $result) {
     $text = new FormattableMarkup('@text', ['@text' => $result->getDisplayValue(), '@count' => $result->getCount()]);
-    if ($this->showNumbers && $result->getCount()) {
+    if ($this->showNumbers && $result->getCount() !== FALSE) {
       $text->string .= ' <span class="facet-count">(@count)</span>';
     }
     if ($result->isActive()) {
