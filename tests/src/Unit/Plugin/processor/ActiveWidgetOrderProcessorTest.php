@@ -16,7 +16,7 @@ class ActiveWidgetOrderProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facets\Processor\WidgetOrderProcessorInterface
+   * @var \Drupal\facets\Processor\SortProcessorInterface
    */
   protected $processor;
 

@@ -8,7 +8,7 @@ use Drupal\facets\FacetInterface;
 /**
  * A base class for plugins that implements some boilerplate for a widget order.
  */
-abstract class WidgetOrderPluginBase extends ProcessorPluginBase implements WidgetOrderProcessorInterface {
+abstract class SortProcessorPluginBase extends ProcessorPluginBase implements SortProcessorInterface {
 
   /**
    * {@inheritdoc}

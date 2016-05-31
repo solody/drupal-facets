@@ -18,7 +18,7 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facets\processor\WidgetOrderProcessorInterface
+   * @var \Drupal\facets\processor\SortProcessorInterface
    */
   protected $processor;
 

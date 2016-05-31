@@ -12,7 +12,7 @@ use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\facets\UrlProcessor\UrlProcessorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\facets\Widget\WidgetPluginManager;
-use Drupal\facets\Processor\WidgetOrderProcessorInterface;
+use Drupal\facets\Processor\SortProcessorInterface;
 
 /**
  * Provides a form for configuring the processors of a facet.
@@ -214,7 +214,7 @@ class FacetForm extends EntityForm {
       ),
     );
     foreach ($all_processors as $processor_id => $processor) {
-      if (!($processor instanceof WidgetOrderProcessorInterface) && !($processor instanceof UrlProcessorInterface)) {
+      if (!($processor instanceof SortProcessorInterface) && !($processor instanceof UrlProcessorInterface)) {
         $clean_css_id = Html::cleanCssIdentifier($processor_id);
         $form['facet_settings'][$processor_id]['status'] = array(
           '#type' => 'checkbox',
@@ -270,7 +270,7 @@ class FacetForm extends EntityForm {
       ),
     );
     foreach ($all_processors as $processor_id => $processor) {
-      if ($processor instanceof WidgetOrderProcessorInterface) {
+      if ($processor instanceof SortProcessorInterface) {
         $clean_css_id = Html::cleanCssIdentifier($processor_id);
         $form['facet_sorting'][$processor_id]['status'] = array(
           '#type' => 'checkbox',
@@ -517,7 +517,7 @@ class FacetForm extends EntityForm {
     /** @var \Drupal\facets\Processor\ProcessorInterface $processor */
     $processors = $facet->getProcessors(FALSE);
     foreach ($processors as $processor_id => $processor) {
-      $form_container_key = $processor instanceof WidgetOrderProcessorInterface ? 'facet_sorting' : 'facet_settings';
+      $form_container_key = $processor instanceof SortProcessorInterface ? 'facet_sorting' : 'facet_settings';
       if (empty($values[$form_container_key][$processor_id]['status'])) {
         $facet->removeProcessor($processor_id);
         continue;

@@ -1,12 +1,13 @@
 <?php
 
 namespace Drupal\facets\Processor;
+
 use Drupal\facets\Result\Result;
 
 /**
  * Processor runs before the renderable array is created.
  */
-interface WidgetOrderProcessorInterface {
+interface SortProcessorInterface {
 
   /**
    * Orders results and return the new order of results.

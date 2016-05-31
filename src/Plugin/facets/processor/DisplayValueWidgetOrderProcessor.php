@@ -4,8 +4,8 @@ namespace Drupal\facets\Plugin\facets\processor;
 
 use Drupal\Component\Transliteration\TransliterationInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\facets\Processor\WidgetOrderPluginBase;
-use Drupal\facets\Processor\WidgetOrderProcessorInterface;
+use Drupal\facets\Processor\SortProcessorInterface;
+use Drupal\facets\Processor\SortProcessorPluginBase;
 use Drupal\facets\Result\Result;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class DisplayValueWidgetOrderProcessor extends WidgetOrderPluginBase implements WidgetOrderProcessorInterface, ContainerFactoryPluginInterface {
+class DisplayValueWidgetOrderProcessor extends SortProcessorPluginBase implements SortProcessorInterface, ContainerFactoryPluginInterface {
 
   /**
    * The transliteration service.

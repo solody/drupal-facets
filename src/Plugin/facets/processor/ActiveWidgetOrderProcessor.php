@@ -3,8 +3,8 @@
 namespace Drupal\facets\Plugin\facets\processor;
 
 
-use Drupal\facets\Processor\WidgetOrderPluginBase;
-use Drupal\facets\Processor\WidgetOrderProcessorInterface;
+use Drupal\facets\Processor\SortProcessorPluginBase;
+use Drupal\facets\Processor\SortProcessorInterface;
 use Drupal\facets\Result\Result;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\facets\Result\Result;
  *   }
  * )
  */
-class ActiveWidgetOrderProcessor extends WidgetOrderPluginBase implements WidgetOrderProcessorInterface {
+class ActiveWidgetOrderProcessor extends SortProcessorPluginBase implements SortProcessorInterface {
 
   /**
    * {@inheritdoc}

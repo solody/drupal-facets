@@ -283,7 +283,7 @@ class DefaultFacetManager {
     // Get the current results from the facets and let all processors that
     // trigger on the build step do their build processing.
     // @see \Drupal\facets\Processor\BuildProcessorInterface.
-    // @see \Drupal\facets\Processor\WidgetOrderProcessorInterface.
+    // @see \Drupal\facets\Processor\SortProcessorInterface.
     $results = $facet->getResults();
 
     foreach ($facet->getProcessorsByStage(ProcessorInterface::STAGE_BUILD) as $processor) {
