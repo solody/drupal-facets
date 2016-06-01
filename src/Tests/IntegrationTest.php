@@ -364,6 +364,30 @@ class IntegrationTest extends WebTestBase {
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
 
+    // Post the form with valid values, so we can test the next step.
+    $form_values = [
+      'name' => 'name 1',
+      'id' => 'name_1',
+      'status' => 1,
+    ];
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+
+    // Create an array of values that are not allowed in the url.
+    $unwanted_values = [' ', '!', '@', '#', '$', '%', '^', '&'];
+    foreach ($unwanted_values as $unwanted_value) {
+      $form_values = [
+        'facet_settings[url_alias]' => 'alias' . $unwanted_value . '1',
+      ];
+      $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+      $this->assertText($this->t('Url alias has illegal characters.'));
+    }
+
+    // Post an alias with allowed values.
+    $form_values = [
+      'facet_settings[url_alias]' => 'alias~-_.1',
+    ];
+    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->assertRaw($this->t('Facet %name has been updated.', ['%name' => 'name 1']));
   }
 
   /**

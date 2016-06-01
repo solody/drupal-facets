@@ -329,15 +329,12 @@ class FacetForm extends EntityForm {
     ];
 
     $form['facet_settings']['url_alias'] = [
-      '#type' => 'machine_name',
+      '#type' => 'textfield',
       '#title' => $this->t('Url alias'),
+      '#description' => $this->t('This will appear in the URL to identify this facet. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed.'),
       '#default_value' => $facet->getUrlAlias(),
       '#maxlength' => 50,
       '#required' => TRUE,
-      '#machine_name' => [
-        'exists' => [\Drupal::service('entity_type.manager')->getStorage('facets_facet'), 'load'],
-        'source' => ['name'],
-      ],
     ];
 
     $empty_behavior_config = $facet->getEmptyBehavior();
@@ -500,6 +497,17 @@ class FacetForm extends EntityForm {
         $processors[$processor_id]->validateConfigurationForm($form['facet_sorting'][$processor_id], $processor_form_state, $facet);
       }
     }
+
+    // Validate url alias.
+    $url_alias = $form_state->getValue(['facet_settings', 'url_alias']);
+    if ($url_alias == 'page') {
+      $form_state->setErrorByName('url_alias', $this->t('This url alias is not allowed.'));
+    }
+    elseif (preg_match('/[^a-zA-Z0-9_~\.\-]/', $url_alias)) {
+      $form_state->setErrorByName('url_alias', $this->t('Url alias has illegal characters.'));
+    }
+    // @todo: validate if url_alias is already used by another facet with the
+    // same facet source.
   }
 
   /**
