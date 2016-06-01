@@ -82,7 +82,7 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
     $indexed_fields = [];
     $fields = $this->index->getFields();
     foreach ($fields as $field) {
-      $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel();
+      $indexed_fields[$field->getFieldIdentifier()] = $field->getLabel() . ' ('. $field->getPropertyPath() . ')';
     }
     return $indexed_fields;
   }
