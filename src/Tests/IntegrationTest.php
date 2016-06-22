@@ -4,6 +4,7 @@ namespace Drupal\facets\Tests;
 
 use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
+use Drupal\views\Entity\View;
 
 /**
  * Tests the overall functionality of the Facets admin UI.
@@ -11,6 +12,8 @@ use Drupal\facets\Entity\Facet;
  * @group facets
  */
 class IntegrationTest extends WebTestBase {
+
+  public static $modules = ['views_ui'];
 
   /**
    * {@inheritdoc}
@@ -517,6 +520,76 @@ class IntegrationTest extends WebTestBase {
     $this->assertText('Displaying 3 search results');
     $this->assertText('article (2)');
     $this->assertText('item (1)');
+  }
+
+  /**
+   * Tests what happens when a dependency is removed.
+   */
+  public function testOnViewRemoval() {
+    $id = "owl";
+    $name = "Owl";
+    $this->createFacet($name, $id);
+
+    $this->drupalGet('/admin/config/search/facets');
+    $this->assertResponse(200);
+
+    // Check that the expected facet sources and the owl facet are shown.
+    $this->assertText('search_api_views:search_api_test_view:block_1');
+    $this->assertText('search_api_views:search_api_test_view:page_1');
+    $this->assertText($name);
+
+    // Delete the view on which both facet sources are based.
+    $view = View::load('search_api_test_view');
+    $view->delete();
+
+    // Go back to the overview, make sure that the page doesn't show any errors
+    // and the facet/facet source are deleted.
+    $this->drupalGet('/admin/config/search/facets');
+    $this->assertResponse(200);
+    $this->assertNoText('search_api_views:search_api_test_view:page_1');
+    $this->assertNoText('search_api_views:search_api_test_view:block_1');
+    $this->assertNoText($name);
+  }
+
+  /**
+   * Tests what happens when a dependency is removed.
+   */
+  public function testOnViewDisplayRemoval() {
+    $admin_user = $this->drupalCreateUser([
+      'administer search_api',
+      'administer facets',
+      'access administration pages',
+      'administer nodes',
+      'access content overview',
+      'administer content types',
+      'administer blocks',
+      'administer views',
+    ]);
+    $this->drupalLogin($admin_user);
+    $id = "owl";
+    $name = "Owl";
+    $this->createFacet($name, $id);
+
+    $this->drupalGet('/admin/config/search/facets');
+    $this->assertResponse(200);
+
+    // Check that the expected facet sources and the owl facet are shown.
+    $this->assertText('search_api_views:search_api_test_view:block_1');
+    $this->assertText('search_api_views:search_api_test_view:page_1');
+    $this->assertText($name);
+
+    // Delete the view display for the page.
+    $this->drupalGet('admin/structure/views/view/search_api_test_view');
+    $this->drupalPostForm(NULL, [], $this->t('Delete Page'));
+    $this->drupalPostForm(NULL, [], $this->t('Save'));
+
+    // Go back to the overview, make sure that the page doesn't show any errors
+    // and the facet/facet source are deleted.
+    $this->drupalGet('/admin/config/search/facets');
+    $this->assertResponse(200);
+    $this->assertNoText('search_api_views:search_api_test_view:page_1');
+    $this->assertText('search_api_views:search_api_test_view:block_1');
+    $this->assertNoText($name);
   }
 
   /**

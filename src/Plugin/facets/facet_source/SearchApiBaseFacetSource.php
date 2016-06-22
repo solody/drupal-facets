@@ -3,7 +3,6 @@
 namespace Drupal\facets\Plugin\facets\facet_source;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facets\Exception\InvalidQueryTypeException;
 use Drupal\facets\FacetInterface;
 use Drupal\search_api\Backend\BackendInterface;
@@ -15,8 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * A base class for Search API facet sources.
  */
 abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
-
-  use StringTranslationTrait;
 
   /**
    * The search index.

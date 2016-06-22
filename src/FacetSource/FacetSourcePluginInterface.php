@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\FacetSource;
 
+use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\facets\FacetInterface;
 
@@ -14,7 +15,7 @@ use Drupal\facets\FacetInterface;
  *
  * @see plugin_api
  */
-interface FacetSourcePluginInterface extends PluginFormInterface {
+interface FacetSourcePluginInterface extends PluginFormInterface, DependentPluginInterface {
 
   /**
    * Fills the facet entities with results from the facet source.

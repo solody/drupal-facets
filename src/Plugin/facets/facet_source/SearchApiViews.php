@@ -2,7 +2,6 @@
 
 namespace Drupal\facets\Plugin\facets\facet_source;
 
-use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
 use Drupal\search_api\Query\ResultSetInterface;
@@ -21,8 +20,6 @@ use Drupal\views\Views;
  * )
  */
 class SearchApiViews extends SearchApiBaseFacetSource implements SearchApiFacetSourceInterface {
-
-  use DependencySerializationTrait;
 
   /**
    * The entity manager.
@@ -163,6 +160,16 @@ class SearchApiViews extends SearchApiBaseFacetSource implements SearchApiFacetS
    */
   public function getIndex() {
     return $this->index;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    $plugin_id_array = explode(':', $this->pluginId);
+    $dependencies['config'] = ['views.view.' . $plugin_id_array[1]];
+
+    return $dependencies;
   }
 
 }

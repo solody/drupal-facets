@@ -739,4 +739,17 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    $facet_dependencies = $this->getFacetSource()->calculateDependencies();
+    if (!empty($facet_dependencies)) {
+      $this->addDependencies($facet_dependencies);
+    }
+
+    return $this;
+  }
+
 }

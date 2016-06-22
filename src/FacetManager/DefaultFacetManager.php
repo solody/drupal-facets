@@ -166,7 +166,7 @@ class DefaultFacetManager {
    * @return \Drupal\facets\FacetInterface[]
    *   An array of enabled facets.
    */
-  protected function getFacetsByFacetSourceId($facetsource_id) {
+  public function getFacetsByFacetSourceId($facetsource_id) {
     $facets = [];
     foreach ($this->facets as $facet) {
       if ($facet->getFacetSourceId() == $facetsource_id) {

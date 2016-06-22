@@ -6,7 +6,9 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\facets\Entity\FacetSource;
 use Drupal\search_api\Query\QueryInterface;
+use Drupal\views\Entity\View;
 
 /**
  * Implements hook_help().
@@ -39,4 +41,55 @@ function facets_search_api_query_alter(QueryInterface &$query) {
     // Add the active filters.
     $facet_manager->alterQuery($query, $search_id);
   }
+}
+
+/**
+ * Implements hook_entity_presave().
+ *
+ * We implement this to make sure that a facet gets removed on view updates, so
+ * we don't get broken facet blocks.
+ */
+function facets_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+  // Make sure that we only react on view entities with changed displays.
+  if ($entity instanceof View && !empty($entity->original)) {
+    if ($entity->original->get('display') != $entity->get('display')) {
+
+      /** @var \Drupal\facets\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
+      $facet_source_plugin_manager = \Drupal::getContainer()
+        ->get('plugin.manager.facets.facet_source');
+      $definitions = $facet_source_plugin_manager->getDefinitions();
+
+      // Setup an array of sources that are deleted.
+      $sources = [];
+      foreach ($entity->original->get('display') as $k => $display) {
+        // Check if the current display is also a facet source plugin and that
+        // is removed from the view.
+        $test = 'search_api_views:' . $entity->id() . ':' . $display['id'];
+        if (array_key_exists($test, $definitions) && !array_key_exists($k, $entity->get('display'))) {
+          $entity_id = str_replace(':', '__', $test);
+          $source_entity = FacetSource::load($entity_id);
+          if (!is_null($source_entity)) {
+            $source_entity->delete();
+            $sources[] = $test;
+          }
+        }
+      }
+
+
+      // Loop over all deleted sources and delete the facets that were linked to
+      // that source.
+      if (count($sources) > 0) {
+        /** @var \Drupal\facets\FacetManager\DefaultFacetManager $fm */
+        $fm = \Drupal::getContainer()->get('facets.manager');
+        foreach ($sources as $source) {
+          $facets = $fm->getFacetsByFacetSourceId($source);
+          foreach ($facets as $facet) {
+            $facet->delete();
+          }
+        }
+      }
+      $facet_source_plugin_manager->clearCachedDefinitions();
+    }
+  }
+
 }
