@@ -394,7 +394,6 @@ class IntegrationTest extends WebTestBase {
     $form_values = [
       'name' => 'name 1',
       'id' => 'name_1',
-      'status' => 1,
     ];
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
 
