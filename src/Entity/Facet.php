@@ -251,13 +251,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $weight;
 
   /**
-   * {@inheritdoc}
-   */
-  public function __construct(array $values, $entity_type) {
-    parent::__construct($values, $entity_type);
-  }
-
-  /**
    * Returns the widget plugin manager.
    *
    * @return \Drupal\facets\Widget\WidgetPluginManager
