@@ -9,6 +9,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\facets\Entity\FacetSource;
 use Drupal\search_api\Query\QueryInterface;
 use Drupal\views\Entity\View;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_help().
@@ -49,7 +50,7 @@ function facets_search_api_query_alter(QueryInterface &$query) {
  * We implement this to make sure that a facet gets removed on view updates, so
  * we don't get broken facet blocks.
  */
-function facets_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+function facets_entity_presave(EntityInterface $entity) {
   // Make sure that we only react on view entities with changed displays.
   if ($entity instanceof View && !empty($entity->original)) {
     if ($entity->original->get('display') != $entity->get('display')) {

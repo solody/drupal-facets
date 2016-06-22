@@ -207,7 +207,7 @@ class IntegrationTest extends WebTestBase {
    *
    * @param string $facet_id
    *   The id of the facet.
-   * @param bool|TRUE $show
+   * @param bool $show
    *   Boolean to determine if we want to show the amount of results.
    */
   protected function setShowAmountOfResults($facet_id, $show = TRUE) {

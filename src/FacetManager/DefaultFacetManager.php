@@ -2,7 +2,6 @@
 
 namespace Drupal\facets\FacetManager;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\facets\Exception\InvalidProcessorException;
@@ -184,7 +183,7 @@ class DefaultFacetManager {
    * set when this method is called ensuring that facets are built only once
    * regardless of how many times this method is called.
    *
-   * @param string|NULL $facetsource_id
+   * @param string|null $facetsource_id
    *   The facetsource if of the currently processed facet.
    */
   public function processFacets($facetsource_id = NULL) {
@@ -359,7 +358,7 @@ class DefaultFacetManager {
    * @param \Drupal\facets\FacetInterface $facet
    *   The facet to process.
    *
-   * @return \Drupal\facets\FacetInterface|NULL
+   * @return \Drupal\facets\FacetInterface|null
    *   The updated facet if it exists, NULL otherwise.
    */
   public function returnProcessedFacet(FacetInterface $facet) {

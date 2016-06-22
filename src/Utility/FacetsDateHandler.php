@@ -169,7 +169,7 @@ class FacetsDateHandler {
    *   A string containing the start date as an ISO date string.
    * @param int $end_time
    *   A string containing the end date as an ISO date string.
-   * @param string|NULL $min_gap
+   * @param string|null $min_gap
    *   (Optional) The minimum gap that should be returned.
    *
    * @return string
@@ -225,7 +225,7 @@ class FacetsDateHandler {
    *   A string containing the start date as an ISO date string.
    * @param string $end_date
    *   A string containing the end date as an ISO date string.
-   * @param string|NULL $min_gap
+   * @param string|null $min_gap
    *   (Optional) The minimum gap that should be returned.
    *
    * @return string

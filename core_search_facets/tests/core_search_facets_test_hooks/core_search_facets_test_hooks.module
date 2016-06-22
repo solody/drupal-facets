@@ -13,4 +13,3 @@ function core_search_facets_test_hooks_facets_core_allowed_field_types(array $al
 
   return $allowed_field_types;
 }
-

@@ -232,7 +232,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Loads the facet sources for this facet.
    *
-   * @param bool|TRUE $only_enabled
+   * @param bool $only_enabled
    *   Only return enabled facet sources.
    *
    * @return \Drupal\facets\FacetSource\FacetSourcePluginInterface[]
@@ -243,7 +243,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Returns an array of processors with their configuration.
    *
-   * @param bool|TRUE $only_enabled
+   * @param bool $only_enabled
    *   Only return enabled processors.
    *
    * @return \Drupal\facets\Processor\ProcessorInterface[]
@@ -323,7 +323,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Returns the defined no-results behavior or NULL if none defined.
    *
-   * @return array|NULL
+   * @return array|null
    *   The behavior definition or NULL.
    */
   public function getEmptyBehavior();
