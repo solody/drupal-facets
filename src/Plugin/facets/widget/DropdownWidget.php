@@ -36,7 +36,7 @@ class DropdownWidget extends LinksWidget {
 
     $configuration = $facet->getWidgetConfigs();
     $this->showNumbers = empty($configuration['show_numbers']) ? FALSE : (bool) $configuration['show_numbers'];
-    $this->defaultOptionLabel = isset($configuration['default_option_label']) ? $configuration['default_option_label'] : '';
+    $this->defaultOptionLabel = isset($configuration['default_option_label']) ? $this->t($configuration['default_option_label']) : '';
 
     foreach ($results as $result) {
       if (is_null($result->getUrl())) {
