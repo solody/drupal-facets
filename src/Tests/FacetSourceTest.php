@@ -15,7 +15,6 @@ class FacetSourceTest extends WebTestBase {
   public static $modules = [
     'views',
     'search_api',
-    'search_api_test_backend',
     'facets',
     'facets_search_api_dependency',
     'facets_query_processor',

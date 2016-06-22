@@ -17,7 +17,6 @@ class LanguageIntegrationTest extends WebTestBase {
   public static $modules = [
     'views',
     'search_api',
-    'search_api_test_backend',
     'facets',
     'block',
     'facets_search_api_dependency',

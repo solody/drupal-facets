@@ -16,7 +16,6 @@ class WidgetIntegrationTest extends WebTestBase {
     'views',
     'node',
     'search_api',
-    'search_api_test_backend',
     'facets',
     'block',
     'facets_search_api_dependency',
