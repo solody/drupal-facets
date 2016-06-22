@@ -103,7 +103,7 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
       }
     }
 
-    throw new InvalidQueryTypeException($this->t("No available query types were found for facet @facet", ['@facet' => $facet->getName()]));
+    throw new InvalidQueryTypeException("No available query types were found for facet {$facet->getName()}");
   }
 
   /**

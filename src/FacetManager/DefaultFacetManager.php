@@ -206,7 +206,7 @@ class DefaultFacetManager {
         /** @var \Drupal\facets\processor\PostQueryProcessorInterface $post_query_processor */
         $post_query_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], ['facet' => $facet]);
         if (!$post_query_processor instanceof PostQueryProcessorInterface) {
-          throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a post_query definition but doesn't implement the required PostQueryProcessor interface", ['@processor' => $processor->getPluginDefinition()['id']]));
+          throw new InvalidProcessorException("The processor {$processor->getPluginDefinition()['id']} has a post_query definition but doesn't implement the required PostQueryProcessor interface");
         }
         $post_query_processor->postQuery($facet);
       }
@@ -228,7 +228,7 @@ class DefaultFacetManager {
           /** @var PreQueryProcessorInterface $pre_query_processor */
           $pre_query_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], ['facet' => $facet]);
           if (!$pre_query_processor instanceof PreQueryProcessorInterface) {
-            throw new InvalidProcessorException(new FormattableMarkup("The processor @processor has a pre_query definition but doesn't implement the required PreQueryProcessorInterface interface", ['@processor' => $processor->getPluginDefinition()['id']]));
+            throw new InvalidProcessorException("The processor {$processor->getPluginDefinition()['id']} has a pre_query definition but doesn't implement the required PreQueryProcessorInterface interface");
           }
           $pre_query_processor->preQuery($facet);
         }
