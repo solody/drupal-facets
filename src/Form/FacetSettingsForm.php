@@ -2,9 +2,12 @@
 
 namespace Drupal\facets\Form;
 
+use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginManager;
 use Drupal\facets\Processor\ProcessorPluginManager;
@@ -38,26 +41,56 @@ class FacetSettingsForm extends EntityForm {
   protected $processorPluginManager;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The block manager.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $blockManager;
+
+  /**
+   * The url generator.
+   *
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface
+   */
+   protected $urlGenerator;
+
+  /**
    * Constructs a FacetForm object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity manager.
    * @param \Drupal\facets\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager
    *   The plugin manager for facet sources.
    * @param \Drupal\facets\Processor\ProcessorPluginManager $processor_plugin_manager
    *   The plugin manager for processors.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
+   *   The block manager.
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   *   The url generator.
    */
-  public function __construct(EntityTypeManager $entity_type_manager, FacetSourcePluginManager $facet_source_plugin_manager, ProcessorPluginManager $processor_plugin_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, FacetSourcePluginManager $facet_source_plugin_manager, ProcessorPluginManager $processor_plugin_manager, ModuleHandlerInterface $module_handler, BlockManagerInterface $block_manager, UrlGeneratorInterface $url_generator) {
     $this->facetStorage = $entity_type_manager->getStorage('facets_facet');
     $this->facetSourcePluginManager = $facet_source_plugin_manager;
     $this->processorPluginManager = $processor_plugin_manager;
+    $this->moduleHandler = $module_handler;
+    $this->blockManager = $block_manager;
+    $this->urlGenerator = $url_generator;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
     $entity_type_manager = $container->get('entity_type.manager');
 
     /** @var \Drupal\facets\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager */
@@ -66,37 +99,16 @@ class FacetSettingsForm extends EntityForm {
     /** @var \Drupal\facets\Processor\ProcessorPluginManager $processor_plugin_manager */
     $processor_plugin_manager = $container->get('plugin.manager.facets.processor');
 
-    return new static($entity_type_manager, $facet_source_plugin_manager, $processor_plugin_manager);
-  }
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
+    $module_handler = $container->get('module_handler');
 
-  /**
-   * Retrieves the facet storage controller.
-   *
-   * @return \Drupal\Core\Entity\EntityStorageInterface
-   *   The facet storage controller.
-   */
-  protected function getFacetStorage() {
-    return $this->facetStorage ?: \Drupal::service('entity_type.manager')->getStorage('facets_facet');
-  }
+    /** @var \Drupal\Core\Block\BlockManagerInterface $block_manager */
+    $block_manager = $container->get('plugin.manager.block');
 
-  /**
-   * Returns the facet source plugin manager.
-   *
-   * @return \Drupal\facets\FacetSource\FacetSourcePluginManager
-   *   The facet source plugin manager.
-   */
-  protected function getFacetSourcePluginManager() {
-    return $this->facetSourcePluginManager ?: \Drupal::service('plugin.manager.facets.facet_source');
-  }
+    /** @var \Drupal\Core\Routing\UrlGeneratorInterface $url_generator */
+    $url_generator = $container->get('url_generator');
 
-  /**
-   * Returns the processor plugin manager.
-   *
-   * @return \Drupal\facets\Processor\ProcessorPluginManager
-   *   The processor plugin manager.
-   */
-  protected function getProcessorPluginManager() {
-    return $this->processorPluginManager ?: \Drupal::service('plugin.manager.facets.processor');
+    return new static($entity_type_manager, $facet_source_plugin_manager, $processor_plugin_manager, $module_handler, $block_manager, $url_generator);
   }
 
   /**
@@ -136,7 +148,7 @@ class FacetSettingsForm extends EntityForm {
   public function buildEntityForm(array &$form, FormStateInterface $form_state, FacetInterface $facet) {
 
     $facet_sources = [];
-    foreach ($this->getFacetSourcePluginManager()->getDefinitions() as $facet_source_id => $definition) {
+    foreach ($this->facetSourcePluginManager->getDefinitions() as $facet_source_id => $definition) {
       $facet_sources[$definition['id']] = !empty($definition['label']) ? $definition['label'] : $facet_source_id;
     }
 
@@ -195,7 +207,7 @@ class FacetSettingsForm extends EntityForm {
       '#maxlength' => 50,
       '#required' => TRUE,
       '#machine_name' => [
-        'exists' => [$this->getFacetStorage(), 'load'],
+        'exists' => [$this->facetStorage, 'load'],
         'source' => ['name'],
       ],
     ];
@@ -236,7 +248,7 @@ class FacetSettingsForm extends EntityForm {
 
     if (!is_null($facet_source_id) && $facet_source_id !== '') {
       /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
-      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
+      $facet_source = $this->facetSourcePluginManager->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
 
       if ($config_form = $facet_source->buildConfigurationForm([], $form_state)) {
         $form['facet_source_configs'][$facet_source_id]['#type'] = 'container';
@@ -256,7 +268,7 @@ class FacetSettingsForm extends EntityForm {
     $facet_source_id = $form_state->getValue('facet_source_id');
     if (!is_null($facet_source_id) && $facet_source_id !== '') {
       /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
-      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
+      $facet_source = $this->facetSourcePluginManager->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
       $facet_source->validateConfigurationForm($form, $form_state);
     }
   }
@@ -273,8 +285,8 @@ class FacetSettingsForm extends EntityForm {
     if ($is_new) {
       // On facet creation, enable all locked processors by default, using their
       // default settings.
-      $stages = $this->getProcessorPluginManager()->getProcessingStages();
-      $processors_definitions = $this->getProcessorPluginManager()->getDefinitions();
+      $stages = $this->processorPluginManager->getProcessingStages();
+      $processors_definitions = $this->processorPluginManager->getDefinitions();
 
       foreach ($processors_definitions as $processor_id => $processor) {
         $is_locked = isset($processor['locked']) && $processor['locked'] == TRUE;
@@ -307,7 +319,7 @@ class FacetSettingsForm extends EntityForm {
     $facet_source_id = $form_state->getValue('facet_source_id');
     if (!is_null($facet_source_id) && $facet_source_id !== '') {
       /** @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
-      $facet_source = $this->getFacetSourcePluginManager()->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
+      $facet_source = $this->facetSourcePluginManager->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
       $facet_source->submitConfigurationForm($form, $form_state);
     }
     $facet->save();
@@ -331,8 +343,8 @@ class FacetSettingsForm extends EntityForm {
     }
 
     if ($is_new) {
-      if (\Drupal::moduleHandler()->moduleExists('block')) {
-        $message = $this->t('Facet %name has been created. Go to the <a href=":block_overview">Block overview page</a> to place the new block in the desired region.', ['%name' => $facet->getName(), ':block_overview' => \Drupal::urlGenerator()->generateFromRoute('block.admin_display')]);
+      if ($this->moduleHandler->moduleExists('block')) {
+        $message = $this->t('Facet %name has been created. Go to the <a href=":block_overview">Block overview page</a> to place the new block in the desired region.', ['%name' => $facet->getName(), ':block_overview' => $this->urlGenerator->generateFromRoute('block.admin_display')]);
         drupal_set_message($message);
         $form_state->setRedirect('entity.facets_facet.edit_form', ['facets_facet' => $facet->id()]);
       }
@@ -346,7 +358,7 @@ class FacetSettingsForm extends EntityForm {
     }
 
     // Clear Drupal cache for blocks to reflect recent changes.
-    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+    $this->blockManager->clearCachedDefinitions();
 
     return $facet;
   }
