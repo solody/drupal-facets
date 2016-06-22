@@ -381,6 +381,7 @@ class FacetForm extends EntityForm {
       '#type' => 'number',
       '#title' => $this->t('Weight'),
       '#default_value' => $facet->getWeight(),
+      '#description' => $this->t('This weight is used to determine the order of the facets in the URL if pretty paths are used.'),
       '#maxlength' => 4,
       '#required' => TRUE,
     ];
