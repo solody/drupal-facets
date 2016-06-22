@@ -123,7 +123,6 @@ class IntegrationTest extends WebTestBase {
 
     $form_values = [
       'id' => $facet_id,
-      'status' => 1,
       'name' => $facet_name,
       'facet_source_id' => 'search_api_views:search_api_test_view:block_1',
       'facet_source_configs[search_api_views:search_api_test_view:block_1][field_identifier]' => 'type',
@@ -380,7 +379,6 @@ class IntegrationTest extends WebTestBase {
     $form_values = [
       'name' => 'name 1',
       'id' => 'name 1',
-      'status' => 1,
     ];
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
@@ -388,7 +386,6 @@ class IntegrationTest extends WebTestBase {
     $form_values = [
       'name' => 'name 1',
       'id' => 'name:&1',
-      'status' => 1,
     ];
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
     $this->assertText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
@@ -697,7 +694,6 @@ class IntegrationTest extends WebTestBase {
     $form_values = [
       'name' => '',
       'id' => $facet_id,
-      'status' => 1,
     ];
 
     // Try filling out the form, but without having filled in a name for the

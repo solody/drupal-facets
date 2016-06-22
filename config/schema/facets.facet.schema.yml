@@ -14,9 +14,6 @@ facets.facet.*:
     weight:
       type: integer
       label: 'Weight'
-    status:
-      type: boolean
-      label: 'Status'
     url_alias:
       type: string
       label: 'Name of facet as used in the URL'

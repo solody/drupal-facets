@@ -17,7 +17,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
    */
   public function load() {
     $entities = parent::load();
-    $this->sortByStatusThenAlphabetically($entities);
+    $this->sortAlphabetically($entities);
     return $entities;
   }
 
@@ -65,10 +65,6 @@ class FacetListBuilder extends ConfigEntityListBuilder {
       'title' => [
         'data' => $this->t('Title'),
       ],
-      'status' => [
-        'data' => $this->t('Enabled'),
-        'class' => ['checkbox'],
-      ],
     ];
     return $header + parent::buildHeader();
   }
@@ -79,16 +75,6 @@ class FacetListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\facets\FacetInterface $entity */
     $row = parent::buildRow($entity);
-
-    $status_label = $entity->status() ? $this->t('Enabled') : $this->t('Disabled');
-    $status_icon = array(
-      '#theme' => 'image',
-      '#uri' => $entity->status() ? 'core/misc/icons/73b355/check.svg' : 'core/misc/icons/e32700/error.svg',
-      '#width' => 18,
-      '#height' => 18,
-      '#alt' => $status_label,
-      '#title' => $status_label,
-    );
 
     return array(
       'data' => array(
@@ -103,10 +89,6 @@ class FacetListBuilder extends ConfigEntityListBuilder {
             '#suffix' => '<div>' . $entity->getFieldAlias() . ' - ' . $entity->getWidget() . '</div>',
           ) + $entity->toUrl('edit-form')->toRenderArray(),
           'class' => array('search-api-title'),
-        ),
-        'status' => array(
-          'data' => $status_icon,
-          'class' => array('checkbox'),
         ),
         'operations' => $row['operations'],
       ),
@@ -127,9 +109,6 @@ class FacetListBuilder extends ConfigEntityListBuilder {
         ),
         'title' => array(
           'data' => $facet_source['id'],
-        ),
-        'status' => array(
-          'data' => '',
         ),
         'operations' => array(
           'data' => Link::createFromRoute(
@@ -213,7 +192,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
     $facets = $this->storage->loadMultiple();
     $facet_sources = $facet_source_plugin_manager->getDefinitions();
 
-    $this->sortByStatusThenAlphabetically($facets);
+    $this->sortAlphabetically($facets);
 
     $facet_source_groups = array();
     foreach ($facet_sources as $facet_source) {
@@ -240,21 +219,16 @@ class FacetListBuilder extends ConfigEntityListBuilder {
   }
 
   /**
-   * Sorts an array of entities by status and then alphabetically.
+   * Sorts an array of entities alphabetically.
    *
    * Will preserve the key/value association of the array.
    *
    * @param \Drupal\Core\Config\Entity\ConfigEntityInterface[] $entities
    *   An array of config entities.
    */
-  protected function sortByStatusThenAlphabetically(array &$entities) {
+  protected function sortAlphabetically(array &$entities) {
     uasort($entities, function (ConfigEntityInterface $a, ConfigEntityInterface $b) {
-      if ($a->status() == $b->status()) {
-        return strnatcasecmp($a->label(), $b->label());
-      }
-      else {
-        return $a->status() ? -1 : 1;
-      }
+      return strnatcasecmp($a->label(), $b->label());
     });
   }
 

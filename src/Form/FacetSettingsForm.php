@@ -211,13 +211,6 @@ class FacetSettingsForm extends EntityForm {
         'source' => ['name'],
       ],
     ];
-
-    $form['status'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enabled'),
-      '#description' => $this->t('Only enabled facets can be displayed.'),
-      '#default_value' => $facet->status(),
-    ];
   }
 
   /**

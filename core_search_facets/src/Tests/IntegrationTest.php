@@ -193,7 +193,6 @@ class IntegrationTest extends WebTestBase {
     $this->drupalGet('admin/config/search/facets/add-facet');
     $form_values = [
       'id' => $id,
-      'status' => 1,
       'name' => $name,
       'facet_source_id' => 'core_node_search:node_search',
       'facet_source_configs[core_node_search:node_search][field_identifier]' => $type,
@@ -298,7 +297,6 @@ class IntegrationTest extends WebTestBase {
     $form_values = [
       'name' => '',
       'id' => $facet_id,
-      'status' => 1,
     ];
 
     // Try filling out the form, but without having filled in a name for the
