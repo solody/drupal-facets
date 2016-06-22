@@ -26,3 +26,8 @@ services:
     class: Drupal\facets\Utility\FacetsDateHandler
     arguments:
       - '@date.formatter'
+  facets.event_subscriber:
+    class: Drupal\facets\EventSubscriber
+    arguments: ['@plugin.manager.block']
+    tags:
+      - { name: event_subscriber }

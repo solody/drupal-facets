@@ -161,6 +161,32 @@ class IntegrationTest extends WebTestBase {
   }
 
   /**
+   * Tests for deleting a block.
+   */
+  public function testBlockDelete() {
+    $name = 'Tawny-browed owl';
+    $id = 'tawny_browed_owl';
+
+    // Add a new facet.
+    $this->createFacet($name, $id);
+
+    $block = $this->blocks[$id];
+    $block_id = $block->label();
+
+    $this->drupalGet('admin/structure/block');
+    $this->assertText($block_id);
+
+    $this->drupalGet('admin/structure/block/library/classy');
+    $this->assertText($name);
+
+    $this->drupalGet('admin/config/search/facets/' . $id . '/delete');
+    $this->drupalPostForm(NULL, [], $this->t('Delete'));
+
+    $this->drupalGet('admin/structure/block/library/classy');
+    $this->assertNoText($name);
+  }
+
+  /**
    * Tests renaming of a facet.
    *
    * @see https://www.drupal.org/node/2629504
