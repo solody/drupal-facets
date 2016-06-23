@@ -325,8 +325,8 @@ class DefaultFacetManager {
     }
 
     // Let the widget plugin render the facet.
-    /** @var \Drupal\facets\Widget\WidgetInterface $widget */
-    $widget = $this->widgetPluginManager->createInstance($facet->getWidget());
+    /** @var \Drupal\facets\Widget\WidgetPluginInterface $widget */
+    $widget = $facet->getWidgetInstance();
 
     return [$widget->build($facet)];
   }

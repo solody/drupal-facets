@@ -3,11 +3,13 @@
 namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\widget\DropdownWidget;
 use Drupal\facets\Result\Result;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Unit test for widget.
@@ -49,7 +51,13 @@ class DropdownWidgetTest extends UnitTestCase {
     }
     $this->originalResults = $original_results;
 
-    $this->widget = new DropdownWidget();
+    // Creates a mocked container, so we can access string translation.
+    $container = $this->prophesize(ContainerInterface::class);
+    $string_translation = $this->prophesize(TranslationInterface::class);
+    $container->get('string_translation')->willReturn($string_translation->reveal());
+    \Drupal::setContainer($container->reveal());
+
+    $this->widget = new DropdownWidget(['show_numbers' => TRUE]);
   }
 
   /**
@@ -58,7 +66,6 @@ class DropdownWidgetTest extends UnitTestCase {
   public function testNoFilterResults() {
     $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
-    $facet->setWidgetConfigs(['show_numbers' => 1]);
 
     $output = $this->widget->build($facet);
 

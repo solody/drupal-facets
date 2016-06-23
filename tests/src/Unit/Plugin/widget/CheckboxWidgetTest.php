@@ -49,7 +49,7 @@ class CheckboxWidgetTest extends UnitTestCase {
     }
     $this->originalResults = $original_results;
 
-    $this->widget = new CheckboxWidget();
+    $this->widget = new CheckboxWidget(['show_numbers' => TRUE]);
   }
 
   /**
@@ -58,7 +58,6 @@ class CheckboxWidgetTest extends UnitTestCase {
   public function testNoFilterResults() {
     $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
-    $facet->setWidgetConfigs(['show_numbers' => 1]);
 
     $output = $this->widget->build($facet);
 
@@ -80,6 +79,14 @@ class CheckboxWidgetTest extends UnitTestCase {
       $this->assertEquals('link', $output['#items'][$index]['#type']);
       $this->assertEquals(['facet-item'], $output['#items'][$index]['#wrapper_attributes']['class']);
     }
+  }
+
+  /**
+   * Tests default configuration.
+   */
+  public function testDefaultConfiguration() {
+    $default_config = $this->widget->defaultConfiguration();
+    $this->assertEquals(['show_numbers' => FALSE, 'soft_limit' => 0], $default_config);
   }
 
   /**

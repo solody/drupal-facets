@@ -75,6 +75,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\facets\FacetInterface $entity */
     $row = parent::buildRow($entity);
+    $facet = $entity;
 
     return array(
       'data' => array(
@@ -85,14 +86,14 @@ class FacetListBuilder extends ConfigEntityListBuilder {
         'title' => array(
           'data' => array(
             '#type' => 'link',
-            '#title' => $entity->getName(),
-            '#suffix' => '<div>' . $entity->getFieldAlias() . ' - ' . $entity->getWidget() . '</div>',
-          ) + $entity->toUrl('edit-form')->toRenderArray(),
+            '#title' => $facet->label(),
+            '#suffix' => '<div>' . $facet->getFieldAlias() . ' - ' . $facet->getWidget()['type'] . '</div>',
+          ) + $facet->toUrl('edit-form')->toRenderArray(),
           'class' => array('search-api-title'),
         ),
         'operations' => $row['operations'],
       ),
-      'title' => $this->t('ID: @name', array('@name' => $entity->id())),
+      'title' => $this->t('ID: @name', array('@name' => $facet->id())),
       'class' => array('facet'),
     );
   }

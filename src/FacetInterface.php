@@ -10,23 +10,35 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface FacetInterface extends ConfigEntityInterface {
 
   /**
-   * Sets the facet's widget plugin id.
+   * Sets the facet widget definition.
    *
-   * @param string $widget
+   * @param string $id
    *   The widget plugin id.
+   * @param array $configuration
+   *   (optional) The facet widget plugin configuration. If missed, the default
+   *   plugin configuration will be filled.
    *
    * @return $this
-   *   Returns self
    */
-  public function setWidget($widget);
+  public function setWidget($id, array $configuration = NULL);
 
   /**
-   * Returns the facet's widget plugin id.
+   * Returns the facet widget definition.
    *
-   * @return string
-   *   The widget plugin id.
+   * @return array
+   *   An associative array with the following structure:
+   *   - id: The widget plugin id as a string.
+   *   - config: The widget configuration as an array.
    */
   public function getWidget();
+
+  /**
+   * Returns the facet widget instance.
+   *
+   * @return \Drupal\facets\Widget\WidgetPluginBase
+   *   The plugin instance
+   */
+  public function getWidgetInstance();
 
   /**
    * Returns field identifier.
@@ -327,22 +339,6 @@ interface FacetInterface extends ConfigEntityInterface {
    *   The behavior definition or NULL.
    */
   public function getEmptyBehavior();
-
-  /**
-   * Returns the configuration of the selected widget.
-   *
-   * @return array
-   *   The configuration settings for the widget.
-   */
-  public function getWidgetConfigs();
-
-  /**
-   * Sets the configuration for the widget of this facet.
-   *
-   * @param array $widget_config
-   *   The configuration settings for the widget.
-   */
-  public function setWidgetConfigs(array $widget_config);
 
   /**
    * Returns any additional configuration for this facet, not defined above.

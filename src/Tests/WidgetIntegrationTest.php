@@ -69,14 +69,15 @@ class WidgetIntegrationTest extends WebTestBase {
   }
 
   /**
-   * Tests select widget's basic functionality.
+   * Tests dropdown widget's basic functionality.
    */
-  public function testSelectWidget() {
+  public function testDropdownWidget() {
     $id = 'select_widget';
     $name = 'Select';
     $this->createFacet($name, $id);
     $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
-    $this->drupalPostForm(NULL, ['widget' => 'select'], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['widget' => 'dropdown'], $this->t('Configure widget'));
+    $this->drupalPostForm(NULL, ['widget' => 'dropdown', 'facet_settings[show_only_one_result]' => TRUE], $this->t('Save'));
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 5 search results');
@@ -101,7 +102,7 @@ class WidgetIntegrationTest extends WebTestBase {
     $this->assertLink('article');
 
     $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_configs[show_numbers]' => TRUE], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_config[show_numbers]' => TRUE], $this->t('Save'));
 
     // Go back to the same view and check that links now display the count.
     $this->drupalGet('search-api-test-fulltext');
@@ -110,7 +111,7 @@ class WidgetIntegrationTest extends WebTestBase {
 
     $edit = [
       'widget' => 'links',
-      'widget_configs[show_numbers]' => TRUE,
+      'widget_config[show_numbers]' => TRUE,
       'facet_settings[query_operator]' => 'OR',
     ];
     $this->drupalPostForm($facet_edit_page, $edit, $this->t('Save'));
@@ -123,7 +124,7 @@ class WidgetIntegrationTest extends WebTestBase {
     $this->assertRaw('article <span class="facet-count">(0)</span>');
 
     $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_configs[show_numbers]' => FALSE], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_config[show_numbers]' => FALSE], $this->t('Save'));
 
     // The count should be hidden again.
     $this->drupalGet('search-api-test-fulltext');

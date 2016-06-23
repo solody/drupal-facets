@@ -512,7 +512,7 @@ class IntegrationTest extends WebTestBase {
     $this->createBlock('type');
     $this->createBlock('keywords');
 
-    $edit = ['widget' => 'links', 'widget_configs[show_numbers]' => '1'];
+    $edit = ['widget' => 'links', 'widget_config[show_numbers]' => '1'];
     $this->drupalPostForm('admin/config/search/facets/keywords/edit', $edit, $this->t('Save'));
     $this->drupalPostForm('admin/config/search/facets/type/edit', $edit, $this->t('Save'));
 
@@ -654,7 +654,7 @@ class IntegrationTest extends WebTestBase {
     $edit = [
       'facet_settings[only_visible_when_facet_source_is_visible]' => TRUE,
       'widget' => 'links',
-      'widget_configs[show_numbers]' => '0',
+      'widget_config[show_numbers]' => '0',
     ];
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
   }

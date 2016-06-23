@@ -216,7 +216,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertResponse(200);
 
     $edit = [
-      'widget_configs[show_numbers]' => $show,
+      'widget_config[show_numbers]' => $show,
     ];
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
   }
@@ -260,7 +260,7 @@ class IntegrationTest extends WebTestBase {
     $edit = [
       'facet_settings[only_visible_when_facet_source_is_visible]' => TRUE,
       'widget' => 'links',
-      'widget_configs[show_numbers]' => '0',
+      'widget_config[show_numbers]' => '0',
     ];
     $this->drupalPostForm(NULL, $edit, $this->t('Save'));
   }

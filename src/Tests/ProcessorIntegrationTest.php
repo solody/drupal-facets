@@ -141,7 +141,7 @@ class ProcessorIntegrationTest extends WebTestBase {
 
     $values = [
       'facet_sorting[display_value_widget_order][status]' => TRUE,
-      'widget_configs[show_numbers]' => TRUE,
+      'widget_config[show_numbers]' => TRUE,
     ];
     $this->drupalPostForm($this->editForm, $values, $this->t('Save'));
 
@@ -220,20 +220,20 @@ class ProcessorIntegrationTest extends WebTestBase {
     $this->drupalGet($this->editForm);
 
     $form = [
-      'widget_configs[show_numbers]' => TRUE,
+      'widget_config[show_numbers]' => TRUE,
       'facet_settings[count_limit][status]' => TRUE,
     ];
     $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
     $this->assertResponse(200);
     $this->assertFieldChecked('edit-facet-settings-count-limit-status');
     $form = [
-      'widget_configs[show_numbers]' => TRUE,
+      'widget_config[show_numbers]' => TRUE,
       'facet_settings[count_limit][status]' => TRUE,
     ];
     $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
 
     $form = [
-      'widget_configs[show_numbers]' => TRUE,
+      'widget_config[show_numbers]' => TRUE,
       'facet_settings[count_limit][status]' => TRUE,
       'facet_settings[count_limit][settings][minimum_items]' => 5,
     ];
@@ -246,7 +246,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $this->assertNoRaw('apple <span class="facet-count">(4)');
 
     $form = [
-      'widget_configs[show_numbers]' => TRUE,
+      'widget_config[show_numbers]' => TRUE,
       'facet_settings[count_limit][status]' => TRUE,
       'facet_settings[count_limit][settings][minimum_items]' => 1,
       'facet_settings[count_limit][settings][maximum_items]' => 5,
@@ -259,7 +259,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $this->assertText('apple (4)');
 
     $form = [
-      'widget_configs[show_numbers]' => FALSE,
+      'widget_config[show_numbers]' => FALSE,
       'facet_settings[count_limit][status]' => FALSE,
     ];
     $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
@@ -396,7 +396,7 @@ class ProcessorIntegrationTest extends WebTestBase {
   protected function checkSortByCount() {
     $this->disableAllFacetSorts();
     $form = [
-      'widget_configs[show_numbers]' => TRUE,
+      'widget_config[show_numbers]' => TRUE,
       'facet_sorting[count_widget_order][status]' => TRUE,
       'facet_sorting[count_widget_order][settings][sort]' => 'ASC',
     ];
@@ -419,7 +419,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $this->assertStringPosition('orange', 'apple');
 
     $form = [
-      'widget_configs[show_numbers]' => FALSE,
+      'widget_config[show_numbers]' => FALSE,
       'facet_sorting[count_widget_order][status]' => FALSE,
     ];
     $this->drupalPostForm($this->editForm, $form, $this->t('Save'));

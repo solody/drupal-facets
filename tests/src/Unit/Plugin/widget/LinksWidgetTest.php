@@ -19,7 +19,7 @@ class LinksWidgetTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var \drupal\facets\Widget\WidgetInterface
+   * @var \drupal\facets\Widget\WidgetPluginInterface
    */
   protected $widget;
 
@@ -58,8 +58,8 @@ class LinksWidgetTest extends UnitTestCase {
   public function testNoFilterResults() {
     $facet = new Facet([], 'facets_facet');
     $facet->setResults($this->originalResults);
-    $facet->setWidgetConfigs(['show_numbers' => 1]);
 
+    $this->widget->setConfiguration(['show_numbers' => TRUE]);
     $output = $this->widget->build($facet);
 
     $this->assertInternalType('array', $output);
@@ -90,8 +90,8 @@ class LinksWidgetTest extends UnitTestCase {
 
     $facet = new Facet([], 'facets_facet');
     $facet->setResults($original_results);
-    $facet->setWidgetConfigs(['show_numbers' => 1]);
 
+    $this->widget->setConfiguration(['show_numbers' => TRUE]);
     $output = $this->widget->build($facet);
 
     $this->assertInternalType('array', $output);
@@ -123,8 +123,8 @@ class LinksWidgetTest extends UnitTestCase {
 
     $facet = new Facet([], 'facets_facet');
     $facet->setResults($original_results);
-    $facet->setWidgetConfigs(['show_numbers' => 0]);
 
+    $this->widget->setConfiguration(['show_numbers' => FALSE]);
     $output = $this->widget->build($facet);
 
     $this->assertInternalType('array', $output);
@@ -148,7 +148,7 @@ class LinksWidgetTest extends UnitTestCase {
 
     // Enable the 'show_numbers' setting again to make sure that the switch
     // between those settings works.
-    $facet->setWidgetConfigs(['show_numbers' => 1]);
+    $this->widget->setConfiguration(['show_numbers' => TRUE]);
 
     $output = $this->widget->build($facet);
 
@@ -184,8 +184,8 @@ class LinksWidgetTest extends UnitTestCase {
 
     $facet = new Facet([], 'facets_facet');
     $facet->setResults($original_results);
-    $facet->setWidgetConfigs(['show_numbers' => 1]);
 
+    $this->widget->setConfiguration(['show_numbers' => TRUE]);
     $output = $this->widget->build($facet);
 
     $this->assertInternalType('array', $output);
@@ -213,6 +213,14 @@ class LinksWidgetTest extends UnitTestCase {
   }
 
   /**
+   * Tests default configuration.
+   */
+  public function testDefaultConfiguration() {
+    $default_config = $this->widget->defaultConfiguration();
+    $this->assertEquals(['show_numbers' => FALSE, 'soft_limit' => 0], $default_config);
+  }
+
+  /**
    * Build a formattable markup object to use in the other tests.
    *
    * @param string $text
@@ -228,14 +236,16 @@ class LinksWidgetTest extends UnitTestCase {
    *   Formattable markup object for link.
    */
   protected function buildLinkAssertion($text, $count = 0, $active = FALSE, $show_numbers = TRUE) {
-    $text = new FormattableMarkup('@text', ['@text' => $text, '@count' => $count]);
-    if ($show_numbers !== FALSE) {
-      $text->string .= ' <span class="facet-count">(@count)</span>';
+    $template = '@text';
+    $arguments = ['@text' => $text];
+    if ($show_numbers) {
+      $template .= ' <span class="facet-count">(@count)</span>';
+      $arguments += ['@count' => $count];
     }
     if ($active) {
-      $text->string = '<span class="facet-deactivate">(-)</span> ' . $text->string;
+      $template = '<span class="facet-deactivate">(-)</span> ' . $template;
     }
-    return $text;
+    return new FormattableMarkup($template, $arguments);
   }
 
 }

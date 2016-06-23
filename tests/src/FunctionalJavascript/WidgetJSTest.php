@@ -70,14 +70,18 @@ class WidgetJSTest extends JavascriptTestBase {
     $id = 'llama';
 
     // Create and save a facet with a checkbox widget on the 'type' field.
-    $facet = $facet_storage->create([
+    $facet_storage->create([
       'id' => $id,
       'name' => strtoupper($id),
       'url_alias' => $id,
-      'widget' => 'checkbox',
       'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
       'field_identifier' => 'type',
-      'widget_configs' => ['show_numbers' => TRUE],
+      'widget' => [
+        'type' => 'checkbox',
+        'config' => [
+          'show_numbers' => TRUE,
+        ],
+      ],
       'processor_configs' => [
         'url_processor_handler' => [
           'processor_id' => 'url_processor_handler',
@@ -85,8 +89,7 @@ class WidgetJSTest extends JavascriptTestBase {
           'settings' => [],
         ],
       ],
-    ]);
-    $facet->save();
+    ])->save();
     $this->createBlock($id);
 
     // Go to the views page.

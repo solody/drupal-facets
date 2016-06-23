@@ -33,8 +33,15 @@ facets.facet.*:
       type: boolean
       label: 'Exclude'
     widget:
-      type: string
-      label: 'Widget identifier'
+      type: mapping
+      label: 'Facet widget'
+      mapping:
+        type:
+          type: string
+          label: 'Plugin ID'
+        config:
+          type: facet.widget.config.[%parent.type]
+          label: 'Configuration'
     empty_behavior:
       type: mapping
       label: 'Empty behavior'
@@ -48,12 +55,6 @@ facets.facet.*:
         text:
           type: string
           label: 'Text'
-    widget_configs:
-      type: sequence
-      label: 'Widget plugin configurations'
-      sequence:
-        type: string
-        label: 'Widget plugin configurations'
     only_visible_when_facet_source_is_visible:
       type: boolean
       label: 'Show this facet only when the facet source is visible.'

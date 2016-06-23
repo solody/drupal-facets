@@ -2,7 +2,6 @@
 
 namespace Drupal\facets\Form;
 
-use Drupal\Core\Config\Config;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManager;
@@ -106,29 +105,32 @@ class FacetForm extends EntityForm {
    *   The current state of the complete form.
    */
   public function buildWidgetConfigForm(array &$form, FormStateInterface $form_state) {
-    $widget = $form_state->getValue('widget') ?: $this->entity->getWidget();
-
-    if (!is_null($widget) && $widget !== '') {
-      $widget_instance = $this->getWidgetPluginManager()->createInstance($widget);
-      // @todo Create, use and save SubFormState already here, not only in
-      //   validate(). Also, use proper subset of $form for first parameter?
-      $config = $this->config('facets.facet.' . $this->entity->id());
-      if ($config_form = $widget_instance->buildConfigurationForm([], $form_state, ($config instanceof Config) ? $config : NULL)) {
-        $form['widget_configs']['#type'] = 'fieldset';
-        $form['widget_configs']['#title'] = $this->t('%widget settings', ['%widget' => $this->getWidgetPluginManager()->getDefinition($widget)['label']]);
-
-        $form['widget_configs'] += $config_form;
-      }
-      else {
-        $form['widget_configs']['#type'] = 'container';
-        $form['widget_configs']['#open'] = TRUE;
-        $form['widget_configs']['widget_information_dummy'] = [
-          '#type' => 'hidden',
-          '#value' => '1',
-          '#default_value' => '1',
-        ];
-      }
+    /** @var \Drupal\facets\FacetInterface $facet */
+    $facet = $this->getEntity();
+    $widget_plugin_id = $form_state->getValue('widget') ?: $facet->getWidget()['type'];
+    $widget_config = $form_state->getValue('widget_config') ?: $facet->getWidget()['config'];
+    if (empty($widget_plugin_id)) {
+      return;
     }
+
+    /** @var \Drupal\facets\Widget\WidgetPluginBase $widget */
+    $facet->setWidget($widget_plugin_id, $widget_config);
+    $widget = $facet->getWidgetInstance();
+
+    $arguments = ['%widget' => $widget->getPluginDefinition()['label']];
+    if (!$config_form = $widget->buildConfigurationForm([], $form_state, $this->getEntity())) {
+      $type = 'details';
+      $config_form = ['#markup' => $this->t('%widget widget needs no configuration.', $arguments)];
+    }
+    else {
+      $type = 'fieldset';
+    }
+    $form['widget_config'] = [
+      '#type' => $type,
+      '#tree' => TRUE,
+      '#title' => $this->t('%widget settings', $arguments),
+      '#attributes' => ['id' => 'facets-widget-config-form'],
+    ] + $config_form;
   }
 
   /**
@@ -149,7 +151,7 @@ class FacetForm extends EntityForm {
       '#title' => $this->t('Widget'),
       '#description' => $this->t('The widget used for displaying this facet.'),
       '#options' => $widget_options,
-      '#default_value' => $facet->getWidget(),
+      '#default_value' => $facet->getWidget()['type'],
       '#required' => TRUE,
       '#ajax' => [
         'trigger_as' => ['name' => 'widget_configure'],
@@ -159,7 +161,7 @@ class FacetForm extends EntityForm {
         'effect' => 'fade',
       ],
     ];
-    $form['widget_configs'] = [
+    $form['widget_config'] = [
       '#type' => 'container',
       '#attributes' => [
         'id' => 'facets-widget-config-form',
@@ -551,10 +553,9 @@ class FacetForm extends EntityForm {
       $facet->addProcessor($new_settings);
     }
 
-    $facet->setWidget($form_state->getValue('widget'));
+    $facet->setWidget($form_state->getValue('widget'), $form_state->getValue('widget_config'));
     $facet->setUrlAlias($form_state->getValue(['facet_settings', 'url_alias']));
     $facet->setWeight((int) $form_state->getValue(['facet_settings', 'weight']));
-    $facet->setWidgetConfigs($form_state->getValue('widget_configs'));
     $facet->setOnlyVisibleWhenFacetSourceIsVisible($form_state->getValue(['facet_settings', 'only_visible_when_facet_source_is_visible']));
     $facet->setShowOnlyOneResult($form_state->getValue(['facet_settings', 'show_only_one_result']));
 
@@ -596,7 +597,7 @@ class FacetForm extends EntityForm {
    * Handles changes to the selected widgets.
    */
   public function buildAjaxWidgetConfigForm(array $form, FormStateInterface $form_state) {
-    return $form['widget_configs'];
+    return $form['widget_config'];
   }
 
   /**

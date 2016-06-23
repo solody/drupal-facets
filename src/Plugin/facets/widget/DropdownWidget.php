@@ -4,94 +4,58 @@ namespace Drupal\facets\Plugin\facets\widget;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\FacetInterface;
+use Drupal\facets\Result\Result;
+use Drupal\facets\Widget\WidgetPluginBase;
 
 /**
  * The dropdown widget.
  *
  * @FacetsWidget(
- *   id = "select",
+ *   id = "dropdown",
  *   label = @Translation("Dropdown"),
  *   description = @Translation("A configurable widget that shows a dropdown."),
  * )
  */
-class DropdownWidget extends LinksWidget {
+class DropdownWidget extends WidgetPluginBase {
 
   /**
-   * The facet the widget is being built for.
-   *
-   * @var \Drupal\facets\FacetInterface
+   * {@inheritdoc}
    */
-  protected $facet;
+  public function defaultConfiguration() {
+    return [
+      'default_option_label' => $this->t('Choose'),
+    ] + parent::defaultConfiguration();
+  }
 
   /**
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet) {
-
-    $this->facet = $facet;
-
-    /** @var \Drupal\facets\Result\Result[] $results */
-    $results = $facet->getResults();
-    $items = [];
-
-    $configuration = $facet->getWidgetConfigs();
-    $this->showNumbers = empty($configuration['show_numbers']) ? FALSE : (bool) $configuration['show_numbers'];
-    $this->defaultOptionLabel = isset($configuration['default_option_label']) ? $this->t($configuration['default_option_label']) : '';
-
-    foreach ($results as $result) {
-      if (is_null($result->getUrl())) {
-        $text = $this->extractText($result);
-        $items[] = ['#markup' => $text];
-      }
-      else {
-        $items[] = $this->buildListItems($result);
-      }
-    }
-
-    $build = [
-      '#theme' => 'item_list',
-      '#items' => $items,
-      '#attributes' => ['class' => ['js-facets-dropdown-links'], 'data-facet-default-option-label' => $this->defaultOptionLabel],
-      '#cache' => [
-        'contexts' => [
-          'url.path',
-          'url.query_args',
-        ],
-      ],
-    ];
+    $build = parent::build($facet);
+    $build['#attributes']['class'][] = 'js-facets-dropdown-links';
+    $build['#attributes']['data-facet-default-option-label'] = $this->getConfiguration()['default_option_label'];
     $build['#attached']['library'][] = 'facets/drupal.facets.dropdown-widget';
-
     return $build;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state, $config) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
+    $config = $this->getConfiguration();
+
     $message = $this->t('This widget requires "Make sure only one result can be shown." to be enabled to behave as a standard dropdown.');
     $form['warning'] = [
       '#markup' => '<div class="messages messages--warning">' . $message . '</div>',
     ];
 
-    $form['show_numbers'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Show the amount of results'),
-    ];
+    $form += parent::buildConfigurationForm($form, $form_state, $facet);
 
     $form['default_option_label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Default option label'),
+      '#default_value' => $config['default_option_label'],
     ];
-
-    if (!is_null($config)) {
-      $widget_configs = $config->get('widget_configs');
-      if (isset($widget_configs['show_numbers'])) {
-        $form['show_numbers']['#default_value'] = $widget_configs['show_numbers'];
-      }
-      if (isset($widget_configs['default_option_label'])) {
-        $form['default_option_label']['#default_value'] = $widget_configs['default_option_label'];
-      }
-    }
 
     return $form;
   }
