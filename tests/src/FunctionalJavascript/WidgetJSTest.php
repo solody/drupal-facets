@@ -43,6 +43,26 @@ class WidgetJSTest extends JavascriptTestBase {
   }
 
   /**
+   * Tests JS interactions in the admin UI.
+   */
+  public function testAddFacet() {
+    $this->drupalGet('admin/config/search/facets/add-facet');
+
+    $page = $this->getSession()->getPage();
+
+    // Select one of the options from the facet source dropdown and wait for the
+    // result to show.
+    $page->selectFieldOption('edit-facet-source-id', 'search_api_views:search_api_test_view:page_1');
+    $this->getSession()->wait(6000, "jQuery('.facet-source-field-wrapper').length > 0");
+
+    $page->selectFieldOption('facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]', 'type');
+
+    // Check that after choosing the field, the name is already filled in.
+    $field_value = $this->getSession()->getPage()->findField('edit-name')->getValue();
+    $this->assertEquals('Type', $field_value);
+  }
+
+  /**
    * Tests checkbox widget.
    */
   public function testCheckboxWidget() {
