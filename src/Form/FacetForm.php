@@ -6,6 +6,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\Processor\ProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginManager;
@@ -29,7 +30,7 @@ class FacetForm extends EntityForm {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
@@ -57,7 +58,7 @@ class FacetForm extends EntityForm {
    * @param \Drupal\facets\Widget\WidgetPluginManager $widget_plugin_manager
    *   The plugin manager for widgets.
    */
-  public function __construct(EntityTypeManager $entity_type_manager, ProcessorPluginManager $processor_plugin_manager, WidgetPluginManager $widget_plugin_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ProcessorPluginManager $processor_plugin_manager, WidgetPluginManager $widget_plugin_manager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->processorPluginManager = $processor_plugin_manager;
     $this->widgetPluginManager = $widget_plugin_manager;

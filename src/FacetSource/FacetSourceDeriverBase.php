@@ -4,6 +4,7 @@ namespace Drupal\facets\FacetSource;
 
 
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -25,7 +26,7 @@ abstract class FacetSourceDeriverBase implements ContainerDeriverInterface {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
@@ -59,12 +60,12 @@ abstract class FacetSourceDeriverBase implements ContainerDeriverInterface {
   /**
    * Sets the entity manager.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity manager.
    *
    * @return $this
    */
-  public function setEntityTypeManager(EntityTypeManager $entity_type_manager) {
+  public function setEntityTypeManager(EntityTypeManagerInterface $entity_type_manager) {
     $this->entityTypeManager = $entity_type_manager;
     return $this;
   }
