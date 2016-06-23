@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @FacetsProcessor(
  *   id = "list_item",
  *   label = @Translation("List item label"),
- *   description = @Translation("Display the list item label instead of the key"),
+ *   description = @Translation("Fields that are a list (such as list (integer), list (text)) can use this processor to show the value instead of the key."),
  *   stages = {
  *     "build" = 5
  *   }
