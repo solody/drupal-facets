@@ -112,7 +112,7 @@ class WidgetIntegrationTest extends WebTestBase {
     $edit = [
       'widget' => 'links',
       'widget_config[show_numbers]' => TRUE,
-      'facet_settings[query_operator]' => 'OR',
+      'facet_settings[query_operator]' => 'or',
     ];
     $this->drupalPostForm($facet_edit_page, $edit, $this->t('Save'));
 
@@ -121,7 +121,7 @@ class WidgetIntegrationTest extends WebTestBase {
     $this->assertRaw('article <span class="facet-count">(2)</span>');
     $this->clickLinkPartialName('item');
     $this->assertRaw('item <span class="facet-count">(3)</span>');
-    $this->assertRaw('article <span class="facet-count">(0)</span>');
+    $this->assertRaw('article <span class="facet-count">(2)</span>');
 
     $this->drupalGet($facet_edit_page);
     $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_config[show_numbers]' => FALSE], $this->t('Save'));

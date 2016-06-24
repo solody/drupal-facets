@@ -334,7 +334,7 @@ class IntegrationTest extends WebTestBase {
     $this->createFacet($facet_name, $facet_id);
 
     $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'AND'], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'and'], $this->t('Save'));
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertLink('item');
@@ -345,7 +345,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertNoLink('article');
 
     $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'OR'], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'or'], $this->t('Save'));
     $this->drupalGet('search-api-test-fulltext');
     $this->assertLink('item');
     $this->assertLink('article');
@@ -353,6 +353,14 @@ class IntegrationTest extends WebTestBase {
     $this->clickLink('item');
     $this->assertRaw('<span class="facet-deactivate">(-)</span> item');
     $this->assertLink('article');
+
+    // Verify the number of results for OR functionality.
+    $this->drupalGet($facet_edit_page);
+    $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_config[show_numbers]' => TRUE], $this->t('Save'));
+    $this->drupalGet('search-api-test-fulltext');
+    $this->clickLink('item (3)');
+    $this->assertText('article (2)');
+
   }
 
   /**
@@ -512,7 +520,11 @@ class IntegrationTest extends WebTestBase {
     $this->createBlock('type');
     $this->createBlock('keywords');
 
-    $edit = ['widget' => 'links', 'widget_config[show_numbers]' => '1'];
+    $edit = [
+      'widget' => 'links',
+      'widget_config[show_numbers]' => '1',
+      'facet_settings[query_operator]' => 'and',
+    ];
     $this->drupalPostForm('admin/config/search/facets/keywords/edit', $edit, $this->t('Save'));
     $this->drupalPostForm('admin/config/search/facets/type/edit', $edit, $this->t('Save'));
 

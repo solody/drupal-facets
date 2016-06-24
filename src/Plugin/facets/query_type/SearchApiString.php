@@ -46,7 +46,7 @@ class SearchApiString extends QueryTypePluginBase {
       $options['search_api_facets'][$field_identifier] = array(
         'field' => $field_identifier,
         'limit' => 50,
-        'operator' => 'and',
+        'operator' => $this->facet->getQueryOperator(),
         'min_count' => 0,
         'missing' => FALSE,
       );
@@ -73,7 +73,7 @@ class SearchApiString extends QueryTypePluginBase {
     if (!empty($this->results)) {
       $facet_results = array();
       foreach ($this->results as $key => $result) {
-        if ($result['count'] || $query_operator == 'OR') {
+        if ($result['count'] || $query_operator == 'or') {
           $count = $result['count'];
           $result_filter = trim($result['filter'], '"');
           $result = new Result($result_filter, $result_filter, $count);

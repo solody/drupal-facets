@@ -368,7 +368,7 @@ class FacetForm extends EntityForm {
     $form['facet_settings']['query_operator'] = [
       '#type' => 'radios',
       '#title' => $this->t('Operator'),
-      '#options' => ['OR' => $this->t('OR'), 'AND' => $this->t('AND')],
+      '#options' => ['or' => $this->t('OR'), 'and' => $this->t('AND')],
       '#description' => $this->t('AND filters are exclusive and narrow the result set. OR filters are inclusive and widen the result set.'),
       '#default_value' => $facet->getQueryOperator(),
     ];

@@ -97,6 +97,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $this->editForm = 'admin/config/search/facets/' . $facet_id . '/edit';
 
     $this->createFacet($facet_name, $facet_id, 'keywords');
+    $this->drupalPostForm($this->editForm, ['facet_settings[query_operator]' => 'and'], 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 10 search results');

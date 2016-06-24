@@ -387,7 +387,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * {@inheritdoc}
    */
   public function getQueryOperator() {
-    return $this->query_operator ?: 'OR';
+    return $this->query_operator ?: 'or';
   }
 
   /**

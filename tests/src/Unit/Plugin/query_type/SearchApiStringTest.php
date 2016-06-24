@@ -20,7 +20,7 @@ class SearchApiStringTest extends UnitTestCase {
   public function testQueryTypeAnd() {
     $query = new SearchApiQuery([], 'search_api_query', []);
     $facet = new Facet(
-      ['query_operator' => 'AND'],
+      ['query_operator' => 'and'],
       'facets_facet'
     );
 
@@ -60,7 +60,7 @@ class SearchApiStringTest extends UnitTestCase {
   public function testQueryTypeOr() {
     $query = new SearchApiQuery([], 'search_api_query', []);
     $facet = new Facet(
-      ['query_operator' => 'OR'],
+      ['query_operator' => 'or'],
       'facets_facet'
     );
     $facet->setFieldIdentifier('field_animal');
