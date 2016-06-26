@@ -3,7 +3,6 @@
 namespace Drupal\facets\Plugin\facets\widget;
 
 use Drupal\facets\FacetInterface;
-use Drupal\facets\Result\ResultInterface;
 
 /**
  * The checkbox / radios widget.
