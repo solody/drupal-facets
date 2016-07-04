@@ -50,7 +50,7 @@ class FacetForm extends EntityForm {
   /**
    * Constructs an FacetDisplayForm object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity manager.
    * @param \Drupal\facets\Processor\ProcessorPluginManager $processor_plugin_manager
    *   The processor plugin manager.

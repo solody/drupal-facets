@@ -59,7 +59,7 @@ class FacetSettingsForm extends EntityForm {
    *
    * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
-   protected $urlGenerator;
+  protected $urlGenerator;
 
   /**
    * Constructs a FacetForm object.

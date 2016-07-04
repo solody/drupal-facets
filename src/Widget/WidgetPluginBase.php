@@ -162,7 +162,6 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
     return $items;
   }
 
-
   /**
    * Returns the text or link for an item.
    *
