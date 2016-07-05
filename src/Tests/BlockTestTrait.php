@@ -23,8 +23,10 @@ trait BlockTestTrait {
    *   The facet id.
    * @param string $field
    *   The facet field.
+   * @param string $display_id
+   *   The display id.
    */
-  protected function createFacet($name, $id, $field = 'type') {
+  protected function createFacet($name, $id, $field = 'type', $display_id = 'page_1') {
     $facet_add_page = 'admin/config/search/facets/add-facet';
 
     $this->drupalGet($facet_add_page);
@@ -32,10 +34,10 @@ trait BlockTestTrait {
     $form_values = [
       'id' => $id,
       'name' => $name,
-      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => $field,
+      'facet_source_id' => "search_api_views:search_api_test_view:{$display_id}",
+      "facet_source_configs[search_api_views:search_api_test_view:{$display_id}][field_identifier]" => $field,
     ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, ['facet_source_id' => "search_api_views:search_api_test_view:{$display_id}"], $this->t('Configure facet source'));
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
 
     $this->blocks[$id] = $this->createBlock($id);

@@ -134,6 +134,7 @@ class SearchApiViews extends SearchApiBaseFacetSource implements SearchApiFacetS
   public function isRenderedInCurrentRequest() {
     $display = View::load($this->pluginDefinition['view_id'])->getDisplay($this->pluginDefinition['view_display']);
     switch ($display['display_plugin']) {
+      case 'rest_export':
       case 'page':
         $request = \Drupal::requestStack()->getMasterRequest();
         if ($request->attributes->get('_controller') === 'Drupal\views\Routing\ViewPageController::handle') {

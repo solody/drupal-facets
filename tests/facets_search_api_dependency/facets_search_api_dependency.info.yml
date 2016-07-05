@@ -5,6 +5,7 @@ package: 'Search'
 core: 8.x
 hidden: true
 dependencies:
+  - rest
   - search_api:search_api
   - search_api:search_api_test_db
   - drupal:views
