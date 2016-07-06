@@ -43,7 +43,7 @@
 
     if (active) {
       checkbox.attr('checked', true);
-      label.find('.facet-deactivate').remove();
+      label.find('.js-facet-deactivate').remove();
     }
 
     $link.before(checkbox).before(label).hide();

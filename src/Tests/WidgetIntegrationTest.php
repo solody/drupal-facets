@@ -65,7 +65,7 @@ class WidgetIntegrationTest extends WebTestBase {
     $this->assertLink('article');
 
     $this->clickLink('item');
-    $this->assertRaw('<span class="facet-deactivate">(-)</span> item');
+    $this->assertRaw('<span class="js-facet-deactivate">(-)</span> item');
   }
 
   /**

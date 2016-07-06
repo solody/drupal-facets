@@ -52,7 +52,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
 
     $items = array_map(function (Result $result) {
       if (empty($result->getUrl())) {
-        return ['#markup' => $this->extractText($result)];
+        return $this->buildResultItem($result);
       }
       else {
         return $this->buildListItems($result);
@@ -138,7 +138,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
 
       $children_markup = [];
       foreach ($children as $child) {
-        $children_markup[] = $this->buildChildren($child);
+        $children_markup[] = $this->buildChild($child);
       }
 
       $classes[] = 'expanded';
@@ -169,63 +169,50 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
    *   A result item.
    *
    * @return array
-   *   The item, as a renderable array.
+   *   The item as a render array.
    */
   protected function prepareLink(ResultInterface $result) {
-    $text = $this->extractText($result);
-    if (is_null($result->getUrl())) {
-      $link = ['#markup' => $text];
-    }
-    else {
-      $link = (new Link($text, $result->getUrl()))->toRenderable();
-    }
-    return $link;
-  }
+    $item = $this->buildResultItem($result);
 
-  /**
-   * Builds a renderable array of a result.
-   *
-   * @param \Drupal\facets\Result\ResultInterface $child
-   *   A result item.
-   *
-   * @return array
-   *   A renderable array of the result.
-   */
-  protected function buildChildren(ResultInterface $child) {
-    $text = $this->extractText($child);
-
-    if (!is_null($child->getUrl())) {
-      $link = new Link($text, $child->getUrl());
-      $item = $link->toRenderable();
+    if (!is_null($result->getUrl())) {
+      $item = (new Link($item, $result->getUrl()))->toRenderable();
     }
-    else {
-      $item = ['#markup' => $text];
-    }
-    $item['#wrapper_attributes'] = ['class' => ['leaf']];
 
     return $item;
   }
 
   /**
-   * Extracts the text for a result to display in the UI.
+   * Builds a result item as a render array.
+   *
+   * @param \Drupal\facets\Result\ResultInterface $child
+   *   A result item.
+   *
+   * @return array
+   *   The result item as render array.
+   */
+  protected function buildChild(ResultInterface $child) {
+    $item = $this->prepareLink($child);
+    $item['#wrapper_attributes'] = ['class' => ['leaf']];
+    return $item;
+  }
+
+  /**
+   * Builds a facet result item.
    *
    * @param \Drupal\facets\Result\ResultInterface $result
-   *   The result to extract the text for.
+   *   The result item.
    *
-   * @return string
-   *   The text to display.
+   * @return array
+   *   The facet result item as a render array.
    */
-  protected function extractText(ResultInterface $result) {
-    $template = '@text';
-    $arguments = ['@text' => $result->getDisplayValue()];
-    if ($this->getConfiguration()['show_numbers'] && $result->getCount() !== FALSE) {
-      $template .= ' <span class="facet-count">(@count)</span>';
-      $arguments += ['@count' => $result->getCount()];
-    }
-    if ($result->isActive()) {
-      $template = '<span class="facet-deactivate">(-)</span> ' . $template;
-    }
-    return new FormattableMarkup($template, $arguments);
+  protected function buildResultItem(ResultInterface $result) {
+    $count = $result->getCount();
+    return [
+      '#theme' => $result->isActive() ? 'facets_result_item_active' : 'facets_result_item',
+      '#value' => $result->getDisplayValue(),
+      '#show_count' => $this->getConfiguration()['show_numbers'] && ($count !== NULL),
+      '#count' => $count,
+    ];
   }
 
 }

@@ -30,6 +30,19 @@ function facets_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function facets_theme($existing, $type, $theme, $path) {
+  $result_item_variables = [
+    'variables' => ['value' => '', 'show_count' => FALSE, 'count' => NULL],
+  ];
+  return [
+    'facets_result_item' => $result_item_variables,
+    'facets_result_item_active' => $result_item_variables,
+  ];
+}
+
+/**
  * Implementation of hook_search_api_query_alter.
  *
  * @param \Drupal\search_api\Query\QueryInterface $query

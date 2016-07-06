@@ -66,7 +66,7 @@ class IntegrationTest extends WebTestBase {
 
     // Verify that the label is correct for a clicked link.
     $this->clickLinkPartialName('page');
-    $this->assertRaw('<span class="facet-deactivate">(-)</span> page <span class="facet-count">(19)</span>');
+    $this->assertRaw('<span class="js-facet-deactivate">(-)</span> page <span class="facet-count">(19)</span>');
 
     // To make sure we have an empty result, we truncate the search_index table
     // because, for the moment, we don't have the possibility to clear the index

@@ -29,8 +29,8 @@ interface ResultInterface {
   /**
    * Returns the count for the result.
    *
-   * @return mixed
-   *   The amount of items for the result.
+   * @return int|null
+   *   The amount of items for the result or NULL.
    */
   public function getCount();
 

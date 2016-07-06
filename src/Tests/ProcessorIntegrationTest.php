@@ -373,7 +373,7 @@ class ProcessorIntegrationTest extends WebTestBase {
 
     $this->drupalGet('search-api-test-fulltext');
     $this->clickLink('strawberry');
-    $this->assertStringPosition('<span class="facet-deactivate">(-)</span> strawberry', 'grape');
+    $this->assertStringPosition('<span class="js-facet-deactivate">(-)</span> strawberry', 'grape');
 
     $form = [
       'facet_sorting[active_widget_order][status]' => TRUE,
@@ -383,7 +383,7 @@ class ProcessorIntegrationTest extends WebTestBase {
 
     $this->drupalGet('search-api-test-fulltext');
     $this->clickLink('strawberry');
-    $this->assertStringPosition('grape', '<span class="facet-deactivate">(-)</span> strawberry');
+    $this->assertStringPosition('grape', '<span class="js-facet-deactivate">(-)</span> strawberry');
 
     $form = [
       'facet_sorting[active_widget_order][status]' => FALSE,

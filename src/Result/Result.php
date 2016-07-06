@@ -22,9 +22,9 @@ class Result implements ResultInterface {
   /**
    * The facet count.
    *
-   * @var int|FALSE
+   * @var int|null
    */
-  protected $count = FALSE;
+  protected $count = NULL;
 
   /**
    * The Url object.
@@ -50,8 +50,8 @@ class Result implements ResultInterface {
    *   The raw value.
    * @param mixed $display_value
    *   The formatted value.
-   * @param int $count
-   *   The amount of items.
+   * @param int|null $count
+   *   The amount of items or NULL.
    */
   public function __construct($raw_value, $display_value, $count) {
     $this->rawValue = $raw_value;
