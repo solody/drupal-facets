@@ -124,11 +124,11 @@ class WidgetJSTest extends JavascriptTestBase {
    * Setup and insert test content.
    */
   private function insertExampleContent() {
-    entity_test_create_bundle('item');
-    entity_test_create_bundle('article');
+    entity_test_create_bundle('item', NULL, 'entity_test_mulrev_changed');
+    entity_test_create_bundle('article', NULL, 'entity_test_mulrev_changed');
 
     $entity_test_storage = \Drupal::entityTypeManager()
-      ->getStorage('entity_test');
+      ->getStorage('entity_test_mulrev_changed');
     $entity_1 = $entity_test_storage->create(array(
       'name' => 'foo bar baz',
       'body' => 'test test',
@@ -168,7 +168,7 @@ class WidgetJSTest extends JavascriptTestBase {
     ));
     $entity_5->save();
 
-    $inserted_entities = \Drupal::entityQuery('entity_test')
+    $inserted_entities = \Drupal::entityQuery('entity_test_mulrev_changed')
         ->count()
         ->execute();
     $this->assertEquals(5, $inserted_entities, "5 items inserted.");

@@ -117,7 +117,7 @@ class UrlIntegrationTest extends WebTestBase {
 
     // Add a new entity that has a colon in one of it's keywords.
     $entity_test_storage = \Drupal::entityTypeManager()
-      ->getStorage('entity_test');
+      ->getStorage('entity_test_mulrev_changed');
     $entity_test_storage->create([
       'name' => 'Entity with colon',
       'body' => 'test test',

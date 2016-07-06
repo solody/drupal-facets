@@ -13,7 +13,7 @@ trait ExampleContentTrait {
   /**
    * The generated test entities, keyed by ID.
    *
-   * @var \Drupal\entity_test\Entity\EntityTest[]
+   * @var \Drupal\entity_test\Entity\EntityTestMulRevChanged[]
    */
   protected $entities = [];
 
@@ -21,18 +21,20 @@ trait ExampleContentTrait {
    * Sets up the necessary bundles on the test entity type.
    */
   protected function setUpExampleStructure() {
-    entity_test_create_bundle('item');
-    entity_test_create_bundle('article');
+    entity_test_create_bundle('item', NULL, 'entity_test_mulrev_changed');
+    entity_test_create_bundle('article', NULL, 'entity_test_mulrev_changed');
   }
 
   /**
    * Creates several test entities.
    */
   protected function insertExampleContent() {
-    $count = \Drupal::entityQuery('entity_test')->count()->execute();
+    $count = \Drupal::entityQuery('entity_test_mulrev_changed')
+      ->count()
+      ->execute();
 
     $entity_test_storage = \Drupal::entityTypeManager()
-      ->getStorage('entity_test');
+      ->getStorage('entity_test_mulrev_changed');
     $this->entities[1] = $entity_test_storage->create(array(
       'name' => 'foo bar baz',
       'body' => 'test test',
@@ -71,7 +73,9 @@ trait ExampleContentTrait {
       'category' => 'article_category',
     ));
     $this->entities[5]->save();
-    $count = \Drupal::entityQuery('entity_test')->count()->execute() - $count;
+    $count = \Drupal::entityQuery('entity_test_mulrev_changed')
+        ->count()
+        ->execute() - $count;
     $this->assertEqual($count, 5, "$count items inserted.");
   }
 
