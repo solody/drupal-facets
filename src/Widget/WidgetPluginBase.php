@@ -2,7 +2,6 @@
 
 namespace Drupal\facets\Widget;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;

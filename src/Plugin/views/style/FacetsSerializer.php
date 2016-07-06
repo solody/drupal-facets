@@ -85,7 +85,7 @@ class FacetsSerializer extends Serializer {
     $this->facetsManager->updateResults($facetsource_id);
 
     $processed_facets = [];
-    foreach($facets as $facet) {
+    foreach ($facets as $facet) {
       $processed_facets[] = $this->facetsManager->build($facet);
     }
 

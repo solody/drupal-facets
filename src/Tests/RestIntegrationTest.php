@@ -35,7 +35,7 @@ class RestIntegrationTest extends WebTestBase {
     $id = 'type';
 
     // Add a new facet to filter by content type.
-    $this->createFacet($name, $id, 'type','rest_export_1');
+    $this->createFacet($name, $id, 'type', 'rest_export_1');
 
     // Use the array widget.
     $facet_edit_page = '/admin/config/search/facets/' . $id . '/edit';
@@ -58,7 +58,7 @@ class RestIntegrationTest extends WebTestBase {
     $name = 'Keywords';
     $id = 'keywords';
     // Add a new facet to filter by keywords.
-    $this->createFacet($name, $id, 'keywords','rest_export_1');
+    $this->createFacet($name, $id, 'keywords', 'rest_export_1');
 
     // Use the array widget.
     $facet_edit_page = '/admin/config/search/facets/' . $id . '/edit';
@@ -86,15 +86,15 @@ class RestIntegrationTest extends WebTestBase {
     $results = [
       'article' => [
         'url' => $base_url . '/facets-rest?f[0]=type%3Aarticle',
-        'count' => 2
+        'count' => 2,
       ],
       'item' => [
         'url' => $base_url . '/facets-rest?f[0]=type%3Aitem',
-        'count' => 3
+        'count' => 3,
       ],
     ];
 
-    foreach($json_decoded->facets[1][0]->type as $result) {
+    foreach ($json_decoded->facets[1][0]->type as $result) {
       $value = $result->values->value;
       $this->assertEqual($result->url, $results[$value]['url']);
       $this->assertEqual($result->values->count, $results[$value]['count']);
@@ -104,27 +104,27 @@ class RestIntegrationTest extends WebTestBase {
     $results = [
       'banana' => [
         'url' => $base_url . '/facets-rest?f[0]=keywords%3Abanana',
-        'count' => 1
+        'count' => 1,
       ],
       'strawberry' => [
         'url' => $base_url . '/facets-rest?f[0]=keywords%3Astrawberry',
-        'count' => 2
+        'count' => 2,
       ],
       'apple' => [
         'url' => $base_url . '/facets-rest?f[0]=keywords%3Aapple',
-        'count' => 2
+        'count' => 2,
       ],
       'orange' => [
         'url' => $base_url . '/facets-rest?f[0]=keywords%3Aorange',
-        'count' => 3
+        'count' => 3,
       ],
       'grape' => [
         'url' => $base_url . '/facets-rest?f[0]=keywords%3Agrape',
-        'count' => 3
+        'count' => 3,
       ],
     ];
 
-    foreach($json_decoded->facets[0][0]->keywords as $result) {
+    foreach ($json_decoded->facets[0][0]->keywords as $result) {
       $value = $result->values->value;
       $this->assertEqual($result->url, $results[$value]['url']);
       $this->assertEqual($result->values->count, $results[$value]['count']);
@@ -139,41 +139,41 @@ class RestIntegrationTest extends WebTestBase {
     $results = [
       'article' => [
         'url' => $base_url . '/facets-rest?f[0]=type%3Aitem&f[1]=type%3Aarticle',
-        'count' => 2
+        'count' => 2,
       ],
       'item' => [
         'url' => $base_url . '/facets-rest',
-        'count' => 3
+        'count' => 3,
       ],
       'banana' => [
         'url' => $base_url . '/facets-rest?f[0]=type%3Aitem&f[1]=keywords%3Abanana',
-        'count' => 0
+        'count' => 0,
       ],
       'strawberry' => [
         'url' => $base_url . '/facets-rest?f[0]=type%3Aitem&f[1]=keywords%3Astrawberry',
-        'count' => 0
+        'count' => 0,
       ],
       'apple' => [
         'url' => $base_url . '/facets-rest?f[0]=type%3Aitem&f[1]=keywords%3Aapple',
-        'count' => 1
+        'count' => 1,
       ],
       'orange' => [
         'url' => $base_url . '/facets-rest?f[0]=type%3Aitem&f[1]=keywords%3Aorange',
-        'count' => 2
+        'count' => 2,
       ],
       'grape' => [
         'url' => $base_url . '/facets-rest?f[0]=type%3Aitem&f[1]=keywords%3Agrape',
-        'count' => 1
+        'count' => 1,
       ],
     ];
 
-    foreach($json_decoded->facets[1][0]->type as $result) {
+    foreach ($json_decoded->facets[1][0]->type as $result) {
       $value = $result->values->value;
       $this->assertEqual($result->url, $results[$value]['url']);
       $this->assertEqual($result->values->count, $results[$value]['count']);
     }
 
-    foreach($json_decoded->facets[0][0]->keywords as $result) {
+    foreach ($json_decoded->facets[0][0]->keywords as $result) {
       $value = $result->values->value;
       $this->assertEqual($result->url, $results[$value]['url']);
       $this->assertEqual($result->values->count, $results[$value]['count']);

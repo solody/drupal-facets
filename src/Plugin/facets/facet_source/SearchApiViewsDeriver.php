@@ -41,10 +41,9 @@ class SearchApiViewsDeriver extends FacetSourceDeriverBase {
           $displays = $view->get('display');
           foreach ($displays as $display_id => $display_info) {
 
-            // We only support pages and blocks because those are the ones that
-            // we've tested. They are also the only ones that support for
-            // ::isRenderedInCurrentRequest() and ::getPath().
-            if (in_array($display_info['display_plugin'], ['page', 'block', 'rest_export'])) {
+            // We only support page, block and REST export displays for views.
+            $allowed_plugins = ['page', 'block', 'rest_export'];
+            if (in_array($display_info['display_plugin'], $allowed_plugins)) {
               $machine_name = $view->id() . PluginBase::DERIVATIVE_SEPARATOR . $display_id;
 
               $label_arguments = [

@@ -22,7 +22,7 @@ class ArrayWidgetTest extends UnitTestCase {
   /**
    * The processor to be tested.
    *
-   * @var \Drupal\facets\Widget\WidgetInterface
+   * @var \Drupal\facets\Widget\WidgetPluginInterface
    */
   protected $widget;
 
@@ -51,7 +51,6 @@ class ArrayWidgetTest extends UnitTestCase {
       $original_result->setUrl(new Url('test'));
     }
     $this->originalResults = $original_results;
-
 
     // Creates a mocked container, so we can access string translation.
     $container = $this->prophesize(ContainerInterface::class);

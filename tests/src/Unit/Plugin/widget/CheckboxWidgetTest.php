@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\widget\CheckboxWidget;
