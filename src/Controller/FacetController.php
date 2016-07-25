@@ -12,26 +12,6 @@ use Drupal\facets\FacetInterface;
 class FacetController extends ControllerBase {
 
   /**
-   * Displays information about a search facet.
-   *
-   * @param \Drupal\facets\FacetInterface $facet
-   *   The facet to display.
-   *
-   * @return array
-   *   An array suitable for drupal_render().
-   */
-  public function page(FacetInterface $facet) {
-    // Build the search index information.
-    $render = array(
-      'view' => array(
-        '#theme' => 'facets_facet',
-        '#facet' => $facet,
-      ),
-    );
-    return $render;
-  }
-
-  /**
    * Returns a form to add a new facet to a Search API index.
    *
    * @return array
