@@ -12,17 +12,6 @@ use Drupal\facets\FacetInterface;
 class FacetController extends ControllerBase {
 
   /**
-   * Returns a form to add a new facet to a Search API index.
-   *
-   * @return array
-   *   The facet add form.
-   */
-  public function addForm() {
-    $facet = \Drupal::service('entity_type.manager')->getStorage('facets_facet')->create();
-    return $this->entityFormBuilder()->getForm($facet, 'default');
-  }
-
-  /**
    * Returns a form to edit a facet on a Search API index.
    *
    * @param \Drupal\facets\FacetInterface $facets_facet
