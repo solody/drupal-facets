@@ -82,7 +82,7 @@ class TranslateEntityProcessor extends ProcessorPluginBase implements BuildProce
     $ids = [];
 
     /** @var \Drupal\facets\Result\ResultInterface $result */
-    foreach ($results as &$result) {
+    foreach ($results as $result) {
       $ids[] = $result->getRawValue();
     }
 
@@ -115,8 +115,13 @@ class TranslateEntityProcessor extends ProcessorPluginBase implements BuildProce
       ->getStorage($entity_type)
       ->loadMultiple($ids);
 
-    // Loop over all entities.
-    for ($i = 0; $i < count($entities); $i++) {
+    // Loop over all results.
+    foreach ($results as $i => $result) {
+      if (!isset($entities[$ids[$i]])) {
+        unset($results[$i]);
+        continue;
+      }
+
       /** @var \Drupal\Core\Entity\ContentEntityBase $entity */
       $entity = $entities[$ids[$i]];
 
