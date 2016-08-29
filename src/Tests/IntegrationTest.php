@@ -5,6 +5,7 @@ namespace Drupal\facets\Tests;
 use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
 use Drupal\views\Entity\View;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the overall functionality of the Facets admin UI.
@@ -30,6 +31,25 @@ class IntegrationTest extends WebTestBase {
     // Make absolutely sure the ::$blocks variable doesn't pass information
     // along between tests.
     $this->blocks = NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function installModulesFromClassProperty(ContainerInterface $container) {
+    // This will just set the Drupal state to include the necessary bundles for
+    // our test entity type. Otherwise, fields from those bundles won't be found
+    // and thus removed from the test index. (We can't do it in setUp(), before
+    // calling the parent method, since the container isn't set up at that
+    // point.)
+    $bundles = array(
+      'entity_test_mulrev_changed' => array('label' => 'Entity Test Bundle'),
+      'item' => array('label' => 'item'),
+      'article' => array('label' => 'article'),
+    );
+    \Drupal::state()->set('entity_test_mulrev_changed.bundles', $bundles);
+
+    parent::installModulesFromClassProperty($container);
   }
 
   /**
