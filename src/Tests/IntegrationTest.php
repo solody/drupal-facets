@@ -132,11 +132,8 @@ class IntegrationTest extends WebTestBase {
 
   /**
    * Tests that a block view also works.
-   *
-   * @todo enable this test again when https://www.drupal.org/node/2792569 is
-   *   fixed.
    */
-  public function _testBlockView() {
+  public function testBlockView() {
     $facet_name = "Block view facet";
     $facet_id = 'bvf';
 

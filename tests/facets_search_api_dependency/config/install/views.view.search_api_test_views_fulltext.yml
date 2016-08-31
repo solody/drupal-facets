@@ -322,6 +322,9 @@ display:
     position: 2
     display_options:
       display_extenders: {  }
+      defaults:
+        use_ajax: false
+      use_ajax: true
   rest_export_1:
     display_plugin: rest_export
     id: rest_export_1
