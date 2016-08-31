@@ -76,6 +76,7 @@ class WidgetJSTest extends JavascriptTestBase {
       'url_alias' => $id,
       'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
       'field_identifier' => 'type',
+      'empty_behavior' => ['behavior' => 'none'],
       'widget' => [
         'type' => 'checkbox',
         'config' => [
