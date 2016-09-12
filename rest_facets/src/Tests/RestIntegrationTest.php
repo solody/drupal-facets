@@ -1,7 +1,8 @@
 <?php
 
-namespace Drupal\facets\Tests;
+namespace Drupal\rest_facets\Tests;
 
+use Drupal\facets\Tests\WebTestBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -14,7 +15,14 @@ class RestIntegrationTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['rest', 'hal', 'serialization', 'views_ui'];
+  public static $modules = [
+    'rest_view',
+    'rest_facets',
+    'rest',
+    'hal',
+    'serialization',
+    'views_ui',
+  ];
 
   /**
    * {@inheritdoc}
@@ -56,7 +64,7 @@ class RestIntegrationTest extends WebTestBase {
     $id = 'type';
 
     // Add a new facet to filter by content type.
-    $this->createFacet($name, $id, 'type', 'rest_export_1');
+    $this->createFacet($name, $id, 'type', 'rest_export_1', 'search_api_rest_test_view');
 
     // Use the array widget.
     $facet_edit_page = '/admin/config/search/facets/' . $id . '/edit';
@@ -79,7 +87,7 @@ class RestIntegrationTest extends WebTestBase {
     $name = 'Keywords';
     $id = 'keywords';
     // Add a new facet to filter by keywords.
-    $this->createFacet($name, $id, 'keywords', 'rest_export_1');
+    $this->createFacet($name, $id, 'keywords', 'rest_export_1', 'search_api_rest_test_view');
 
     // Use the array widget.
     $facet_edit_page = '/admin/config/search/facets/' . $id . '/edit';

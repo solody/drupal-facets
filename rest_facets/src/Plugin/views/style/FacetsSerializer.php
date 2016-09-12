@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\facets\Plugin\views\style;
+namespace Drupal\rest_facets\Plugin\views\style;
 
 use Drupal\facets\FacetManager\DefaultFacetManager;
 use Drupal\rest\Plugin\views\style\Serializer;
