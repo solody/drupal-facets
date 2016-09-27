@@ -5,5 +5,5 @@ core: 8.x
 package: Search
 configure: facets.overview
 test_dependencies:
-  - search_api:search_api (2.x-dev)
+  - search_api:search_api (1.x-dev)
   - drupal:views
