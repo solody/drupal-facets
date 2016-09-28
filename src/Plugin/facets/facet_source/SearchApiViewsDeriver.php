@@ -23,21 +23,24 @@ class SearchApiViewsDeriver extends FacetSourceDeriverBase {
 
     $plugin_derivatives = array();
     foreach ($search_api_displays->getDefinitions() as $display) {
-      $machine_name = $display['view_id'] . '__' . $display['view_display'];
+      // Avoid providing corrupted displays.
+      if (isset($display['view_id']) && isset($display['view_display']) && isset($display['label'])) {
+        $machine_name = $display['view_id'] . '__' . $display['view_display'];
 
-      $plugin_derivatives[$machine_name] = [
-        'id' => $base_plugin_id . ':' . $machine_name,
-        'label' => $display['label'],
-        'description' => $this->t('Provides a facet source.'),
-        'view_id' => $display['view_id'],
-        'view_display' => $display['view_display'],
-      ] + $base_plugin_definition;
+        $plugin_derivatives[$machine_name] = [
+          'id' => $base_plugin_id . ':' . $machine_name,
+          'label' => $display['label'],
+          'description' => $this->t('Provides a facet source.'),
+          'view_id' => $display['view_id'],
+          'view_display' => $display['view_display'],
+        ] + $base_plugin_definition;
 
-      $arguments = [
-        '%view' => $display['label'],
-        '%display' => $display['view_display'],
-      ];
-      $sources[] = $this->t('Search API view: %view, display: %display', $arguments);
+        $arguments = [
+          '%view' => $display['label'],
+          '%display' => $display['view_display'],
+        ];
+        $sources[] = $this->t('Search API view: %view, display: %display', $arguments);
+      }
     }
 
     uasort($plugin_derivatives, array($this, 'compareDerivatives'));
