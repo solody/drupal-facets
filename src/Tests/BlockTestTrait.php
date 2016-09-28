@@ -33,12 +33,12 @@ trait BlockTestTrait {
 
     $this->drupalGet($facet_add_page);
 
-    $facet_source = "search_api_views:{$source}:{$display_id}";
+    $facet_source = "views_page:{$source}__{$display_id}";
     $form_values = [
       'id' => $id,
       'name' => $name,
       'facet_source_id' => $facet_source,
-      "facet_source_configs[search_api_views:{$source}:{$display_id}][field_identifier]" => $field,
+      "facet_source_configs[views_page:{$source}__{$display_id}][field_identifier]" => $field,
     ];
     $this->drupalPostForm(NULL, ['facet_source_id' => $facet_source], $this->t('Configure facet source'));
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));

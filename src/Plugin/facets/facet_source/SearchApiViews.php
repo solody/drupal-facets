@@ -9,13 +9,10 @@ use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
 /**
- * A facet source to support search api views.
- *
- * This facet source only supports views that have a search api index as a base,
- * and only those displays that are a block or a page.
+ * A facet source to support search api views trough display plugins.
  *
  * @FacetsFacetSource(
- *   id = "search_api_views",
+ *   id = "views_page",
  *   deriver = "Drupal\facets\Plugin\facets\facet_source\SearchApiViewsDeriver"
  * )
  */
@@ -97,7 +94,7 @@ class SearchApiViews extends SearchApiBaseFacetSource implements SearchApiFacetS
     $results = $this->searchApiQueryHelper->getResults($this->pluginId);
 
     // If our results are not there, execute the view to get the results.
-    if (!$results) {
+    if ($results === NULL) {
       // If there are no results, execute the view. and check for results again!
       $view = Views::getView($this->pluginDefinition['view_id']);
       $view->setDisplay($this->pluginDefinition['view_display']);
@@ -106,10 +103,12 @@ class SearchApiViews extends SearchApiBaseFacetSource implements SearchApiFacetS
     }
 
     // Get the results from the cache. It is possible it still errored out.
-    // @todo figure out what to do when this errors out.
     if ($results instanceof ResultSetInterface) {
       // Get our facet data.
       $facet_results = $results->getExtraData('search_api_facets');
+      if ($facet_results === []) {
+        return;
+      }
 
       // Loop over each facet and execute the build method from the given
       // query type.
@@ -138,7 +137,8 @@ class SearchApiViews extends SearchApiBaseFacetSource implements SearchApiFacetS
       case 'page':
         $request = \Drupal::requestStack()->getMasterRequest();
         if ($request->attributes->get('_controller') === 'Drupal\views\Routing\ViewPageController::handle') {
-          list(, $search_api_view_id, $search_api_view_display) = explode(':', $this->getPluginId());
+          list(, $view) = explode(':', $this->getPluginId());
+          list($search_api_view_id, $search_api_view_display) = explode('__', $view);
 
           if ($request->attributes->get('view_id') == $search_api_view_id && $request->attributes->get('display_id') == $search_api_view_display) {
             return TRUE;

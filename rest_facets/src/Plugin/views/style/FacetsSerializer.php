@@ -80,7 +80,7 @@ class FacetsSerializer extends Serializer {
     }
 
     // Processing facets.
-    $facetsource_id = "search_api_views:{$this->view->id()}:{$this->view->getDisplay()->display['id']}";
+    $facetsource_id = "views_page:{$this->view->id()}__{$this->view->getDisplay()->display['id']}";
     $facets = $this->facetsManager->getFacetsByFacetSourceId($facetsource_id);
     $this->facetsManager->updateResults($facetsource_id);
 

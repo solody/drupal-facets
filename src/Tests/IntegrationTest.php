@@ -138,6 +138,7 @@ class IntegrationTest extends WebTestBase {
     $facet_id = 'bvf';
 
     $this->createFacet($facet_name, $facet_id, 'type', 'block_1');
+    $this->drupalPostForm(NULL, ['facet_settings[only_visible_when_facet_source_is_visible]' => FALSE], 'Save');
 
     // Place the views block in the footer of all pages.
     $block_settings = [
@@ -373,13 +374,13 @@ class IntegrationTest extends WebTestBase {
 
     // Configure the facet source by selecting one of the Search API views.
     $this->drupalGet($facet_add_page);
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'views_page:search_api_test_view__page_1'], $this->t('Configure facet source'));
 
     // Fill in all fields and make sure the 'field is required' message is no
     // longer shown.
     $facet_source_form = [
-      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => 'type',
+      'facet_source_id' => 'views_page:search_api_test_view__page_1',
+      'facet_source_configs[views_page:search_api_test_view__page_1][field_identifier]' => 'type',
     ];
     $this->drupalPostForm(NULL, $facet_source_form, $this->t('Save'));
 
@@ -567,8 +568,8 @@ class IntegrationTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Check that the expected facet sources and the owl facet are shown.
-    $this->assertText('search_api_views:search_api_test_view:block_1');
-    $this->assertText('search_api_views:search_api_test_view:page_1');
+    $this->assertText('views_page:search_api_test_view__block_1');
+    $this->assertText('views_page:search_api_test_view__page_1');
     $this->assertText($name);
 
     // Delete the view on which both facet sources are based.
@@ -579,8 +580,8 @@ class IntegrationTest extends WebTestBase {
     // and the facet/facet source are deleted.
     $this->drupalGet('/admin/config/search/facets');
     $this->assertResponse(200);
-    $this->assertNoText('search_api_views:search_api_test_view:page_1');
-    $this->assertNoText('search_api_views:search_api_test_view:block_1');
+    $this->assertNoText('views_page:search_api_test_view__page_1');
+    $this->assertNoText('views_page:search_api_test_view__block_1');
     $this->assertNoText($name);
   }
 
@@ -607,8 +608,8 @@ class IntegrationTest extends WebTestBase {
     $this->assertResponse(200);
 
     // Check that the expected facet sources and the owl facet are shown.
-    $this->assertText('search_api_views:search_api_test_view:block_1');
-    $this->assertText('search_api_views:search_api_test_view:page_1');
+    $this->assertText('views_page:search_api_test_view__block_1');
+    $this->assertText('views_page:search_api_test_view__page_1');
     $this->assertText($name);
 
     // Delete the view display for the page.
@@ -620,8 +621,8 @@ class IntegrationTest extends WebTestBase {
     // and the facet/facet source are deleted.
     $this->drupalGet('/admin/config/search/facets');
     $this->assertResponse(200);
-    $this->assertNoText('search_api_views:search_api_test_view:page_1');
-    $this->assertText('search_api_views:search_api_test_view:block_1');
+    $this->assertNoText('views_page:search_api_test_view__page_1');
+    $this->assertText('views_page:search_api_test_view__block_1');
     $this->assertNoText($name);
   }
 
@@ -683,8 +684,8 @@ class IntegrationTest extends WebTestBase {
     $this->assertNoText('Field:');
 
     // Check that the expected facet sources are shown.
-    $this->assertText('search_api_views:search_api_test_view:block_1');
-    $this->assertText('search_api_views:search_api_test_view:page_1');
+    $this->assertText('views_page:search_api_test_view__block_1');
+    $this->assertText('views_page:search_api_test_view__page_1');
   }
 
   /**
@@ -719,7 +720,7 @@ class IntegrationTest extends WebTestBase {
 
     // Configure the facet source by selecting one of the Search API views.
     $this->drupalGet($facet_add_page);
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api_views:search_api_test_view:page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'views_page:search_api_test_view__page_1'], $this->t('Configure facet source'));
 
     // The field is still required.
     $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
@@ -728,8 +729,8 @@ class IntegrationTest extends WebTestBase {
     // Fill in all fields and make sure the 'field is required' message is no
     // longer shown.
     $facet_source_form = [
-      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
-      'facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]' => $facet_type,
+      'facet_source_id' => 'views_page:search_api_test_view__page_1',
+      'facet_source_configs[views_page:search_api_test_view__page_1][field_identifier]' => $facet_type,
     ];
     $this->drupalPostForm(NULL, $form_values + $facet_source_form, $this->t('Save'));
     $this->assertNoText('field is required.');
@@ -756,10 +757,10 @@ class IntegrationTest extends WebTestBase {
     $form_values = [
       'name' => $facet_name,
       'id' => $facet_id,
-      'facet_source_id' => 'search_api_views:search_api_test_view:page_1',
+      'facet_source_id' => 'views_page:search_api_test_view__page_1',
     ];
 
-    $facet_source_configs['facet_source_configs[search_api_views:search_api_test_view:page_1][field_identifier]'] = $facet_type;
+    $facet_source_configs['facet_source_configs[views_page:search_api_test_view__page_1][field_identifier]'] = $facet_type;
 
     // Try to submit a facet with a duplicate machine name after form rebuilding
     // via facet source submit.
