@@ -82,7 +82,13 @@ class SearchApiViews extends SearchApiBaseFacetSource implements SearchApiFacetS
 
       case 'block':
       default:
-        return \Drupal::service('path.current')->getPath();
+        $current_path = \Drupal::service('path.current')->getPath();
+        if (\Drupal::moduleHandler()->moduleExists('path')) {
+          return \Drupal::service('path.alias_manager')->getAliasByPath($current_path);
+        }
+        else {
+          return $current_path;
+        }
     }
   }
 
