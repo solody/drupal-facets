@@ -76,7 +76,7 @@ class UrlIntegrationTest extends WebTestBase {
     $this->assertTrue($facet instanceof FacetInterface);
     $config = $facet->getFacetSourceConfig();
     $this->assertTrue($config instanceof FacetSourceInterface);
-    $this->assertEqual(NULL, $config->getFilterKey());
+    $this->assertEqual('f', $config->getFilterKey());
 
     $facet = NULL;
     $config = NULL;

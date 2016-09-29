@@ -268,7 +268,7 @@ class DefaultFacetManager {
       // is not available on the page. Returning an empty array here is enough
       // to halt all further processing.
       $facet_source = $facet->getFacetSource();
-      if (!$facet_source->isRenderedInCurrentRequest()) {
+      if (is_null($facet_source) || !$facet_source->isRenderedInCurrentRequest()) {
         return [];
       }
     }

@@ -13,6 +13,7 @@ use Drupal\search_api\Query\QueryInterface;
 use Drupal\views\Entity\View;
 use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Drupal\Core\Logger\RfcLogLevel;
 
 /**
  * Implements hook_help().
@@ -82,13 +83,13 @@ function facets_entity_presave(EntityInterface $entity) {
         // Check if the current display is also a facet source plugin and that
         // is removed from the view. We use the double underscore here to make
         // sure that we use core convention of "plugin:derived_plugin".
-        $test = 'views_page:' . $entity->id() . '__' . $display['id'];
-        if (array_key_exists($test, $definitions) && !array_key_exists($k, $entity->get('display'))) {
-          $entity_id = str_replace(':', '__', $test);
+        $facets_source_plugin_id = 'views_page:' . $entity->id() . '__' . $display['id'];
+        if (array_key_exists($facets_source_plugin_id, $definitions) && !array_key_exists($k, $entity->get('display'))) {
+          $entity_id = str_replace(':', '__', $facets_source_plugin_id);
           $source_entity = FacetSource::load($entity_id);
+          $sources[] = $facets_source_plugin_id;
           if (!is_null($source_entity)) {
             $source_entity->delete();
-            $sources[] = $test;
           }
         }
       }
@@ -132,23 +133,26 @@ function facets_preprocess_block(&$variables) {
  * when a view is deleted. It also deletes facets that are created on those
  * plugins.
  */
-function facets_entity_predelete(Drupal\Core\Entity\EntityInterface $entity) {
+function facets_entity_predelete(EntityInterface $entity) {
   if ($entity instanceof View) {
     $facet_source_plugin_manager = \Drupal::getContainer()
       ->get('plugin.manager.facets.facet_source');
 
     $definitions = $facet_source_plugin_manager->getDefinitions();
+
     if (!is_array($definitions)) {
       return;
     }
+
     foreach ($definitions as $plugin_id => $definition) {
       if (strpos($plugin_id, 'views_page:' . $entity->id() . '__') !== FALSE) {
         try {
           $facetManager = \Drupal::getContainer()->get('facets.manager');
         } catch (ServiceNotFoundException $e) {
-          \Drupal::logger('facets')->log(Drupal\Core\Logger\RfcLogLevel::DEBUG, 'Facet manager not found on trying to delete a view.');
+          \Drupal::logger('facets')->log(RfcLogLevel::DEBUG, 'Facet manager not found on trying to delete a view.');
           return;
         }
+
         $facets = $facetManager->getFacetsByFacetSourceId($plugin_id);
         foreach ($facets as $facet) {
           $facet->delete();
