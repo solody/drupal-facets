@@ -229,4 +229,44 @@ class TranslateEntityProcessorTest extends UnitTestCase {
     }
   }
 
+  /**
+   * Test that deleted entities still in index results doesn't display.
+   */
+  public function testDeletedEntityResults() {
+    // Set original results.
+    /** @var \Drupal\facets\Result\ResultInterface[] $original_results */
+    $original_results = [
+      new Result(1, 1, 5),
+    ];
+    $this->facet->setResults($original_results);
+
+    // Mock entity type.
+    $field_config = $this->getMock(FieldStorageConfigInterface::class);
+    $field_config->expects($this->any())
+      ->method('getSetting')
+      ->willReturn('taxonomy_term');
+    $field_storage = $this->getMock(EntityStorageInterface::class);
+    $field_storage->expects($this->any())
+      ->method('load')
+      ->willReturn($field_config);
+    $this->entityTypeManager->expects($this->at(0))
+      ->method('getStorage')
+      ->with('field_storage_config')
+      ->willReturn($field_storage);
+
+    $term_storage = $this->getMock(EntityStorageInterface::class);
+    $term_storage->expects($this->any())
+      ->method('loadMultiple')
+      ->willReturn([]);
+    $this->entityTypeManager->expects($this->at(1))
+      ->method('getStorage')
+      ->willReturn($term_storage);
+
+    // Processor should return nothing (and not throw an exception).
+    /** @var \Drupal\facets\Result\ResultInterface[] $filtered_results */
+    $processor = new TranslateEntityProcessor([], 'translate_entity', [], $this->languageManager, $this->entityTypeManager);
+    $filtered_results = $processor->build($this->facet, $original_results);
+    $this->assertEmpty($filtered_results);
+  }
+
 }
