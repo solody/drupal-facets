@@ -30,10 +30,10 @@
     facetsList.find('li:gt(' + zero_based_limit + ')').once().hide();
 
     // Add "Show more" / "Show less" links.
-    facetsList.once().filter(function() {
+    facetsList.once().filter(function () {
       return $(this).find('li').length > limit;
-    }).each(function() {
-      $('<a href="#" class="facets-soft-limit-link"></a>').text(Drupal.t('Show more')).click(function() {
+    }).each(function () {
+      $('<a href="#" class="facets-soft-limit-link"></a>').text(Drupal.t('Show more')).click(function () {
         if ($(this).siblings().find('li:hidden').length > 0) {
           $(this).siblings().find('li:gt(' + zero_based_limit + ')').slideDown();
           $(this).addClass('open').text(Drupal.t('Show less'));

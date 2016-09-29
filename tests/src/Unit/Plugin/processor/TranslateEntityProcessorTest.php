@@ -146,7 +146,7 @@ class TranslateEntityProcessorTest extends UnitTestCase {
 
     // Set expected results.
     $expected_results = [
-      ['nid' => 2, 'title' => 'shaken not stirred']
+      ['nid' => 2, 'title' => 'shaken not stirred'],
     ];
 
     // Without the processor we expect the id to display.

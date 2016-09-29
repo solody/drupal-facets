@@ -2,7 +2,6 @@
 
 namespace Drupal\facets\FacetSource;
 
-
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
