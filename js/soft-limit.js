@@ -33,13 +33,14 @@
     facetsList.once().filter(function () {
       return $(this).find('li').length > limit;
     }).each(function () {
+      var facet = $(this);
       $('<a href="#" class="facets-soft-limit-link"></a>').text(Drupal.t('Show more')).click(function () {
-        if ($(this).siblings().find('li:hidden').length > 0) {
-          $(this).siblings().find('li:gt(' + zero_based_limit + ')').slideDown();
+        if (facet.find('li:hidden').length > 0) {
+          facet.find('li:gt(' + zero_based_limit + ')').slideDown();
           $(this).addClass('open').text(Drupal.t('Show less'));
         }
         else {
-          $(this).siblings().find('li:gt(' + zero_based_limit + ')').slideUp();
+          facet.find('li:gt(' + zero_based_limit + ')').slideUp();
           $(this).removeClass('open').text(Drupal.t('Show more'));
         }
         return false;
