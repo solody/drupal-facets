@@ -186,32 +186,6 @@ class IntegrationTest extends WebTestBase {
   }
 
   /**
-   * Tests renaming of a facet.
-   *
-   * @see https://www.drupal.org/node/2629504
-   */
-  public function testRenameFacet() {
-    $facet_id = 'ab_facet';
-    $new_facet_id = 'facet__ab';
-    $facet_name = 'ab>Facet';
-
-    // Add a new facet.
-    $this->addFacet($facet_name);
-
-    $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/settings';
-
-    // Go to the facet edit page and make sure "edit facet %facet" is present.
-    $this->drupalGet($facet_edit_page);
-    $this->assertResponse(200);
-    $this->assertRaw($this->t('Facet settings for @facet facet', ['@facet' => $facet_name]));
-
-    // Change the machine name to a new name and check that the redirected page
-    // is the correct url.
-    $form = ['id' => $new_facet_id];
-    $this->drupalPostForm($facet_edit_page, $form, $this->t('Save'));
-  }
-
-  /**
    * Tests that an url alias works correctly.
    */
   public function testUrlAlias() {
@@ -790,6 +764,10 @@ class IntegrationTest extends WebTestBase {
     $this->drupalGet($facet_edit_page);
     $this->assertResponse(200);
     $this->assertRaw($this->t('Facet settings for @facet facet', ['@facet' => $facet_name]));
+
+    // Check if it's possible to change the machine name.
+    $elements = $this->xpath('//form[@id="facets-facet-settings-form"]/div[contains(@class, "form-item-id")]/input[@disabled]');
+    $this->assertEqual(count($elements), 1, 'Machine name cannot be changed.');
 
     // Change the facet name to add in "-2" to test editing of a facet works.
     $form_values = ['name' => $facet_name . ' - 2'];
