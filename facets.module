@@ -36,11 +36,16 @@ function facets_help($route_name, RouteMatchInterface $route_match) {
  */
 function facets_theme($existing, $type, $theme, $path) {
   $result_item_variables = [
-    'variables' => ['value' => '', 'show_count' => FALSE, 'count' => NULL],
+    'variables' => [
+      'value' => '',
+      'show_count' => FALSE,
+      'count' => NULL,
+      'is_active' => FALSE,
+    ],
   ];
+
   return [
     'facets_result_item' => $result_item_variables,
-    'facets_result_item_active' => $result_item_variables,
   ];
 }
 
@@ -122,7 +127,7 @@ function facets_entity_presave(EntityInterface $entity) {
 function facets_preprocess_block(&$variables) {
   if ($variables['configuration']['provider'] == 'facets') {
     $facet = Facet::load($variables['derivative_plugin_id']);
-    $variables['attributes']['class'][] = 'block-facet-widget--' . Html::cleanCssIdentifier($facet->getWidget()['type']);
+    $variables['attributes']['class'][] = 'block-facets--' . Html::cleanCssIdentifier($facet->getWidget()['type']);
   }
 }
 

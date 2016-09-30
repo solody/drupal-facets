@@ -195,8 +195,8 @@ class IntegrationTest extends WebTestBase {
     $this->createFacet($facet_name, $facet_id);
 
     $this->drupalGet('search-api-test-fulltext');
-    $this->assertLink('item');
-    $this->assertLink('article');
+    $this->assertFacetLabel('item');
+    $this->assertFacetLabel('article');
 
     $this->clickLink('item');
     $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'ab_facet:item']]);
@@ -206,8 +206,8 @@ class IntegrationTest extends WebTestBase {
     $this->drupalPostForm(NULL, ['facet_settings[url_alias]' => 'llama'], $this->t('Save'));
 
     $this->drupalGet('search-api-test-fulltext');
-    $this->assertLink('item');
-    $this->assertLink('article');
+    $this->assertFacetLabel('item');
+    $this->assertFacetLabel('article');
 
     $this->clickLink('item');
     $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'llama:item']]);
@@ -234,10 +234,10 @@ class IntegrationTest extends WebTestBase {
     // Go the the view and test that both facets are shown. Item and article
     // come from the DependableFacet, orange and grape come from DependingFacet.
     $this->drupalGet('search-api-test-fulltext');
-    $this->assertLink('grape');
-    $this->assertLink('orange');
-    $this->assertLink('item');
-    $this->assertLink('article');
+    $this->assertFacetLabel('grape');
+    $this->assertFacetLabel('orange');
+    $this->assertFacetLabel('item');
+    $this->assertFacetLabel('article');
     $this->assertFacetBlocksAppear();
 
     // Change the visiblity settings of the DependingFacet.
@@ -253,13 +253,13 @@ class IntegrationTest extends WebTestBase {
     $this->drupalGet('search-api-test-fulltext');
     $this->assertNoLink('grape');
     $this->assertNoLink('orange');
-    $this->assertLink('item');
-    $this->assertLink('article');
+    $this->assertFacetLabel('item');
+    $this->assertFacetLabel('article');
 
     // Click on the item, and test that this shows the keywords.
     $this->clickLink('item');
-    $this->assertLink('grape');
-    $this->assertLink('orange');
+    $this->assertFacetLabel('grape');
+    $this->assertFacetLabel('orange');
 
     // Go back to the view, click on article and test that the keywords are
     // hidden.
@@ -279,15 +279,15 @@ class IntegrationTest extends WebTestBase {
 
     // Go the the view and test only the type facet is shown.
     $this->drupalGet('search-api-test-fulltext');
-    $this->assertLink('item');
-    $this->assertLink('article');
-    $this->assertLink('grape');
-    $this->assertLink('orange');
+    $this->assertFacetLabel('item');
+    $this->assertFacetLabel('article');
+    $this->assertFacetLabel('grape');
+    $this->assertFacetLabel('orange');
 
     // Click on the article, and test that this shows the keywords.
     $this->clickLink('article');
-    $this->assertLink('grape');
-    $this->assertLink('orange');
+    $this->assertFacetLabel('grape');
+    $this->assertFacetLabel('orange');
 
     // Go back to the view, click on item and test that the keywords are
     // hidden.
@@ -311,29 +311,29 @@ class IntegrationTest extends WebTestBase {
     $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'and'], $this->t('Save'));
 
     $this->drupalGet('search-api-test-fulltext');
-    $this->assertLink('item');
-    $this->assertLink('article');
+    $this->assertFacetLabel('item');
+    $this->assertFacetLabel('article');
 
     $this->clickLink('item');
-    $this->assertRaw('<span class="js-facet-deactivate">(-)</span> item');
+    $this->checkFacetIsActive('item');
     $this->assertNoLink('article');
 
     $this->drupalGet($facet_edit_page);
     $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'or'], $this->t('Save'));
     $this->drupalGet('search-api-test-fulltext');
-    $this->assertLink('item');
-    $this->assertLink('article');
+    $this->assertFacetLabel('item');
+    $this->assertFacetLabel('article');
 
     $this->clickLink('item');
-    $this->assertRaw('<span class="js-facet-deactivate">(-)</span> item');
-    $this->assertLink('article');
+    $this->checkFacetIsActive('item');
+    $this->assertFacetLabel('article');
 
     // Verify the number of results for OR functionality.
     $this->drupalGet($facet_edit_page);
     $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_config[show_numbers]' => TRUE], $this->t('Save'));
     $this->drupalGet('search-api-test-fulltext');
     $this->clickLink('item (3)');
-    $this->assertText('article (2)');
+    $this->assertFacetLabel('article (2)');
 
   }
 
@@ -415,10 +415,10 @@ class IntegrationTest extends WebTestBase {
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('foo bar baz');
     $this->assertText('foo baz');
-    $this->assertLink('item');
+    $this->assertFacetLabel('item');
 
     $this->clickLink('item');
-    $this->assertRaw('<span class="js-facet-deactivate">(-)</span> item');
+    $this->checkFacetIsActive('item');
     $this->assertText('foo baz');
     $this->assertText('bar baz');
     $this->assertNoText('foo bar baz');
@@ -431,10 +431,10 @@ class IntegrationTest extends WebTestBase {
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('foo bar baz');
     $this->assertText('foo baz');
-    $this->assertLink('item');
+    $this->assertFacetLabel('item');
 
     $this->clickLink('item');
-    $this->assertRaw('<span class="js-facet-deactivate">(-)</span> item');
+    $this->checkFacetIsActive('item');
     $this->assertText('foo bar baz');
     $this->assertText('foo test');
     $this->assertText('bar');
@@ -457,18 +457,18 @@ class IntegrationTest extends WebTestBase {
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 5 search results');
-    $this->assertLink('grape');
-    $this->assertLink('orange');
+    $this->assertFacetLabel('grape');
+    $this->assertFacetLabel('orange');
 
     $this->clickLink('grape');
     $this->assertText('Displaying 3 search results');
-    $this->assertRaw('<span class="js-facet-deactivate">(-)</span> grape');
-    $this->assertLink('orange');
+    $this->checkFacetIsActive('grape');
+    $this->assertFacetLabel('orange');
 
     $this->clickLink('orange');
     $this->assertText('Displaying 3 search results');
-    $this->assertLink('grape');
-    $this->assertRaw('<span class="js-facet-deactivate">(-)</span> orange');
+    $this->assertFacetLabel('grape');
+    $this->checkFacetIsActive('orange');
   }
 
   /**
@@ -504,30 +504,30 @@ class IntegrationTest extends WebTestBase {
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 5 search results');
-    $this->assertText('article (2)');
-    $this->assertText('grape (3)');
+    $this->assertFacetLabel('article (2)');
+    $this->assertFacetLabel('grape (3)');
 
     // Make sure that after clicking on article, which has only 2 entities,
     // there are only 2 items left in the results for other facets as well.
     // In this case, that means we can't have 3 entities tagged with grape. Both
     // remaining entities are tagged with grape and strawberry.
     $this->clickLinkPartialName('article');
-    $this->assertNoText('grape (3)');
-    $this->assertText('grape (2)');
-    $this->assertText('strawberry (2)');
+    $this->assertNoText('(3)');
+    $this->assertFacetLabel('grape (2)');
+    $this->assertFacetLabel('strawberry (2)');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 5 search results');
-    $this->assertText('article (2)');
-    $this->assertText('grape (3)');
+    $this->assertFacetLabel('article (2)');
+    $this->assertFacetLabel('grape (3)');
 
     // Make sure that after clicking on grape, which has only 3 entities, there
     // are only 3 items left in the results for other facets as well. In this
     // case, that means 2 entities of type article and 1 item.
     $this->clickLinkPartialName('grape');
     $this->assertText('Displaying 3 search results');
-    $this->assertText('article (2)');
-    $this->assertText('item (1)');
+    $this->assertFacetLabel('article (2)');
+    $this->assertFacetLabel('item (1)');
   }
 
   /**

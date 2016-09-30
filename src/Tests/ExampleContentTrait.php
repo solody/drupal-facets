@@ -107,11 +107,11 @@ trait ExampleContentTrait {
    *   Another string.
    */
   protected function assertStringPosition($x, $y) {
-    $this->assertRaw($x);
-    $this->assertRaw($y);
+    $this->assertText($x);
+    $this->assertText($y);
 
-    $x_position = strpos($this->getRawContent(), $x);
-    $y_position = strpos($this->getRawContent(), $y);
+    $x_position = strpos($this->getTextContent(), $x);
+    $y_position = strpos($this->getTextContent(), $y);
 
     $message = new FormattableMarkup('Assert that %x is before %y in the source', ['%x' => $x, '%y' => $y]);
     $this->assertTrue($x_position < $y_position, $message);

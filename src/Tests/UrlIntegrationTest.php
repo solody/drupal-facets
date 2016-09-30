@@ -150,9 +150,9 @@ class UrlIntegrationTest extends WebTestBase {
 
     // Go to the overview and test that we have the expected links.
     $this->drupalGet('search-api-test-fulltext');
-    $this->assertLink('test:colon');
-    $this->assertLink('orange');
-    $this->assertLink('banana');
+    $this->assertFacetLabel('test:colon');
+    $this->assertFacetLabel('orange');
+    $this->assertFacetLabel('banana');
 
     // Click the link with the colon.
     $this->clickLink('test:colon');
@@ -161,9 +161,9 @@ class UrlIntegrationTest extends WebTestBase {
     // Make sure 'test:colon' is active.
     $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'water_bear:test:colon']]);
     $this->assertUrl($url);
-    $this->assertRaw('<span class="js-facet-deactivate">(-)</span> test:colon');
-    $this->assertLink('orange');
-    $this->assertLink('banana');
+    $this->checkFacetIsActive('test:colon');
+    $this->assertFacetLabel('orange');
+    $this->assertFacetLabel('banana');
   }
 
   /**
@@ -175,14 +175,14 @@ class UrlIntegrationTest extends WebTestBase {
   protected function checkClickedFacetUrl(Url $url) {
     $this->drupalGet('search-api-test-fulltext');
     $this->assertResponse(200);
-    $this->assertLink('item');
-    $this->assertLink('article');
+    $this->assertFacetLabel('item');
+    $this->assertFacetLabel('article');
 
     $this->clickLink('item');
 
     $this->assertResponse(200);
-    $this->assertRaw('<span class="js-facet-deactivate">(-)</span> item');
-    $this->assertLink('article');
+    $this->checkFacetIsActive('item');
+    $this->assertFacetLabel('article');
     $this->assertUrl($url);
   }
 
