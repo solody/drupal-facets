@@ -64,24 +64,6 @@ trait BlockTestTrait {
   }
 
   /**
-   * Asserts that a facet block does not appear.
-   */
-  protected function assertNoFacetBlocksAppear() {
-    foreach ($this->blocks as $block) {
-      $this->assertNoBlockAppears($block);
-    }
-  }
-
-  /**
-   * Asserts that a facet block appears.
-   */
-  protected function assertFacetBlocksAppear() {
-    foreach ($this->blocks as $block) {
-      $this->assertBlockAppears($block);
-    }
-  }
-
-  /**
    * Deletes a facet block by id.
    *
    * @param string $id

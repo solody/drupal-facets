@@ -166,24 +166,4 @@ class UrlIntegrationTest extends WebTestBase {
     $this->assertFacetLabel('banana');
   }
 
-  /**
-   * Checks that the url after clicking a facet is as expected.
-   *
-   * @param \Drupal\Core\Url $url
-   *   The expected url we end on.
-   */
-  protected function checkClickedFacetUrl(Url $url) {
-    $this->drupalGet('search-api-test-fulltext');
-    $this->assertResponse(200);
-    $this->assertFacetLabel('item');
-    $this->assertFacetLabel('article');
-
-    $this->clickLink('item');
-
-    $this->assertResponse(200);
-    $this->checkFacetIsActive('item');
-    $this->assertFacetLabel('article');
-    $this->assertUrl($url);
-  }
-
 }
