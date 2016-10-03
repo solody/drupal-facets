@@ -174,7 +174,8 @@ class SearchApiViews extends SearchApiBaseFacetSource implements SearchApiFacetS
    */
   public function calculateDependencies() {
     $plugin_id_array = explode(':', $this->pluginId);
-    $dependencies['config'] = ['views.view.' . $plugin_id_array[1]];
+    list($view_id, ) = explode('__', $plugin_id_array[1]);
+    $dependencies['config'] = ['views.view.' . $view_id];
 
     return $dependencies;
   }
