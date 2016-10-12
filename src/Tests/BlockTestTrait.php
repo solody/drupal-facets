@@ -70,10 +70,10 @@ trait BlockTestTrait {
    *   The id of the block.
    */
   protected function deleteBlock($id) {
-    $this->drupalGet('admin/structure/block/manage/' . $this->blocks[$id]->id(), array('query' => array('destination' => 'admin')));
-    $this->clickLink(t('Delete'));
-    $this->drupalPostForm(NULL, array(), t('Delete'));
-    $this->assertRaw(t('The block %name has been deleted.', array('%name' => $this->blocks[$id]->label())));
+    $this->drupalGet('admin/structure/block/manage/' . $this->blocks[$id]->id(), ['query' => ['destination' => 'admin']]);
+    $this->clickLink('Remove block');
+    $this->drupalPostForm(NULL, [], 'Remove');
+    $this->assertRaw(t('The block %name has been removed.', array('%name' => $this->blocks[$id]->label())));
   }
 
 }
