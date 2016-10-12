@@ -3,6 +3,7 @@
 namespace Drupal\facets\Processor;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\facets\FacetInterface;
 
@@ -10,6 +11,8 @@ use Drupal\facets\FacetInterface;
  * A base class for plugins that implements most of the boilerplate.
  */
 class ProcessorPluginBase extends PluginBase implements ProcessorInterface {
+
+  use DependencyTrait;
 
   /**
    * {@inheritdoc}
