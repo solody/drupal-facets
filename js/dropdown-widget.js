@@ -60,6 +60,7 @@
 
       // Append dropdown.
       $(this).html($dropdown);
+      Drupal.attachBehaviors(document, Drupal.settings);
     });
   };
 
