@@ -16,8 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @FacetsProcessor(
  *   id = "translate_entity",
- *   label = @Translation("Translate entity label"),
- *   description = @Translation("Translate entity label"),
+ *   label = @Translation("Transform entity id into label"),
+ *   description = @Translation("Show entity label instead of entity id. E.g. for a taxonomy term id, show the term name instead"),
  *   stages = {
  *     "build" = 5
  *   }
