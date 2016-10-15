@@ -67,16 +67,11 @@ class FacetForm extends EntityForm {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
-    $entity_type_manager = $container->get('entity_type.manager');
-
-    /** @var \Drupal\facets\Processor\ProcessorPluginManager $processor_plugin_manager */
-    $processor_plugin_manager = $container->get('plugin.manager.facets.processor');
-
-    /** @var \Drupal\facets\Widget\WidgetPluginManager $widget_plugin_manager */
-    $widget_plugin_manager = $container->get('plugin.manager.facets.widget');
-
-    return new static($entity_type_manager, $processor_plugin_manager, $widget_plugin_manager);
+    return new static(
+      $container->get('entity_type.manager'),
+      $container->get('plugin.manager.facets.processor'),
+      $container->get('plugin.manager.facets.widget')
+    );
   }
 
   /**

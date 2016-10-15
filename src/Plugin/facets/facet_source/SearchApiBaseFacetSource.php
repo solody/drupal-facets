@@ -8,6 +8,8 @@ use Drupal\facets\FacetInterface;
 use Drupal\search_api\Backend\BackendInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginBase;
 use Drupal\search_api\FacetsQueryTypeMappingInterface;
+use Drupal\search_api\Utility\QueryHelper;
+use Drupal\facets\QueryType\QueryTypePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -30,9 +32,20 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
   protected $searchApiQueryHelper;
 
   /**
-   * {@inheritdoc}
+   * Constructs a SearchApiBaseFacetSource object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\facets\QueryType\QueryTypePluginManager $query_type_plugin_manager
+   *   The query type plugin manager.
+   * @param \Drupal\search_api\Utility\QueryHelper $search_results_cache
+   *   The query type plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, $query_type_plugin_manager, $search_results_cache) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, QueryTypePluginManager $query_type_plugin_manager, QueryHelper $search_results_cache) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
     // Since defaultConfiguration() depends on the plugin definition, we need to
     // override the constructor and set the definition property before calling
@@ -47,12 +60,13 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    /** @var \Drupal\facets\QueryType\QueryTypePluginManager $query_type_plugin_manager */
-    $query_type_plugin_manager = $container->get('plugin.manager.facets.query_type');
-
-    /** @var \Drupal\search_api\Utility\QueryHelper $query_helper */
-    $query_helper = $container->get('search_api.query_helper');
-    return new static($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager, $query_helper);
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.facets.query_type'),
+      $container->get('search_api.query_helper')
+    );
   }
 
   /**

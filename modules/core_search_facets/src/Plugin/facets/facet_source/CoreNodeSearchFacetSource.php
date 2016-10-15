@@ -54,13 +54,28 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
 
   /**
    * The facet query being executed.
+   *
+   * @var \Drupal\core_search_facets\FacetsQuery
    */
   protected $facetQueryExtender;
 
   /**
-   * {@inheritdoc}
+   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\facets\QueryType\QueryTypePluginManager $query_type_plugin_manager
+   *   The query type plugin manager.
+   * @param \Drupal\search\SearchPluginManager $search_manager
+   *   The plugin manager for core search plugins.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   Request stack.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, QueryTypePluginManager $query_type_plugin_manager, SearchPluginManager $search_manager, RequestStack $request_stack) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, QueryTypePluginManager $query_type_plugin_manager, SearchPluginManager $search_manager, RequestStack $request_stack) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
     $this->searchManager = $search_manager;
     $this->setSearchKeys($request_stack->getMasterRequest()->query->get('keys'));
@@ -70,8 +85,6 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
-    $request_stack = $container->get('request_stack');
 
     return new static(
       $configuration,
@@ -79,7 +92,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
       $plugin_definition,
       $container->get('plugin.manager.facets.query_type'),
       $container->get('plugin.manager.search'),
-      $request_stack
+      $container->get('request_stack')
     );
   }
 
