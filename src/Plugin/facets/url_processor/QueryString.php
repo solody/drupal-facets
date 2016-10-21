@@ -116,7 +116,9 @@ class QueryString extends UrlProcessorPluginBase {
       $result_get_params->set($this->filterKey, array_values($filter_params));
 
       $url = clone $url;
-      $url->setOption('query', $result_get_params->all());
+      if ($result_get_params->all() !== [$this->filterKey => []]) {
+        $url->setOption('query', $result_get_params->all());
+      }
 
       $result->setUrl($url);
     }
