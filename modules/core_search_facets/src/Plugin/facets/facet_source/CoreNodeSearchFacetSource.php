@@ -12,7 +12,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\search\SearchPageInterface;
 use Drupal\search\SearchPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * A facet source to support node search pages.
@@ -60,6 +60,13 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   protected $facetQueryExtender;
 
   /**
+   * The master request.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
    * Constructs a Drupal\Component\Plugin\PluginBase object.
    *
    * @param array $configuration
@@ -72,13 +79,14 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    *   The query type plugin manager.
    * @param \Drupal\search\SearchPluginManager $search_manager
    *   The plugin manager for core search plugins.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   Request stack.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The master request.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, QueryTypePluginManager $query_type_plugin_manager, SearchPluginManager $search_manager, RequestStack $request_stack) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, QueryTypePluginManager $query_type_plugin_manager, SearchPluginManager $search_manager, Request $request) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
     $this->searchManager = $search_manager;
-    $this->setSearchKeys($request_stack->getMasterRequest()->query->get('keys'));
+    $this->request = $request;
+    $this->setSearchKeys($this->request->query->get('keys'));
   }
 
   /**
@@ -92,7 +100,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
       $plugin_definition,
       $container->get('plugin.manager.facets.query_type'),
       $container->get('plugin.manager.search'),
-      $container->get('request_stack')
+      $container->get('request_stack')->getMasterRequest()
     );
   }
 
@@ -100,8 +108,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    * {@inheritdoc}
    */
   public function getPath() {
-    $request = \Drupal::requestStack()->getMasterRequest();
-    $search_page = $request->attributes->get('entity');
+    $search_page = $this->request->attributes->get('entity');
     if ($search_page instanceof SearchPageInterface) {
       return '/search/' . $search_page->getPath();
     }
