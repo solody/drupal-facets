@@ -43,7 +43,7 @@ class WidgetIntegrationTest extends WebTestBase {
     $name = 'Facet & checkbox~';
     $this->createFacet($name, $id);
     $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
-    $this->drupalPostForm(NULL, ['widget' => 'checkbox'], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['widget' => 'checkbox'], 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('item');
@@ -58,7 +58,7 @@ class WidgetIntegrationTest extends WebTestBase {
     $name = '>.Facet &* Links';
     $this->createFacet($name, $id);
     $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
-    $this->drupalPostForm(NULL, ['widget' => 'links'], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['widget' => 'links'], 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('item');
@@ -76,8 +76,8 @@ class WidgetIntegrationTest extends WebTestBase {
     $name = 'Select';
     $this->createFacet($name, $id);
     $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
-    $this->drupalPostForm(NULL, ['widget' => 'dropdown'], $this->t('Configure widget'));
-    $this->drupalPostForm(NULL, ['widget' => 'dropdown', 'facet_settings[show_only_one_result]' => TRUE], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['widget' => 'dropdown'], 'Configure widget');
+    $this->drupalPostForm(NULL, ['widget' => 'dropdown', 'facet_settings[show_only_one_result]' => TRUE], 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 5 search results');
@@ -102,7 +102,7 @@ class WidgetIntegrationTest extends WebTestBase {
     $this->assertFacetLabel('article');
 
     $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_config[show_numbers]' => TRUE], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_config[show_numbers]' => TRUE], 'Save');
 
     // Go back to the same view and check that links now display the count.
     $this->drupalGet('search-api-test-fulltext');
@@ -114,7 +114,7 @@ class WidgetIntegrationTest extends WebTestBase {
       'widget_config[show_numbers]' => TRUE,
       'facet_settings[query_operator]' => 'or',
     ];
-    $this->drupalPostForm($facet_edit_page, $edit, $this->t('Save'));
+    $this->drupalPostForm($facet_edit_page, $edit, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('item (3)');
@@ -124,7 +124,7 @@ class WidgetIntegrationTest extends WebTestBase {
     $this->assertFacetLabel('article (2)');
 
     $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_config[show_numbers]' => FALSE], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_config[show_numbers]' => FALSE], 'Save');
 
     // The count should be hidden again.
     $this->drupalGet('search-api-test-fulltext');

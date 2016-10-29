@@ -83,13 +83,13 @@ class UrlIntegrationTest extends WebTestBase {
 
     // Go to the only enabled facet source's config and change the filter key.
     $this->drupalGet('admin/config/search/facets');
-    $this->clickLink($this->t('Configure'), 1);
+    $this->clickLink('Configure', 1);
 
     $edit = [
       'filter_key' => 'y',
       'url_processor' => 'query_string',
     ];
-    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
     /** @var \Drupal\facets\FacetInterface $facet */
     $facet = Facet::load($id);
@@ -106,13 +106,13 @@ class UrlIntegrationTest extends WebTestBase {
     // Go to the only enabled facet source's config and change the url
     // processor.
     $this->drupalGet('admin/config/search/facets');
-    $this->clickLink($this->t('Configure'), 1);
+    $this->clickLink('Configure', 1);
 
     $edit = [
       'filter_key' => 'y',
       'url_processor' => 'dummy_query',
     ];
-    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
     /** @var \Drupal\facets\FacetInterface $facet */
     $facet = Facet::load($id);

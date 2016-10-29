@@ -68,7 +68,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $this->assertNoFieldChecked('edit-facet-settings-count-limit-status');
 
     $form = ['facet_settings[count_limit][status]' => TRUE];
-    $this->drupalPostForm(NULL, $form, $this->t('Save'));
+    $this->drupalPostForm(NULL, $form, 'Save');
     $this->assertResponse(200);
     $this->assertFieldChecked('edit-facet-settings-count-limit-status');
 
@@ -78,7 +78,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'facet_sorting[active_widget_order][status]' => TRUE,
       'facet_sorting[active_widget_order][settings][sort]' => 'DESC',
     ];
-    $this->drupalPostForm(NULL, $form, $this->t('Save'));
+    $this->drupalPostForm(NULL, $form, 'Save');
     $this->assertResponse(200);
     $this->assertFieldChecked('edit-facet-sorting-active-widget-order-status');
     $this->assertFieldChecked('edit-facet-sorting-active-widget-order-settings-sort-desc');
@@ -88,7 +88,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'facet_settings[hide_non_narrowing_result_processor][status]' => TRUE,
       'facet_settings[count_limit][status]' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $form, $this->t('Save'));
+    $this->drupalPostForm(NULL, $form, 'Save');
     $this->assertResponse(200);
     $this->assertFieldChecked('edit-facet-settings-count-limit-status');
     $this->assertFieldChecked('edit-facet-settings-hide-non-narrowing-result-processor-status');
@@ -102,7 +102,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'facet_settings[count_limit][status]' => TRUE,
       'processors[hide_non_narrowing_result_processor][weights][build]' => 5,
     ];
-    $this->drupalPostForm(NULL, $form, $this->t('Save'));
+    $this->drupalPostForm(NULL, $form, 'Save');
     $this->assertFieldChecked('edit-facet-settings-count-limit-status');
     $this->assertFieldChecked('edit-facet-settings-hide-non-narrowing-result-processor-status');
     $this->assertOptionSelected('edit-processors-count-limit-weights-build', -10);
@@ -165,7 +165,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'facet_sorting[display_value_widget_order][status]' => TRUE,
       'widget_config[show_numbers]' => TRUE,
     ];
-    $this->drupalPostForm($this->editForm, $values, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $values, 'Save');
 
     $expected_results = [
       'apple',
@@ -191,7 +191,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $values['facet_sorting[display_value_widget_order][status]'] = TRUE;
     $values['processors[display_value_widget_order][weights][sort]'] = 2;
     $this->disableAllFacetSorts();
-    $this->drupalPostForm($this->editForm, $values, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $values, 'Save');
 
     $expected_results = [
       'banana',
@@ -213,7 +213,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $values['facet_sorting[display_value_widget_order][status]'] = TRUE;
     $values['facet_sorting[count_widget_order][status]'] = TRUE;
     $values['facet_sorting[count_widget_order][settings][sort]'] = 'ASC';
-    $this->drupalPostForm($this->editForm, $values, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $values, 'Save');
     $this->assertFieldChecked('edit-facet-sorting-display-value-widget-order-status');
     $this->assertFieldChecked('edit-facet-sorting-count-widget-order-status');
 
@@ -245,21 +245,21 @@ class ProcessorIntegrationTest extends WebTestBase {
       'widget_config[show_numbers]' => TRUE,
       'facet_settings[count_limit][status]' => TRUE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
     $this->assertResponse(200);
     $this->assertFieldChecked('edit-facet-settings-count-limit-status');
     $form = [
       'widget_config[show_numbers]' => TRUE,
       'facet_settings[count_limit][status]' => TRUE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $form = [
       'widget_config[show_numbers]' => TRUE,
       'facet_settings[count_limit][status]' => TRUE,
       'facet_settings[count_limit][settings][minimum_items]' => 5,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 10 search results');
@@ -272,7 +272,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'facet_settings[count_limit][settings][minimum_items]' => 1,
       'facet_settings[count_limit][settings][maximum_items]' => 5,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 10 search results');
@@ -283,7 +283,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'widget_config[show_numbers]' => FALSE,
       'facet_settings[count_limit][status]' => FALSE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
   }
 
   /**
@@ -293,13 +293,13 @@ class ProcessorIntegrationTest extends WebTestBase {
     $form = [
       'facet_settings[exclude_specified_items][status]' => TRUE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $form = [
       'facet_settings[exclude_specified_items][status]' => TRUE,
       'facet_settings[exclude_specified_items][settings][exclude]' => 'banana',
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 10 search results');
@@ -311,7 +311,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'facet_settings[exclude_specified_items][settings][exclude]' => '(.*)berry',
       'facet_settings[exclude_specified_items][settings][regex]' => TRUE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 10 search results');
@@ -321,7 +321,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $form = [
       'facet_settings[exclude_specified_items][status]' => FALSE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
   }
 
   /**
@@ -339,7 +339,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $form = [
       'facet_settings[hide_non_narrowing_result_processor][status]' => TRUE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 10 search results');
@@ -352,7 +352,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $form = [
       'facet_settings[hide_non_narrowing_result_processor][status]' => FALSE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
   }
 
   /**
@@ -362,7 +362,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $form = [
       'facet_settings[hide_active_items_processor][status]' => TRUE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 10 search results');
@@ -377,7 +377,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $form = [
       'facet_settings[hide_active_items_processor][status]' => FALSE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
   }
 
   /**
@@ -389,7 +389,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'facet_sorting[active_widget_order][status]' => TRUE,
       'facet_sorting[active_widget_order][settings][sort]' => 'ASC',
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->clickLink('strawberry');
@@ -399,7 +399,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'facet_sorting[active_widget_order][status]' => TRUE,
       'facet_sorting[active_widget_order][settings][sort]' => 'DESC',
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->clickLink('strawberry');
@@ -408,7 +408,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $form = [
       'facet_sorting[active_widget_order][status]' => FALSE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
   }
 
   /**
@@ -421,7 +421,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'facet_sorting[count_widget_order][status]' => TRUE,
       'facet_sorting[count_widget_order][settings][sort]' => 'ASC',
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertStringPosition('banana', 'apple');
@@ -432,7 +432,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'facet_sorting[count_widget_order][status]' => TRUE,
       'facet_sorting[count_widget_order][settings][sort]' => 'DESC',
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertStringPosition('apple', 'banana');
@@ -443,7 +443,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'widget_config[show_numbers]' => FALSE,
       'facet_sorting[count_widget_order][status]' => FALSE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
   }
 
   /**
@@ -452,7 +452,7 @@ class ProcessorIntegrationTest extends WebTestBase {
   protected function checkSortByDisplay() {
     $this->disableAllFacetSorts();
     $form = ['facet_sorting[display_value_widget_order][status]' => TRUE];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertStringPosition('grape', 'strawberry');
@@ -462,14 +462,14 @@ class ProcessorIntegrationTest extends WebTestBase {
       'facet_sorting[display_value_widget_order][status]' => TRUE,
       'facet_sorting[display_value_widget_order][settings][sort]' => 'DESC',
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertStringPosition('strawberry', 'grape');
     $this->assertStringPosition('banana', 'apple');
 
     $form = ['facet_sorting[display_value_widget_order][status]' => FALSE];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
   }
 
   /**
@@ -480,7 +480,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $form = [
       'facet_sorting[raw_value_widget_order][status]' => TRUE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertStringPosition('grape', 'strawberry');
@@ -490,7 +490,7 @@ class ProcessorIntegrationTest extends WebTestBase {
       'facet_sorting[raw_value_widget_order][status]' => TRUE,
       'facet_sorting[raw_value_widget_order][settings][sort]' => 'DESC',
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertStringPosition('strawberry', 'grape');
@@ -499,7 +499,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     $form = [
       'facet_sorting[raw_value_widget_order][status]' => FALSE,
     ];
-    $this->drupalPostForm($this->editForm, $form, $this->t('Save'));
+    $this->drupalPostForm($this->editForm, $form, 'Save');
   }
 
   /**
@@ -530,7 +530,7 @@ class ProcessorIntegrationTest extends WebTestBase {
     if (!$path) {
       $path = $this->editForm;
     }
-    $this->drupalPostForm($path, $settings, $this->t('Save'));
+    $this->drupalPostForm($path, $settings, 'Save');
   }
 
 }

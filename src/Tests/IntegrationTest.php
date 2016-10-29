@@ -179,7 +179,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertText($name);
 
     $this->drupalGet('admin/config/search/facets/' . $id . '/delete');
-    $this->drupalPostForm(NULL, [], $this->t('Delete'));
+    $this->drupalPostForm(NULL, [], 'Delete');
 
     $this->drupalGet('admin/structure/block/library/classy');
     $this->assertNoText($name);
@@ -203,7 +203,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertUrl($url);
 
     $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['facet_settings[url_alias]' => 'llama'], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['facet_settings[url_alias]' => 'llama'], 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('item');
@@ -246,7 +246,7 @@ class IntegrationTest extends WebTestBase {
       'visibility[other_facet][facets]' => 'facet_block:dependablefacet',
       'visibility[other_facet][facet_value]' => 'item',
     ];
-    $this->drupalPostForm(NULL, $edit, $this->t('Save block'));
+    $this->drupalPostForm(NULL, $edit, 'Save block');
     $this->assertText('The block configuration has been saved.');
 
     // Go to the view and test that only the types are shown.
@@ -275,7 +275,7 @@ class IntegrationTest extends WebTestBase {
       'visibility[other_facet][facet_value]' => 'item',
       'visibility[other_facet][negate]' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, $this->t('Save block'));
+    $this->drupalPostForm(NULL, $edit, 'Save block');
 
     // Go the the view and test only the type facet is shown.
     $this->drupalGet('search-api-test-fulltext');
@@ -308,7 +308,7 @@ class IntegrationTest extends WebTestBase {
     $this->createFacet($facet_name, $facet_id);
 
     $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'and'], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'and'], 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('item');
@@ -319,7 +319,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertNoLink('article');
 
     $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'or'], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['facet_settings[query_operator]' => 'or'], 'Save');
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('item');
     $this->assertFacetLabel('article');
@@ -330,7 +330,7 @@ class IntegrationTest extends WebTestBase {
 
     // Verify the number of results for OR functionality.
     $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_config[show_numbers]' => TRUE], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['widget' => 'links', 'widget_config[show_numbers]' => TRUE], 'Save');
     $this->drupalGet('search-api-test-fulltext');
     $this->clickLink('item (3)');
     $this->assertFacetLabel('article (2)');
@@ -348,7 +348,7 @@ class IntegrationTest extends WebTestBase {
 
     // Configure the facet source by selecting one of the Search API views.
     $this->drupalGet($facet_add_page);
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'views_page:search_api_test_view__page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'views_page:search_api_test_view__page_1'], 'Configure facet source');
 
     // Fill in all fields and make sure the 'field is required' message is no
     // longer shown.
@@ -356,28 +356,28 @@ class IntegrationTest extends WebTestBase {
       'facet_source_id' => 'views_page:search_api_test_view__page_1',
       'facet_source_configs[views_page:search_api_test_view__page_1][field_identifier]' => 'type',
     ];
-    $this->drupalPostForm(NULL, $facet_source_form, $this->t('Save'));
+    $this->drupalPostForm(NULL, $facet_source_form, 'Save');
 
     $form_values = [
       'name' => 'name 1',
       'id' => 'name 1',
     ];
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
+    $this->drupalPostForm(NULL, $form_values, 'Save');
+    $this->assertText('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
 
     $form_values = [
       'name' => 'name 1',
       'id' => 'name:&1',
     ];
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertText($this->t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
+    $this->drupalPostForm(NULL, $form_values, 'Save');
+    $this->assertText('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
 
     // Post the form with valid values, so we can test the next step.
     $form_values = [
       'name' => 'name 1',
       'id' => 'name_1',
     ];
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->drupalPostForm(NULL, $form_values, 'Save');
 
     // Create an array of values that are not allowed in the url.
     $unwanted_values = [' ', '!', '@', '#', '$', '%', '^', '&'];
@@ -385,16 +385,16 @@ class IntegrationTest extends WebTestBase {
       $form_values = [
         'facet_settings[url_alias]' => 'alias' . $unwanted_value . '1',
       ];
-      $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-      $this->assertText($this->t('Url alias has illegal characters.'));
+      $this->drupalPostForm(NULL, $form_values, 'Save');
+      $this->assertText('Url alias has illegal characters.');
     }
 
     // Post an alias with allowed values.
     $form_values = [
       'facet_settings[url_alias]' => 'alias~-_.1',
     ];
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertRaw($this->t('Facet %name has been updated.', ['%name' => 'name 1']));
+    $this->drupalPostForm(NULL, $form_values, 'Save');
+    $this->assertText('Facet name 1 has been updated.');
   }
 
   /**
@@ -408,7 +408,7 @@ class IntegrationTest extends WebTestBase {
 
     $this->drupalGet($facet_edit_page);
     $this->assertNoFieldChecked('edit-facet-settings-exclude');
-    $this->drupalPostForm(NULL, ['facet_settings[exclude]' => TRUE], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['facet_settings[exclude]' => TRUE], 'Save');
     $this->assertResponse(200);
     $this->assertFieldChecked('edit-facet-settings-exclude');
 
@@ -424,7 +424,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertNoText('foo bar baz');
 
     $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['facet_settings[exclude]' => FALSE], $this->t('Save'));
+    $this->drupalPostForm(NULL, ['facet_settings[exclude]' => FALSE], 'Save');
     $this->assertResponse(200);
     $this->assertNoFieldChecked('edit-facet-settings-exclude');
 
@@ -453,7 +453,7 @@ class IntegrationTest extends WebTestBase {
 
     $this->drupalGet($facet_edit_page . '/edit');
     $edit = ['facet_settings[show_only_one_result]' => TRUE];
-    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 5 search results');
@@ -499,8 +499,8 @@ class IntegrationTest extends WebTestBase {
       'widget_config[show_numbers]' => '1',
       'facet_settings[query_operator]' => 'and',
     ];
-    $this->drupalPostForm('admin/config/search/facets/keywords/edit', $edit, $this->t('Save'));
-    $this->drupalPostForm('admin/config/search/facets/type/edit', $edit, $this->t('Save'));
+    $this->drupalPostForm('admin/config/search/facets/keywords/edit', $edit, 'Save');
+    $this->drupalPostForm('admin/config/search/facets/type/edit', $edit, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertText('Displaying 5 search results');
@@ -588,8 +588,8 @@ class IntegrationTest extends WebTestBase {
 
     // Delete the view display for the page.
     $this->drupalGet('admin/structure/views/view/search_api_test_view');
-    $this->drupalPostForm(NULL, [], $this->t('Delete Page'));
-    $this->drupalPostForm(NULL, [], $this->t('Save'));
+    $this->drupalPostForm(NULL, [], 'Delete Page');
+    $this->drupalPostForm(NULL, [], 'Save');
 
     // Go back to the overview, make sure that the page doesn't show any errors
     // and the facet/facet source are deleted.
@@ -620,7 +620,7 @@ class IntegrationTest extends WebTestBase {
       'facet_settings[empty_behavior]' => 'text',
       'facet_settings[empty_behavior_container][empty_behavior_text][value]' => 'No results found for this block!',
     ];
-    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
   }
 
@@ -642,7 +642,7 @@ class IntegrationTest extends WebTestBase {
       'widget' => 'links',
       'widget_config[show_numbers]' => '0',
     ];
-    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
   }
 
   /**
@@ -683,22 +683,22 @@ class IntegrationTest extends WebTestBase {
 
     // Try filling out the form, but without having filled in a name for the
     // facet to test for form errors.
-    $this->drupalPostForm($facet_add_page, $form_values, $this->t('Save'));
-    $this->assertText($this->t('Name field is required.'));
-    $this->assertText($this->t('Facet source field is required.'));
+    $this->drupalPostForm($facet_add_page, $form_values, 'Save');
+    $this->assertText('Name field is required.');
+    $this->assertText('Facet source field is required.');
 
     // Make sure that when filling out the name, the form error disappears.
     $form_values['name'] = $facet_name;
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertNoText($this->t('Name field is required.'));
+    $this->drupalPostForm(NULL, $form_values, 'Save');
+    $this->assertNoText('Name field is required.');
 
     // Configure the facet source by selecting one of the Search API views.
     $this->drupalGet($facet_add_page);
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'views_page:search_api_test_view__page_1'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'views_page:search_api_test_view__page_1'], 'Configure facet source');
 
     // The field is still required.
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertText($this->t('Field field is required.'));
+    $this->drupalPostForm(NULL, $form_values, 'Save');
+    $this->assertText('Field field is required.');
 
     // Fill in all fields and make sure the 'field is required' message is no
     // longer shown.
@@ -706,11 +706,11 @@ class IntegrationTest extends WebTestBase {
       'facet_source_id' => 'views_page:search_api_test_view__page_1',
       'facet_source_configs[views_page:search_api_test_view__page_1][field_identifier]' => $facet_type,
     ];
-    $this->drupalPostForm(NULL, $form_values + $facet_source_form, $this->t('Save'));
+    $this->drupalPostForm(NULL, $form_values + $facet_source_form, 'Save');
     $this->assertNoText('field is required.');
 
     // Make sure that the redirection to the display page is correct.
-    $this->assertRaw(t('Facet %name has been created.', ['%name' => $facet_name]));
+    $this->assertText('Facet ' . $facet_name . ' has been created.');
     $this->assertUrl('admin/config/search/facets/' . $facet_id . '/edit');
 
     $this->drupalGet('admin/config/search/facets');
@@ -738,15 +738,15 @@ class IntegrationTest extends WebTestBase {
 
     // Try to submit a facet with a duplicate machine name after form rebuilding
     // via facet source submit.
-    $this->drupalPostForm(NULL, $form_values, $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values + $facet_source_configs, $this->t('Save'));
-    $this->assertText($this->t('The machine-readable name is already in use. It must be unique.'));
+    $this->drupalPostForm(NULL, $form_values, 'Configure facet source');
+    $this->drupalPostForm(NULL, $form_values + $facet_source_configs, 'Save');
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
 
     // Try to submit a facet with a duplicate machine name after form rebuilding
     // via facet source submit using AJAX.
-    $this->drupalPostAjaxForm(NULL, $form_values, array('facet_source_configure' => t('Configure facet source')));
-    $this->drupalPostForm(NULL, $form_values + $facet_source_configs, $this->t('Save'));
-    $this->assertText($this->t('The machine-readable name is already in use. It must be unique.'));
+    $this->drupalPostAjaxForm(NULL, $form_values, array('facet_source_configure' => 'Configure facet source'));
+    $this->drupalPostForm(NULL, $form_values + $facet_source_configs, 'Save');
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
   }
 
   /**
@@ -763,7 +763,7 @@ class IntegrationTest extends WebTestBase {
     // Go to the facet edit page and make sure "edit facet %facet" is present.
     $this->drupalGet($facet_edit_page);
     $this->assertResponse(200);
-    $this->assertRaw($this->t('Facet settings for @facet facet', ['@facet' => $facet_name]));
+    $this->assertRaw('Facet settings for ' . $facet_name . ' facet');
 
     // Check if it's possible to change the machine name.
     $elements = $this->xpath('//form[@id="facets-facet-settings-form"]/div[contains(@class, "form-item-id")]/input[@disabled]');
@@ -771,23 +771,23 @@ class IntegrationTest extends WebTestBase {
 
     // Change the facet name to add in "-2" to test editing of a facet works.
     $form_values = ['name' => $facet_name . ' - 2'];
-    $this->drupalPostForm($facet_edit_page, $form_values, $this->t('Save'));
+    $this->drupalPostForm($facet_edit_page, $form_values, 'Save');
 
     // Make sure that the redirection back to the overview was successful and
     // the edited facet is shown on the overview page.
-    $this->assertRaw(t('Facet %name has been updated.', ['%name' => $facet_name . ' - 2']));
+    $this->assertText('Facet ' . $facet_name . ' - 2 has been updated.');
 
     // Make sure the "-2" suffix is still on the facet when editing a facet.
     $this->drupalGet($facet_edit_page);
-    $this->assertRaw($this->t('Facet settings for @facet facet', ['@facet' => $facet_name . ' - 2']));
+    $this->assertRaw('Facet settings for ' . $facet_name . ' - 2 facet');
 
     // Edit the form and change the facet's name back to the initial name.
     $form_values = ['name' => $facet_name];
-    $this->drupalPostForm($facet_edit_page, $form_values, $this->t('Save'));
+    $this->drupalPostForm($facet_edit_page, $form_values, 'Save');
 
     // Make sure that the redirection back to the overview was successful and
     // the edited facet is shown on the overview page.
-    $this->assertRaw(t('Facet %name has been updated.', ['%name' => $facet_name]));
+    $this->assertText('Facet ' . $facet_name . ' has been updated.');
   }
 
   /**
@@ -807,7 +807,7 @@ class IntegrationTest extends WebTestBase {
 
     // Check that the facet by testing for the message and the absence of the
     // facet name on the overview.
-    $this->assertRaw($this->t("The facet is currently used in a block and thus can't be removed. Remove the block first."));
+    $this->assertRaw("The facet is currently used in a block and thus can't be removed. Remove the block first.");
   }
 
   /**
@@ -835,11 +835,11 @@ class IntegrationTest extends WebTestBase {
     $this->drupalGet($facet_delete_page);
 
     // Actually submit the confirmation form.
-    $this->drupalPostForm(NULL, [], $this->t('Delete'));
+    $this->drupalPostForm(NULL, [], 'Delete');
 
     // Check that the facet by testing for the message and the absence of the
     // facet name on the overview.
-    $this->assertRaw($this->t('The facet %facet has been deleted.', ['%facet' => $facet_name]));
+    $this->assertText('The facet ' . $facet_name . ' has been deleted.');
 
     // Refresh the page because on the previous page the $facet_name is still
     // visible (in the message).
@@ -862,8 +862,8 @@ class IntegrationTest extends WebTestBase {
       'fields[entity:node/uid][type]' => 'search_api_test_data_type',
     ];
 
-    $this->drupalPostForm('admin/config/search/search-api/index/webtest_index/fields', $edit, $this->t('Save changes'));
-    $this->assertText($this->t('The changes were successfully saved.'));
+    $this->drupalPostForm('admin/config/search/search-api/index/webtest_index/fields', $edit, 'Save changes');
+    $this->assertText('The changes were successfully saved.');
   }
 
   /**

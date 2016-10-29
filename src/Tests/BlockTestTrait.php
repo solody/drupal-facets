@@ -40,8 +40,8 @@ trait BlockTestTrait {
       'facet_source_id' => $facet_source,
       "facet_source_configs[views_page:{$source}__{$display_id}][field_identifier]" => $field,
     ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => $facet_source], $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+    $this->drupalPostForm(NULL, ['facet_source_id' => $facet_source], 'Configure facet source');
+    $this->drupalPostForm(NULL, $form_values, 'Save');
 
     $this->blocks[$id] = $this->createBlock($id);
   }
