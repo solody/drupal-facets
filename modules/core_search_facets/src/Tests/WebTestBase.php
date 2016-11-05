@@ -83,6 +83,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
         'body' => 'test page' . $i,
         'type' => 'page',
         'created' => $created_time_en->format('U'),
+        'changed' => $created_time_en->format('U'),
         'langcode' => 'en',
       ));
 
@@ -101,6 +102,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
       'body' => 'test page10',
       'type' => 'page',
       'created' => $created_time->format('U'),
+      'changed' => $created_time_en->format('U'),
       'langcode' => 'en',
     ));
 
@@ -112,6 +114,7 @@ abstract class WebTestBase extends SimpletestWebTestBase {
         'body' => 'test article' . $i,
         'type' => 'article',
         'created' => $created_time->format('U'),
+        'changed' => $created_time_en->format('U'),
         'langcode' => 'en',
       ));
     }
