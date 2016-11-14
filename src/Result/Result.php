@@ -60,7 +60,7 @@ class Result implements ResultInterface {
   public function __construct($raw_value, $display_value, $count) {
     $this->rawValue = $raw_value;
     $this->displayValue = $display_value;
-    $this->count = $count;
+    $this->count = (int) $count;
   }
 
   /**
