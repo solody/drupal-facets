@@ -95,7 +95,7 @@ class SearchApiViews extends SearchApiBaseFacetSource implements SearchApiFacetS
   /**
    * {@inheritdoc}
    */
-  public function fillFacetsWithResults($facets) {
+  public function fillFacetsWithResults(array $facets) {
     // Check if there are results in the static cache.
     $results = $this->searchApiQueryHelper->getResults($this->pluginId);
 

@@ -23,7 +23,7 @@ interface FacetSourcePluginInterface extends PluginFormInterface, DependentPlugi
    * @param \Drupal\facets\FacetInterface[] $facets
    *   The configured facets.
    */
-  public function fillFacetsWithResults($facets);
+  public function fillFacetsWithResults(array $facets);
 
   /**
    * Returns the allowed query types for a given facet for the facet source.

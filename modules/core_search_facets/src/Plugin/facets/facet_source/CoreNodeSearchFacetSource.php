@@ -118,7 +118,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   /**
    * {@inheritdoc}
    */
-  public function fillFacetsWithResults($facets) {
+  public function fillFacetsWithResults(array $facets) {
     foreach ($facets as $facet) {
       $configuration = array(
         'query' => NULL,
