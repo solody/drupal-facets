@@ -7,3 +7,4 @@ configure: facets.overview
 test_dependencies:
   - search_api:search_api (1.x-dev)
   - drupal:views
+  - drupal:system (>=8.2)

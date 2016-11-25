@@ -4,7 +4,6 @@ namespace Drupal\facets\Form;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\Processor\ProcessorInterface;
@@ -13,6 +12,7 @@ use Drupal\facets\UrlProcessor\UrlProcessorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\facets\Widget\WidgetPluginManager;
 use Drupal\facets\Processor\SortProcessorInterface;
+use Drupal\Core\Form\SubformState;
 
 /**
  * Provides a form for configuring the processors of a facet.
@@ -229,10 +229,8 @@ class FacetForm extends EntityForm {
           '#access' => !$processor->isHidden(),
         );
 
-        $processor_form_state = new SubFormState(
-          $form_state,
-          ['facet_settings', $processor_id, 'settings']
-        );
+        $form['facet_settings'][$processor_id]['settings'] = [];
+        $processor_form_state = SubformState::createForSubform($form['facet_settings'][$processor_id]['settings'], $form, $form_state);
         $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facet);
         if ($processor_form) {
           $form['facet_settings'][$processor_id]['settings'] = array(
@@ -285,10 +283,8 @@ class FacetForm extends EntityForm {
           '#access' => !$processor->isHidden(),
         );
 
-        $processor_form_state = new SubFormState(
-          $form_state,
-          array('facet_sorting', $processor_id, 'settings')
-        );
+        $form['facet_sorting'][$processor_id]['settings'] = [];
+        $processor_form_state = SubformState::createForSubform($form['facet_sorting'][$processor_id]['settings'], $form, $form_state);
         $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facet);
         if ($processor_form) {
           $form['facet_sorting'][$processor_id]['settings'] = array(
@@ -479,20 +475,16 @@ class FacetForm extends EntityForm {
     // Iterate over all processors that have a form and are enabled.
     foreach ($form['facet_settings'] as $processor_id => $processor_form) {
       if (!empty($values['processors'][$processor_id])) {
-        $processor_form_state = new SubFormState(
-          $form_state,
-          array('facet_settings', $processor_id, 'settings')
-        );
+
+        $processor_form_state = SubformState::createForSubform($form['facet_settings'][$processor_id]['settings'], $form, $form_state);
         $processors[$processor_id]->validateConfigurationForm($form['facet_settings'][$processor_id], $processor_form_state, $facet);
       }
     }
     // Iterate over all sorting processors that have a form and are enabled.
     foreach ($form['facet_sorting'] as $processor_id => $processor_form) {
       if (!empty($values['processors'][$processor_id])) {
-        $processor_form_state = new SubFormState(
-          $form_state,
-          array('facet_sorting', $processor_id, 'settings')
-        );
+
+        $processor_form_state = SubformState::createForSubform($form['facet_sorting'][$processor_id]['settings'], $form, $form_state);
         $processors[$processor_id]->validateConfigurationForm($form['facet_sorting'][$processor_id], $processor_form_state, $facet);
       }
     }
@@ -538,10 +530,7 @@ class FacetForm extends EntityForm {
         $new_settings['weights'] = $values['processors'][$processor_id]['weights'];
       }
       if (isset($form[$form_container_key][$processor_id]['settings'])) {
-        $processor_form_state = new SubFormState(
-          $form_state,
-          array($form_container_key, $processor_id, 'settings')
-        );
+        $processor_form_state = SubformState::createForSubform($form[$form_container_key][$processor_id]['settings'], $form, $form_state);
         $processor->submitConfigurationForm($form[$form_container_key][$processor_id]['settings'], $processor_form_state, $facet);
         $new_settings['settings'] = $processor->getConfiguration();
       }
