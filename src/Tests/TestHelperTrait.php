@@ -48,6 +48,25 @@ trait TestHelperTrait {
   }
 
   /**
+   * Check if a facet is not active by providing a label for it.
+   *
+   * We'll check by activeness by seeing that there's no span with (-) in the
+   * same link as the label.
+   *
+   * @param string $label
+   *   The label of a facet that should be active.
+   *
+   * @return bool
+   *   Returns true when the facet is found and is active.
+   */
+  protected function checkFacetIsNotActive($label) {
+    $label = (string) $label;
+    $label = strip_tags($label);
+    $links = $this->xpath('//a/span[1][normalize-space(text())=:label]', array(':label' => $label));
+    return $this->assert(isset($links[0]));
+  }
+
+  /**
    * Asserts that a facet block does not appear.
    */
   protected function assertNoFacetBlocksAppear() {
