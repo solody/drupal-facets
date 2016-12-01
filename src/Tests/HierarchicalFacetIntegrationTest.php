@@ -41,7 +41,18 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
    */
   protected $facetEditPage;
 
+  /**
+   * An array of taxonomy terms.
+   *
+   * @var \Drupal\taxonomy\Entity\Term[]
+   */
   protected $parents = [];
+
+  /**
+   * An array of taxonomy terms.
+   *
+   * @var \Drupal\taxonomy\Entity\Term[]
+   */
   protected $terms = [];
 
   /**
@@ -56,7 +67,7 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
     $this->vocabulary = $this->createVocabulary();
     $this->createHierarchialTermStructure();
 
-    // Defaultcontent that is extented with a term reference field below.
+    // Default content that is extended with a term reference field below.
     $this->setUpExampleStructure();
 
     // Create a taxonomy_term_reference field on the article and item.
@@ -80,7 +91,6 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
     $index->addField($term_field);
 
     $index->save();
-
     $this->indexItems($this->indexId);
 
     $facet_name = 'hierarchical facet';
@@ -138,7 +148,6 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
    * Verify the "Always expand hierarchy" option is working.
    */
   protected function verifyExpandHierarchyOption() {
-
     // Expand the hierarchy and verify that all items are visible initially.
     $this->drupalGet($this->facetEditPage);
     $edit = [
@@ -182,7 +191,7 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
     $this->checkFacetIsNotActive('Child 4');
     $this->checkFacetIsNotActive('Parent 2');
 
-    // Enable the option .
+    // Enable the option.
     $this->drupalGet($this->facetEditPage);
     $edit = [
       'facet_settings[expand_hierarchy]' => '1',
@@ -202,7 +211,6 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
     $this->clickLink('(-) Child 4');
     $this->checkFacetIsNotActive('Child 4');
     $this->checkFacetIsActive('Parent 2');
-
   }
 
   /**
@@ -249,7 +257,6 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
    * Creates several test entities with the term-reference field.
    */
   protected function insertExampleContent() {
-
     $entity_test_storage = \Drupal::entityTypeManager()
       ->getStorage('entity_test_mulrev_changed');
 
@@ -262,6 +269,7 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
       $this->fieldName => [$this->parents['Parent 1']->id()],
     ));
     $this->entities[1]->save();
+
     $this->entities[2] = $entity_test_storage->create(array(
       'name' => 'foo test',
       'body' => 'bar test',
@@ -271,6 +279,7 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
       $this->fieldName => [$this->parents['Parent 2']->id()],
     ));
     $this->entities[2]->save();
+
     $this->entities[3] = $entity_test_storage->create(array(
       'name' => 'bar',
       'body' => 'test foobar',
@@ -278,6 +287,7 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
       $this->fieldName => [$this->terms[1]->id()],
     ));
     $this->entities[3]->save();
+
     $this->entities[4] = $entity_test_storage->create(array(
       'name' => 'foo baz',
       'body' => 'test test test',
@@ -287,6 +297,7 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
       $this->fieldName => [$this->terms[2]->id()],
     ));
     $this->entities[4]->save();
+
     $this->entities[5] = $entity_test_storage->create(array(
       'name' => 'bar baz',
       'body' => 'foo',
@@ -296,6 +307,7 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
       $this->fieldName => [$this->terms[3]->id()],
     ));
     $this->entities[5]->save();
+
     $this->entities[6] = $entity_test_storage->create(array(
       'name' => 'bar baz',
       'body' => 'foo',
