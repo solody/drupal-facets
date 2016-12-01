@@ -420,8 +420,8 @@ class DefaultFacetManager {
       if (isset($parent_groups[$current_id]) && $parent_groups[$current_id]) {
         $child_ids = $parent_groups[$current_id];
         $child_keyed_results = [];
-        foreach($child_ids as $child_id){
-          if(isset($keyed_results[$child_id])){
+        foreach ($child_ids as $child_id) {
+          if (isset($keyed_results[$child_id])) {
             $child_keyed_results[$child_id] = $keyed_results[$child_id];
           }
         }

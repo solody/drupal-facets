@@ -105,7 +105,6 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
     return $indexed_fields;
   }
 
-
   /**
    * {@inheritdoc}
    */

@@ -21,7 +21,7 @@
     // Find all checkbox facet links and give them a checkbox.
     var $links = $('.js-facets-checkbox-links .facet-item a');
     $links.once('facets-checkbox-transform').each(Drupal.facets.makeCheckbox);
-    // Set indeterminate value on parents having an active trail
+    // Set indeterminate value on parents having an active trail.
     $('.facet-item--expanded.facet-item--active-trail > input').prop("indeterminate", true);
   };
 
