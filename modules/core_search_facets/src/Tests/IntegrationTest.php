@@ -143,7 +143,7 @@ class IntegrationTest extends WebTestBase {
     // Update the changed date. The nodes were created on February/March 2016
     // and the changed date is December 2016.
     $node = Node::load(1);
-    $changed_date = new \DateTime('December 3 2016 1PM');
+    $changed_date = new \DateTime('June 3 2016 1PM');
     $node->changed = $changed_date->format('U');
     $node->save();
 
@@ -154,11 +154,11 @@ class IntegrationTest extends WebTestBase {
     search_update_totals();
 
     $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
-    $this->assertFacetLabel('December 2016 (1)');
-    $this->clickLinkPartialName('December 2016');
+    $this->assertFacetLabel('June 2016 (1)');
+    $this->clickLinkPartialName('June 2016');
     $this->assertResponse(200);
-    $this->assertFacetLabel('December 3, 2016 (1)');
-    $this->clickLinkPartialName('December 3, 2016');
+    $this->assertFacetLabel('June 3, 2016 (1)');
+    $this->clickLinkPartialName('June 3, 2016');
     $this->assertResponse(200);
   }
 
