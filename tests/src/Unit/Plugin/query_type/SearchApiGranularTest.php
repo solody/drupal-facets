@@ -21,7 +21,7 @@ class SearchApiGranularTest extends UnitTestCase {
     $query = new SearchApiQuery([], 'search_api_query', []);
     $facetReflection = new \ReflectionClass('Drupal\facets\Entity\Facet');
     $facet = new Facet(
-      ['query_operator' => 'AND'],
+      ['query_operator' => 'AND', 'widget' => 'links'],
       'facets_facet'
     );
     $widget = $this->getMockBuilder('Drupal\facets\Widget\WidgetPluginInterface')
