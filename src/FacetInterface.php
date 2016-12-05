@@ -17,8 +17,6 @@ interface FacetInterface extends ConfigEntityInterface {
    * @param array $configuration
    *   (optional) The facet widget plugin configuration. If missed, the default
    *   plugin configuration will be filled.
-   *
-   * @return $this
    */
   public function setWidget($id, array $configuration = NULL);
 
@@ -82,9 +80,6 @@ interface FacetInterface extends ConfigEntityInterface {
    *
    * @param string $field_identifier
    *   The field identifier of this facet.
-   *
-   * @return $this
-   *   Returns self.
    */
   public function setFieldIdentifier($field_identifier);
 
@@ -267,23 +262,12 @@ interface FacetInterface extends ConfigEntityInterface {
   public function setEnableParentWhenChildGetsDisabled($enable_parent_when_child_gets_disabled);
 
   /**
-   * Returns the plugin name for the url processor.
-   *
-   * @return string
-   *   The id of the url processor.
-   */
-  public function getUrlProcessorName();
-
-  /**
    * Sets a string representation of the Facet source plugin.
    *
    * This is usually the name of the Search-api view.
    *
    * @param string $facet_source_id
    *   The facet source id.
-   *
-   * @return $this
-   *   Returns self.
    */
   public function setFacetSourceId($facet_source_id);
 
@@ -380,9 +364,6 @@ interface FacetInterface extends ConfigEntityInterface {
    * @param bool $only_visible_when_facet_source_is_visible
    *   A boolean flag indicating if the facet should be hidden on a page that
    *   does not show the facet source.
-   *
-   * @return $this
-   *   Returns self.
    */
   public function setOnlyVisibleWhenFacetSourceIsVisible($only_visible_when_facet_source_is_visible);
 
@@ -425,22 +406,6 @@ interface FacetInterface extends ConfigEntityInterface {
    *   The behavior definition or NULL.
    */
   public function getEmptyBehavior();
-
-  /**
-   * Returns any additional configuration for this facet, not defined above.
-   *
-   * @return array
-   *   An array of additional configuration for the facet.
-   */
-  public function getFacetConfigs();
-
-  /**
-   * Defines any additional configuration for this facet not defined above.
-   *
-   * @param array $facet_config
-   *   An array of additional configuration for the facet.
-   */
-  public function setFacetConfigs(array $facet_config);
 
   /**
    * Returns the weight of the facet.

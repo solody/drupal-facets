@@ -23,9 +23,6 @@ facets.facet.*:
     field_identifier:
       type: string
       label: 'Field identifier'
-    query_type_name:
-      type: string
-      label: 'Query Type Name'
     query_operator:
       type: string
       label: 'Query Operator'
@@ -88,12 +85,6 @@ facets.facet.*:
               label: 'The processor''s weight for this stage'
           settings:
             type: plugin.plugin_configuration.facets_processor.[%parent.processor_id]
-    facet_configs:
-      type: sequence
-      label: 'Facet plugin-specific options'
-      sequence:
-        type: plugin.plugin_configuration.facets_facet_options.[%key]
-        label: 'Facet plugin options'
 
 condition.plugin.other_facet:
   type: condition.plugin
