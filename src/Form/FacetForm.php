@@ -364,6 +364,21 @@ class FacetForm extends EntityForm {
       '#default_value' => $facet->getQueryOperator(),
     ];
 
+    $hard_limit_options = [3, 5, 10, 15, 20, 30, 40, 50, 75, 100, 250, 500];
+    $form['facet_settings']['hard_limit'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Hard limit'),
+      '#default_value' => $facet->getHardLimit(),
+      '#options' => [0 => $this->t('No limit')] + array_combine($hard_limit_options, $hard_limit_options),
+      '#description' => $this->t('Display no more than this number of facet items.'),
+    ];
+    if (strpos($facet->getFacetSourceId(), 'search_api') === FALSE) {
+      $form['facet_settings']['hard_limit']['#disabled'] = TRUE;
+      $form['facet_settings']['hard_limit']['#description'] .= '<br />';
+      $form['facet_settings']['hard_limit']['#description'] .= $this->t('This setting only works with Search API based facets.');
+    }
+
+
     $form['facet_settings']['exclude'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Exclude'),
@@ -594,6 +609,8 @@ class FacetForm extends EntityForm {
     $facet->setEmptyBehavior($empty_behavior_config);
 
     $facet->setQueryOperator($form_state->getValue(['facet_settings', 'query_operator']));
+
+    $facet->setHardLimit($form_state->getValue(['facet_settings', 'hard_limit']));
 
     $facet->setExclude($form_state->getValue(['facet_settings', 'exclude']));
     $facet->setUseHierarchy($form_state->getValue(['facet_settings', 'use_hierarchy']));

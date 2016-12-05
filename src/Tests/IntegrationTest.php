@@ -601,6 +601,40 @@ class IntegrationTest extends WebTestBase {
   }
 
   /**
+   * Tests the hard limit setting.
+   */
+  public function testHardLimit() {
+    $this->createFacet('Owl', 'owl', 'keywords');
+
+    $edit = [
+      'widget' => 'links',
+      'widget_config[show_numbers]' => '1',
+    ];
+    $this->drupalPostForm('admin/config/search/facets/owl/edit', $edit, 'Save');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 5 search results');
+    $this->assertFacetLabel('grape (3)');
+    $this->assertFacetLabel('orange (3)');
+    $this->assertFacetLabel('apple (2)');
+    $this->assertFacetLabel('banana (1)');
+    $this->assertFacetLabel('strawberry (2)');
+
+    $edit['facet_settings[hard_limit]'] = 3;
+    $this->drupalPostForm('admin/config/search/facets/owl/edit', $edit, 'Save');
+
+    $this->drupalGet('search-api-test-fulltext');
+    // We're still testing for 5 search results here, the hard limit only limits
+    // the facets, not the search results.
+    $this->assertText('Displaying 5 search results');
+    $this->assertFacetLabel('grape (3)');
+    $this->assertFacetLabel('orange (3)');
+    $this->assertFacetLabel('apple (2)');
+    $this->assertFacetLabel('banana (0)');
+    $this->assertFacetLabel('strawberry (0)');
+  }
+
+  /**
    * Configures empty behavior option to show a text on empty results.
    *
    * @param string $facet_name

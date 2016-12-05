@@ -45,6 +45,7 @@ use Drupal\facets\FacetInterface;
  *     "use_hierarchy",
  *     "expand_hierarchy",
  *     "enable_parent_when_child_gets_disabled",
+ *     "hard_limit",
  *     "exclude",
  *     "only_visible_when_facet_source_is_visible",
  *     "processor_configs",
@@ -124,7 +125,18 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $query_operator;
 
   /**
+<<<<<<< 1747eb61a568cf31f8b0a9c6243a596271b7b320
    * A boolean indicating if items should be rendered in hierarchical structure.
+=======
+   * Hard limit for the facet items.
+   *
+   * @var integer
+   */
+  protected $hard_limit;
+
+  /**
+   * A boolean flag indicating if search should exclude selected facets.
+>>>>>>> OG 6
    *
    * @var bool
    */
@@ -494,6 +506,20 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   public function getEnableParentWhenChildGetsDisabled() {
     return $this->enable_parent_when_child_gets_disabled;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setHardLimit($limit) {
+    return $this->hard_limit = $limit;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHardLimit() {
+    return $this->hard_limit ?: 0;
   }
 
   /**

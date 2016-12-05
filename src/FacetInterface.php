@@ -193,6 +193,11 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getQueryOperator();
 
   /**
+   * Returns the limit number for facet items.
+   */
+  public function getHardLimit();
+
+  /**
    * Returns the value of the exclude boolean.
    *
    * This will return true when the current facet's value should be exclusive
@@ -278,6 +283,14 @@ interface FacetInterface extends ConfigEntityInterface {
    *   The query operator being used.
    */
   public function setQueryOperator($operator);
+
+  /**
+   * Sets the hard limit of facet items.
+   *
+   * @param int $limit
+   *   Hard limit of the facet.
+   */
+  public function setHardLimit($limit);
 
   /**
    * Sets the exclude.

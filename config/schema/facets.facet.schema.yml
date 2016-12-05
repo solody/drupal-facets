@@ -26,6 +26,9 @@ facets.facet.*:
     query_operator:
       type: string
       label: 'Query Operator'
+    hard_limit:
+      type: integer
+      label: 'Hard limit'
     exclude:
       type: boolean
       label: 'Exclude'
