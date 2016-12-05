@@ -106,6 +106,13 @@ class DefaultFacetManager {
   protected $facetStorage;
 
   /**
+   * Prepared facets.
+   *
+   * @var bool
+   */
+  protected $preparedFacets = FALSE;
+
+  /**
    * Constructs a new instance of the DefaultFacetManager.
    *
    * @param \Drupal\facets\QueryType\QueryTypePluginManager $query_type_plugin_manager
@@ -125,10 +132,6 @@ class DefaultFacetManager {
     $this->facetSourcePluginManager = $facet_source_manager;
     $this->processorPluginManager = $processor_plugin_manager;
     $this->facetStorage = $entity_type_manager->getStorage('facets_facet');
-
-    // Immediately initialize the facets. This can be done directly because the
-    // only thing needed is the url.
-    $this->initFacets();
   }
 
   /**
@@ -171,6 +174,8 @@ class DefaultFacetManager {
    *   An array of enabled facets.
    */
   public function getFacetsByFacetSourceId($facetsource_id) {
+    // Immediately initialize the facets.
+    $this->initFacets();
     $facets = [];
     foreach ($this->facets as $facet) {
       if ($facet->getFacetSourceId() == $facetsource_id) {
@@ -225,7 +230,7 @@ class DefaultFacetManager {
    * executed.
    */
   protected function initFacets() {
-    if (empty($this->facets)) {
+    if (!$this->preparedFacets && empty($this->facets)) {
       $this->facets = $this->getEnabledFacets();
       foreach ($this->facets as $facet) {
         foreach ($facet->getProcessorsByStage(ProcessorInterface::STAGE_PRE_QUERY) as $processor) {
@@ -237,6 +242,7 @@ class DefaultFacetManager {
           $pre_query_processor->preQuery($facet);
         }
       }
+      $this->preparedFacets = TRUE;
     }
   }
 
@@ -261,6 +267,8 @@ class DefaultFacetManager {
    *   Throws an exception when an invalid processor is linked to the facet.
    */
   public function build(FacetInterface $facet) {
+    // Immediately initialize the facets.
+    $this->initFacets();
     // It might be that the facet received here, is not the same as the already
     // loaded facets in the FacetManager.
     // For that reason, get the facet from the already loaded facets in the
