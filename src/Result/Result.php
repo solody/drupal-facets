@@ -87,6 +87,13 @@ class Result implements ResultInterface {
   /**
    * {@inheritdoc}
    */
+  public function setCount($count) {
+    $this->count = $count;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getUrl() {
     return $this->url;
   }
@@ -96,13 +103,6 @@ class Result implements ResultInterface {
    */
   public function setUrl(Url $url) {
     $this->url = $url;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setCount($count) {
-    $this->count = $count;
   }
 
   /**

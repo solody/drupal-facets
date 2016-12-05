@@ -119,6 +119,20 @@ abstract class FacetSourcePluginBase extends PluginBase implements FacetSourcePl
   /**
    * {@inheritdoc}
    */
+  public function getCount() {
+    global $pager_total_items;
+    // Exposing a global here. This is pretty ugly but the only way to get the
+    // actual results for any kind of query that was done and gets back results.
+    // @see core/includes/pager.inc for more information how this works.
+    // Rounding as some backend plugins could not give accurate information on
+    // the results found.
+    // @todo Figure out when it can not be the first one in the list.
+    return round($pager_total_items[0]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     return TRUE;
   }

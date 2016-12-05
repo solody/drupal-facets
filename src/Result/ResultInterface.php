@@ -34,6 +34,14 @@ interface ResultInterface {
   public function getCount();
 
   /**
+   * Sets the count for the result.
+   *
+   * @param int|null $count
+   *   The amount of items for the result or NULL.
+   */
+  public function setCount($count);
+
+  /**
    * Returns the url.
    *
    * @return \Drupal\Core\Url

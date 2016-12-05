@@ -48,6 +48,14 @@ interface FacetSourcePluginInterface extends PluginFormInterface, DependentPlugi
   public function getPath();
 
   /**
+   * Returns the number of results that were found for this search.
+   *
+   * @return string
+   *   The path of the facet.
+   */
+  public function getCount();
+
+  /**
    * Returns true if the Facet source is being rendered in the current request.
    *
    * This function will define if all facets for this facet source are shown

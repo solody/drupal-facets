@@ -50,7 +50,7 @@ class FacetSettingsForm extends EntityForm {
   /**
    * The block manager.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   * @var \Drupal\Core\Block\BlockManagerInterface
    */
   protected $blockManager;
 
