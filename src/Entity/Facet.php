@@ -126,9 +126,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   protected $query_operator;
 
   /**
-<<<<<<< 1747eb61a568cf31f8b0a9c6243a596271b7b320
-   * A boolean indicating if items should be rendered in hierarchical structure.
-=======
    * Hard limit for the facet items.
    *
    * @var integer
@@ -137,7 +134,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
 
   /**
    * A boolean flag indicating if search should exclude selected facets.
->>>>>>> OG 6
    *
    * @var bool
    */
