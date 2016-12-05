@@ -147,15 +147,19 @@ abstract class SearchApiBaseFacetSource extends FacetSourcePluginBase {
    */
   public function getQueryTypesForDataType(BackendInterface $backend, $data_type_plugin_id) {
     $query_types = [];
-    // @todo Make this flexible for each data type in Search API.
+    $query_types['string'] = 'search_api_string';
+
+    // Add additional query types for specific data types.
     switch ($data_type_plugin_id) {
-      case 'boolean':
       case 'date':
+        $query_types['date'] = 'search_api_date';
+        break;
+
       case 'decimal':
       case 'integer':
-      case 'string':
-        $query_types['string'] = 'search_api_string';
+        $query_types['numeric'] = 'search_api_granular';
         break;
+
     }
 
     // Find out if the backend implemented the Interface to retrieve specific
