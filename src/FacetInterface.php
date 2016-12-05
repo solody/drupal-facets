@@ -433,4 +433,20 @@ interface FacetInterface extends ConfigEntityInterface {
    */
   public function setWeight($weight);
 
+  /**
+   * Sets the minimum count of the result to show.
+   *
+   * @param int $min_count
+   *   Minimum count.
+   */
+  public function setMinCount($min_count);
+
+  /**
+   * Returns the minimum count of the result to show.
+   *
+   * @return int
+   *   Minimum count.
+   */
+  public function getMinCount();
+
 }

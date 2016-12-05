@@ -630,8 +630,45 @@ class IntegrationTest extends WebTestBase {
     $this->assertFacetLabel('grape (3)');
     $this->assertFacetLabel('orange (3)');
     $this->assertFacetLabel('apple (2)');
-    $this->assertFacetLabel('banana (0)');
-    $this->assertFacetLabel('strawberry (0)');
+    $this->assertNoText('banana (0)');
+    $this->assertNoText('strawberry (0)');
+  }
+
+  /**
+   * Test minimum amount of items.
+   */
+  public function testMinimumAmount() {
+    $id = "elf_owl";
+    $name = "Elf owl";
+    $this->createFacet($name, $id);
+
+    // Show the amount of items.
+    $edit = [
+      'widget' => 'links',
+      'widget_config[show_numbers]' => '1',
+      'facet_settings[min_count]' => 1,
+    ];
+    $this->drupalPostForm('admin/config/search/facets/elf_owl/edit', $edit, $this->t('Save'));
+
+    // See that both article and item are showing.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 5 search results');
+    $this->assertFacetLabel('article (2)');
+    $this->assertFacetLabel('item (3)');
+
+    // Make sure that a facet needs at least 3 results.
+    $edit = [
+      'widget' => 'links',
+      'widget_config[show_numbers]' => '1',
+      'facet_settings[min_count]' => 3,
+    ];
+    $this->drupalPostForm('admin/config/search/facets/elf_owl/edit', $edit, $this->t('Save'));
+
+    // See that article is now hidden, item should still be showing.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 5 search results');
+    $this->assertNoText('article');
+    $this->assertFacetLabel('item (3)');
   }
 
   /**

@@ -417,6 +417,20 @@ class FacetForm extends EntityForm {
       ),
     ];
 
+    $form['facet_settings']['min_count'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Minimum count'),
+      '#default_value' => $facet->getMinCount(),
+      '#description' => $this->t('The minimum amount a result needs to have for it to show up in the results.'),
+      '#maxlength' => 4,
+      '#required' => TRUE,
+    ];
+    if (strpos($facet->getFacetSourceId(), 'search_api') === FALSE) {
+      $form['facet_settings']['min_count']['#disabled'] = TRUE;
+      $form['facet_settings']['min_count']['#description'] .= '<br />';
+      $form['facet_settings']['min_count']['#description'] .= $this->t('This setting only works with Search API based facets.');
+    }
+
     $form['facet_settings']['weight'] = [
       '#type' => 'number',
       '#title' => $this->t('Weight'),
@@ -586,6 +600,7 @@ class FacetForm extends EntityForm {
     $facet->setWidget($form_state->getValue('widget'), $form_state->getValue('widget_config'));
     $facet->setUrlAlias($form_state->getValue(['facet_settings', 'url_alias']));
     $facet->setWeight((int) $form_state->getValue(['facet_settings', 'weight']));
+    $facet->setMinCount((int) $form_state->getValue(['facet_settings', 'min_count']));
     $facet->setOnlyVisibleWhenFacetSourceIsVisible($form_state->getValue(['facet_settings', 'only_visible_when_facet_source_is_visible']));
     $facet->setShowOnlyOneResult($form_state->getValue(['facet_settings', 'show_only_one_result']));
 

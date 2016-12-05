@@ -37,6 +37,7 @@ use Drupal\facets\FacetInterface;
  *     "name",
  *     "url_alias",
  *     "weight",
+ *     "min_count",
  *     "show_only_one_result",
  *     "field_identifier",
  *     "facet_source_id",
@@ -284,6 +285,14 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    *   The weight of the facet.
    */
   protected $weight;
+
+  /**
+   * The minimum amount of results to show.
+   *
+   * @var integer
+   *   The minimum amount of results.
+   */
+  protected $min_count = 1;
 
   /**
    * Returns the widget plugin manager.
@@ -853,6 +862,20 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    */
   public function setWeight($weight) {
     $this->weight = $weight;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMinCount($min_count) {
+    $this->min_count = $min_count;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMinCount() {
+    return $this->min_count;
   }
 
   /**
