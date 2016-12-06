@@ -31,7 +31,7 @@ class FacetSourceTest extends KernelTestBase {
   }
 
   /**
-   * Tests constructor
+   * Tests constructor.
    *
    * @covers ::getName
    * @covers ::getFilterKey

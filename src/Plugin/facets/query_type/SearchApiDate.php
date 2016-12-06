@@ -91,7 +91,7 @@ class SearchApiDate extends QueryTypeRangeBase {
 
       case static::FACETAPI_DATE_MONTH:
         $startDate = $dateTime::createFromFormat('Y-m-d\TH:i:s', $value . '-01T00:00:00');
-        $stopDate = $dateTime::createFromFormat('Y-m-d\TH:i:s', $value . '-' . $startDate->format('t') .'T23:59:59');
+        $stopDate = $dateTime::createFromFormat('Y-m-d\TH:i:s', $value . '-' . $startDate->format('t') . 'T23:59:59');
         break;
 
       case static::FACETAPI_DATE_DAY:

@@ -21,7 +21,7 @@ class NumericGranularWidget extends LinksWidget {
    */
   public function defaultConfiguration() {
     return [
-      'granularity' =>  0,
+      'granularity' => 0,
     ] + parent::defaultConfiguration();
   }
 

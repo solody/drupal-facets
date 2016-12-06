@@ -40,7 +40,7 @@ class DateArrayWidget extends ArrayWidget {
    */
   public function defaultConfiguration() {
     return [
-      'display_relative' =>  FALSE,
+      'display_relative' => FALSE,
       'granularity' => SearchApiDate::FACETAPI_DATE_MONTH,
       'date_display' => '',
       'relative_granularity' => 1,

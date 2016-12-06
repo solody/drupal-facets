@@ -378,7 +378,6 @@ class FacetForm extends EntityForm {
       $form['facet_settings']['hard_limit']['#description'] .= $this->t('This setting only works with Search API based facets.');
     }
 
-
     $form['facet_settings']['exclude'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Exclude'),
