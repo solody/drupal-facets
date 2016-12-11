@@ -72,7 +72,7 @@ interface FacetsSummaryInterface extends ConfigEntityInterface {
    *   - suffix: (string) Suffix of facet group.
    *   - separator: (string) Separator for facet items.
    */
-  public function setFacets($facets);
+  public function setFacets(array $facets);
 
   /**
    * Removes a facet from the list.

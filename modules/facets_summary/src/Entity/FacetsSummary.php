@@ -83,7 +83,7 @@ class FacetsSummary extends ConfigEntityBase implements FacetsSummaryInterface {
    *
    * @var string[]
    */
-  protected $facets;
+  protected $facets = [];
 
   /**
    * Cached information about the processors available for this facet.
@@ -158,7 +158,7 @@ class FacetsSummary extends ConfigEntityBase implements FacetsSummaryInterface {
   /**
    * {@inheritdoc}
    */
-  public function setFacets($facets) {
+  public function setFacets(array $facets) {
     return $this->facets = $facets;
   }
 

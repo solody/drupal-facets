@@ -114,7 +114,6 @@ class FacetsSummaryForm extends EntityForm {
 
     /** @var \Drupal\facets_summary\FacetsSummaryInterface $facets_summary */
     $facets_summary = $this->entity;
-    $all_processors = $facets_summary->getProcessors(FALSE);
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'facets/drupal.facets.index-active-formatters';
@@ -141,47 +140,54 @@ class FacetsSummaryForm extends EntityForm {
     $facets = $facets_summary->getFacets();
     $default_facets = array_keys($facets);
 
-    foreach ($this->facetManager->getFacetsByFacetSourceId($facets_summary->getFacetSourceId()) as $facet) {
-      if (!in_array($facet->id(), $default_facets)) {
-        $facets[$facet->id()] = [
-          'label' => $facet->getName(),
-          'separator' => ', ',
-          'show_count' => FALSE,
+    $all_facets = $this->facetManager->getFacetsByFacetSourceId($facets_summary->getFacetSourceId());
+    if (!empty($all_facets)) {
+      foreach ($all_facets as $facet) {
+        if (!in_array($facet->id(), $default_facets)) {
+          $facets[$facet->id()] = [
+            'label' => $facet->getName(),
+            'separator' => ', ',
+            'show_count' => FALSE,
+          ];
+        }
+        $facets[$facet->id()]['name'] = $facet->getName();
+      }
+
+      foreach ($facets as $id => $facet) {
+        $form['facets'][$id] = [
+          'checked' => [
+            '#type' => 'checkbox',
+            '#title' => $facet['name'],
+            '#default_value' => in_array($id, $default_facets),
+          ],
+          'label' => [
+            '#type' => 'textfield',
+            '#title' => $this->t('Label'),
+            '#default_value' => $facet['label'],
+            '#size' => 25,
+          ],
+          'separator' => [
+            '#type' => 'textfield',
+            '#title' => $this->t('Separator'),
+            '#default_value' => $facet['separator'],
+            '#size' => 8,
+          ],
+          'show_count' => [
+            '#type' => 'checkbox',
+            '#default_value' => $facet['show_count'],
+          ],
+          'weight' => [
+            '#type' => 'weight',
+            '#title' => $this->t('Weight for @title', ['@title' => $facet['name']]),
+            '#title_display' => 'invisible',
+            '#attributes' => ['class' => ['facets-order-weight']],
+          ],
+          '#attributes' => ['class' => ['draggable']],
         ];
       }
-      $facets[$facet->id()]['name'] = $facet->getName();
     }
-    foreach ($facets as $id => $facet) {
-      $form['facets'][$id] = [
-        'checked' => [
-          '#type' => 'checkbox',
-          '#title' => $facet['name'],
-          '#default_value' => in_array($id, $default_facets),
-        ],
-        'label' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Label'),
-          '#default_value' => $facet['label'],
-          '#size' => 25,
-        ],
-        'separator' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Separator'),
-          '#default_value' => $facet['separator'],
-          '#size' => 8,
-        ],
-        'show_count' => [
-          '#type' => 'checkbox',
-          '#default_value' => $facet['show_count'],
-        ],
-        'weight' => [
-          '#type' => 'weight',
-          '#title' => $this->t('Weight for @title', ['@title' => $facet['name']]),
-          '#title_display' => 'invisible',
-          '#attributes' => ['class' => ['facets-order-weight']],
-        ],
-        '#attributes' => ['class' => ['draggable']],
-      ];
+    else {
+      $form['facets'] = ['#markup' => $this->t('No facets found.')];
     }
 
     // Retrieve lists of all processors, and the stages and weights they have.
@@ -225,6 +231,8 @@ class FacetsSummaryForm extends EntityForm {
         ),
       );
 
+
+      $form['facets_summary_settings'][$processor_id]['settings'] = [];
       $processor_form_state = SubformState::createForSubform($form['facets_summary_settings'][$processor_id]['settings'], $form, $form_state);
       $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facets_summary);
       if ($processor_form) {
@@ -348,6 +356,7 @@ class FacetsSummaryForm extends EntityForm {
     // Iterate over all processors that have a form and are enabled.
     foreach ($form['facets_summary_settings'] as $processor_id => $processor_form) {
       if (!empty($values['processors'][$processor_id])) {
+
         $processor_form_state = SubformState::createForSubform($form['facets_summary_settings'][$processor_id]['settings'], $form, $form_state);
         $processors[$processor_id]->validateConfigurationForm($form['facets_summary_settings'][$processor_id], $processor_form_state, $facets_summary);
       }
@@ -392,8 +401,9 @@ class FacetsSummaryForm extends EntityForm {
       }
       $facets_summary->addProcessor($new_settings);
     }
+
     // Set our Facet Config.
-    $facets_summary->setFacets($form_state->getValue(['facets']));
+    $facets_summary->setFacets((array) $form_state->getValue(['facets']));
     $facets_summary->save();
 
     drupal_set_message(t('Facets Summary %name has been updated.', ['%name' => $facets_summary->getName()]));
