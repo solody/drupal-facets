@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\facets\Widget\WidgetPluginManager;
 use Drupal\facets\Processor\SortProcessorInterface;
 use Drupal\Core\Form\SubformState;
+use Drupal\Core\Url;
 
 /**
  * Provides a form for configuring the processors of a facet.
@@ -388,9 +389,23 @@ class FacetForm extends EntityForm {
     $form['facet_settings']['use_hierarchy'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Use hierarchy'),
-      '#description' => $this->t('Renders the items using hierarchy. Requires the hierarchy processor configured in search api for this field. If disabled all items will be flatten.') . '<br/><strong>At this moment only hierarchical taxonomy terms are supported.</strong>',
       '#default_value' => $facet->getUseHierarchy(),
     ];
+    if (strpos($facet->getFacetSourceId(), 'search_api') === FALSE) {
+      $form['facet_settings']['use_hierarchy']['#disabled'] = TRUE;
+      $form['facet_settings']['use_hierarchy']['#description'] = $this->t('This setting only works with Search API based facets.');
+    }
+    else {
+      $processor_url = Url::fromRoute('entity.search_api_index.processors', [
+        'search_api_index' => $facet->getFacetSource()->getIndex()->id(),
+      ]);
+      $description = $this->t('Renders the items using hierarchy. Make sure to enable the hierarchy processor on the <a href=":processor-url">Search api index processor configuration</a> for this to work as expected. If disabled all items will be flatten.', [
+        ':processor-url' => $processor_url->toString()
+      ]);
+      $form['facet_settings']['use_hierarchy']['#description'] = $description;
+      $form['facet_settings']['use_hierarchy']['#description'] .= '<br />';
+      $form['facet_settings']['use_hierarchy']['#description'] .= '<strong>At this moment only hierarchical taxonomy terms are supported.</strong>';
+    }
 
     $form['facet_settings']['expand_hierarchy'] = [
       '#type' => 'checkbox',

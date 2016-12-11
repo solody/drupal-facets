@@ -117,6 +117,11 @@ class HierarchicalFacetIntegrationTest extends WebTestBase {
    * Verify the backend option "Use hierarchy" is working.
    */
   protected function verifyUseHierarchyOption() {
+    // Verify that the link to the index processors settings page is available.
+    $this->drupalGet($this->facetEditPage);
+    $this->clickLink('Search api index processor configuration');
+    $this->assertResponse(200);
+
     // Enable hierarchical facets and translation of entity ids to its names for
     // a better readability.
     $this->drupalGet($this->facetEditPage);
