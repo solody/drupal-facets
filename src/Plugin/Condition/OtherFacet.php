@@ -194,7 +194,10 @@ class OtherFacet extends ConditionPluginBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    $config = ['facets' => FALSE, 'facet_value' => FALSE];
+    $config = [
+      'facets' => '',
+      'facet_value' => '',
+    ];
     return $config + parent::defaultConfiguration();
   }
 
