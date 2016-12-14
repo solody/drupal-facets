@@ -609,6 +609,8 @@ class IntegrationTest extends WebTestBase {
     $edit = [
       'widget' => 'links',
       'widget_config[show_numbers]' => '1',
+      'facet_sorting[display_value_widget_order][status]' => TRUE,
+      'facet_sorting[active_widget_order][status]' => FALSE,
     ];
     $this->drupalPostForm('admin/config/search/facets/owl/edit', $edit, 'Save');
 
