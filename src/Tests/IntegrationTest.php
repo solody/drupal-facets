@@ -511,7 +511,7 @@ class IntegrationTest extends WebTestBase {
     // there are only 2 items left in the results for other facets as well.
     // In this case, that means we can't have 3 entities tagged with grape. Both
     // remaining entities are tagged with grape and strawberry.
-    $this->clickLinkPartialName('article');
+    $this->clickPartialLink('article');
     $this->assertNoText('(3)');
     $this->assertFacetLabel('grape (2)');
     $this->assertFacetLabel('strawberry (2)');
@@ -524,7 +524,7 @@ class IntegrationTest extends WebTestBase {
     // Make sure that after clicking on grape, which has only 3 entities, there
     // are only 3 items left in the results for other facets as well. In this
     // case, that means 2 entities of type article and 1 item.
-    $this->clickLinkPartialName('grape');
+    $this->clickPartialLink('grape');
     $this->assertText('Displaying 3 search results');
     $this->assertFacetLabel('article (2)');
     $this->assertFacetLabel('item (1)');

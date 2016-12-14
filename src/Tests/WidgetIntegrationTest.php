@@ -119,7 +119,7 @@ class WidgetIntegrationTest extends WebTestBase {
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('item (3)');
     $this->assertFacetLabel('article (2)');
-    $this->clickLinkPartialName('item');
+    $this->clickPartialLink('item');
     $this->assertFacetLabel('item (3)');
     $this->assertFacetLabel('article (2)');
 

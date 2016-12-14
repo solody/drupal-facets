@@ -11,19 +11,13 @@ use Drupal\Core\Url;
 trait TestHelperTrait {
 
   /**
-   * {@inheritdoc}
+   * Passes if a facet with the specified label is found and is a link.
+   *
+   * @see \Drupal\simpletest\AssertContentTrait::assertLink
    */
   protected function assertFacetLabel($label, $index = 0, $message = '', $group = 'Other') {
-    $label = (string) $label;
-    $label = strip_tags($label);
-    $matches = [];
+    $links = $this->findFacetLink($label);
 
-    if (preg_match('/(.*)\s\((\d+)\)/', $label, $matches)) {
-      $links = $this->xpath('//a//span[normalize-space(text())=:label]/following-sibling::span[normalize-space(text())=:count]', [':label' => $matches[1], ':count' => '(' . $matches[2] . ')']);
-    }
-    else {
-      $links = $this->xpath('//a//span[normalize-space(text())=:label]', [':label' => $label]);
-    }
     $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
     return $this->assert(isset($links[$index]), $message, $group);
   }
@@ -41,9 +35,7 @@ trait TestHelperTrait {
    *   Returns true when the facet is found and is active.
    */
   protected function checkFacetIsActive($label) {
-    $label = (string) $label;
-    $label = strip_tags($label);
-    $links = $this->xpath('//a/span[normalize-space(text())="(-)"]/following-sibling::span[normalize-space(text())=:label]', array(':label' => $label));
+    $links = $this->findFacetLink($label);
     return $this->assert(isset($links[0]));
   }
 
@@ -71,7 +63,8 @@ trait TestHelperTrait {
    */
   protected function assertNoFacetBlocksAppear() {
     foreach ($this->blocks as $block) {
-      $this->assertNoBlockAppears($block);
+      $this->assertFalse($this->xpath('//div[@id = :id]', [':id' => 'block-' . $block->id()]));
+      $this->assertNoText($block->label());
     }
   }
 
@@ -80,7 +73,8 @@ trait TestHelperTrait {
    */
   protected function assertFacetBlocksAppear() {
     foreach ($this->blocks as $block) {
-      $this->assertBlockAppears($block);
+      $this->xpath('//div[@id = :id]', [':id' => 'block-' . $block->id()]);
+      $this->assertText($block->label());
     }
   }
 
@@ -125,6 +119,39 @@ trait TestHelperTrait {
     $this->checkFacetIsActive('item');
     $this->assertFacetLabel('article');
     $this->assertUrl($url);
+  }
+
+  /**
+   * Click a link by partial name
+   *
+   * @param string $label
+   *   The label of a link to click.
+   */
+  protected function clickPartialLink($label) {
+    $this->clickLinkHelper($label, 0, '//a[starts-with(normalize-space(), :label)]');
+  }
+
+  /**
+   * Use xpath to find a facet link.
+   *
+   * @param string $label
+   *   Label of a link to find.
+   * @return array
+   *   An array of links with the facets.
+   */
+  protected function findFacetLink($label) {
+    $label = (string) $label;
+    $label = strip_tags($label);
+    $matches = [];
+
+    if (preg_match('/(.*)\s\((\d+)\)/', $label, $matches)) {
+      $links = $this->xpath('//a//span[normalize-space(text())=:label]/following-sibling::span[normalize-space(text())=:count]', [':label' => $matches[1], ':count' => '(' . $matches[2] . ')']);
+    }
+    else {
+      $links = $this->xpath('//a//span[normalize-space(text())=:label]', [':label' => $label]);
+    }
+
+    return $links;
   }
 
 }

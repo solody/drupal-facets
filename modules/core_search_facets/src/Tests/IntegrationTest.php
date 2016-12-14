@@ -40,6 +40,9 @@ class IntegrationTest extends WebTestBase {
     $facet_id = 'test_facet_name';
     $facet_name = 'Test Facet Name';
 
+    $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
+    $this->assertNoFacetBlocksAppear();
+
     // Check if the overview is empty.
     $this->checkEmptyOverview();
 
@@ -65,7 +68,7 @@ class IntegrationTest extends WebTestBase {
     $this->assertFacetLabel('article (10)');
 
     // Verify that the label is correct for a clicked link.
-    $this->clickLinkPartialName('page');
+    $this->clickPartialLink('page');
     $this->checkFacetIsActive('page');
 
     // To make sure we have an empty result, we truncate the search_index table
@@ -111,19 +114,19 @@ class IntegrationTest extends WebTestBase {
     $this->assertFacetLabel('April 2016 (10)');
     $this->assertResponse(200);
 
-    $this->clickLinkPartialName('March 2016');
+    $this->clickPartialLink('March 2016');
     $this->assertResponse(200);
     $this->assertFacetLabel('March 8, 2016 (1)');
     $this->assertFacetLabel('March 9, 2016 (2)');
 
-    $this->clickLinkPartialName('March 9');
+    $this->clickPartialLink('March 9');
     $this->assertResponse(200);
     $this->assertFacetLabel('10 AM (1)');
     $this->assertFacetLabel('12 PM (1)');
 
     $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
     $this->assertFacetLabel('April 2016 (10)');
-    $this->clickLinkPartialName('April 2016');
+    $this->clickPartialLink('April 2016');
     $this->assertResponse(200);
     $this->assertFacetLabel('April 1, 2016 (1)');
     $this->assertFacetLabel('April 2, 2016 (1)');
@@ -155,10 +158,10 @@ class IntegrationTest extends WebTestBase {
 
     $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
     $this->assertFacetLabel('June 2016 (1)');
-    $this->clickLinkPartialName('June 2016');
+    $this->clickPartialLink('June 2016');
     $this->assertResponse(200);
     $this->assertFacetLabel('June 3, 2016 (1)');
-    $this->clickLinkPartialName('June 3, 2016');
+    $this->clickPartialLink('June 3, 2016');
     $this->assertResponse(200);
   }
 
