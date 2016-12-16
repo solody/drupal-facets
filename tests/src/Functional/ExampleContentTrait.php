@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\facets\Tests;
+namespace Drupal\Tests\facets\Functional;
 
 use Drupal\search_api\Entity\Index;
 

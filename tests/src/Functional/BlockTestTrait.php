@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\facets\Tests;
+namespace Drupal\Tests\facets\Functional;
 
 /**
  * Shared test methods for facet blocks.

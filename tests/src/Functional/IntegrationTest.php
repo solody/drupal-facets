@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\facets\Tests;
+namespace Drupal\Tests\facets\Functional;
 
 use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @group facets
  */
-class IntegrationTest extends WebTestBase {
+class IntegrationTest extends FacetsTestBase {
 
   public static $modules = ['views_ui'];
 
@@ -817,8 +817,8 @@ class IntegrationTest extends WebTestBase {
 
     // Try to submit a facet with a duplicate machine name after form rebuilding
     // via facet source submit using AJAX.
-    $this->drupalPostAjaxForm(NULL, $form_values, array('facet_source_configure' => 'Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values + $facet_source_configs, 'Save');
+    $this->submitForm($form_values, 'Configure facet source');
+    $this->submitForm($form_values + $facet_source_configs, 'Save');
     $this->assertText('The machine-readable name is already in use. It must be unique.');
   }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\core_search_facets\Tests;
+namespace Drupal\Tests\core_search_facets\Functional;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -10,7 +10,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  *
  * @group facets
  */
-class HooksTest extends WebTestBase {
+class HooksTest extends FacetsHooksTestBase {
 
   /**
    * {@inheritdoc}

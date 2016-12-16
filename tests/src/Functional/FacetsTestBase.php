@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\facets\Tests;
+namespace Drupal\Tests\facets\Functional;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Entity\Server;
-use Drupal\simpletest\WebTestBase as SimpletestWebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Provides the base class for web tests for Search API.
  */
-abstract class WebTestBase extends SimpletestWebTestBase {
+abstract class FacetsTestBase extends BrowserTestBase {
 
   use StringTranslationTrait;
   use ExampleContentTrait;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\facets\Tests;
+namespace Drupal\Tests\facets\Functional;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
@@ -15,7 +15,7 @@ use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
  *
  * @group facets
  */
-class HierarchicalFacetIntegrationTest extends WebTestBase {
+class HierarchicalFacetIntegrationTest extends FacetsTestBase {
 
   use TaxonomyTestTrait;
   use EntityReferenceTestTrait;

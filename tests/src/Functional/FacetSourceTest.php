@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\facets\Tests;
+namespace Drupal\Tests\facets\Functional;
 
 /**
  * Tests the functionality of the facet source config entity.
  *
  * @group facets
  */
-class FacetSourceTest extends WebTestBase {
+class FacetSourceTest extends FacetsTestBase {
 
   /**
    * {@inheritdoc}
@@ -78,8 +78,9 @@ class FacetSourceTest extends WebTestBase {
     // Test that saving worked and that the url processor has the new value.
     $this->assertField('filter_key');
     $this->assertField('url_processor');
+    /** @var \Behat\Mink\Element\NodeElement[] $elements */
     $elements = $this->xpath('//input[@id=:id]', [':id' => 'edit-url-processor-dummy-query']);
-    $this->assertEqual('dummy_query', $elements[0]['value']);
+    $this->assertEquals('dummy_query', $elements[0]->getValue());
   }
 
 }

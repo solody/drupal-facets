@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\core_search_facets\Tests;
+namespace Drupal\Tests\core_search_facets\Functional;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\facets\Tests\TestHelperTrait;
+use Drupal\Tests\facets\Functional\TestHelperTrait;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\simpletest\WebTestBase as SimpletestWebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Provides the base class for web tests for Core Search Facets.
  */
-abstract class WebTestBase extends SimpletestWebTestBase {
+abstract class FacetsHooksTestBase extends BrowserTestBase {
 
   use StringTranslationTrait;
   use TestHelperTrait;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\facets\Tests;
+namespace Drupal\Tests\facets\Functional;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @group facets
  */
-class ProcessorIntegrationTest extends WebTestBase {
+class ProcessorIntegrationTest extends FacetsTestBase {
 
   /**
    * The url of the edit form.

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\facets\Tests;
+namespace Drupal\Tests\facets\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 
@@ -9,7 +9,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  *
  * @group facets
  */
-class LanguageIntegrationTest extends WebTestBase {
+class LanguageIntegrationTest extends FacetsTestBase {
 
   /**
    * {@inheritdoc}

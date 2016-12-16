@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\facets\Tests;
+namespace Drupal\Tests\facets\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
@@ -128,7 +128,11 @@ trait TestHelperTrait {
    *   The label of a link to click.
    */
   protected function clickPartialLink($label) {
-    $this->clickLinkHelper($label, 0, '//a[starts-with(normalize-space(), :label)]');
+    $label = (string) $label;
+
+    $xpath = $this->assertSession()->buildXPathQuery('//a[starts-with(normalize-space(), :label)]', [':label' => $label]);
+    $links = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    $links[0]->click();
   }
 
   /**

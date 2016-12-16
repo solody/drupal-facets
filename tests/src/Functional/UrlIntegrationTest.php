@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\facets\Tests;
+namespace Drupal\Tests\facets\Functional;
 
 use Drupal\Core\Url;
 use Drupal\facets\FacetInterface;
@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @group facets
  */
-class UrlIntegrationTest extends WebTestBase {
+class UrlIntegrationTest extends FacetsTestBase {
 
   /**
    * {@inheritdoc}

@@ -2,7 +2,7 @@
 
 namespace Drupal\facets_summary\Tests;
 
-use Drupal\facets\Tests\WebTestBase as FacetTestBase;
+use Drupal\Tests\facets\Functional\FacetsTestBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @group facets
  */
-class IntegrationTest extends FacetTestBase {
+class IntegrationTest extends FacetsTestBase {
 
   /**
    * {@inheritdoc}

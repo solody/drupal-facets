@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\facets\Tests;
+namespace Drupal\Tests\facets\Functional;
 
 /**
  * Tests the overall functionality of the Facets admin UI.
  *
  * @group facets
  */
-class WidgetIntegrationTest extends WebTestBase {
+class WidgetIntegrationTest extends FacetsTestBase {
 
   /**
    * {@inheritdoc}

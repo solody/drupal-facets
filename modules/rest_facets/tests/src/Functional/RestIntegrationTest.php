@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\rest_facets\Tests;
+namespace Drupal\Tests\rest_facets\Functional;
 
-use Drupal\facets\Tests\WebTestBase;
+use Drupal\Tests\facets\Functional\FacetsTestBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @group facets
  */
-class RestIntegrationTest extends WebTestBase {
+class RestIntegrationTest extends FacetsTestBase {
 
   /**
    * {@inheritdoc}

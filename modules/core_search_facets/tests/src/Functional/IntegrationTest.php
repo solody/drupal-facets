@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\core_search_facets\Tests;
+namespace Drupal\Tests\core_search_facets\Functional;
 
-use Drupal\facets\Tests\BlockTestTrait;
+use Drupal\Tests\facets\Functional\BlockTestTrait;
 use Drupal\node\Entity\Node;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\node\Entity\Node;
  *
  * @group facets
  */
-class IntegrationTest extends WebTestBase {
+class IntegrationTest extends FacetsHooksTestBase {
 
   use BlockTestTrait;
 
