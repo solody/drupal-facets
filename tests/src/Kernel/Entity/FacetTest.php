@@ -3,8 +3,12 @@
 namespace Drupal\Tests\facets\Kernel\Entity;
 
 use Drupal\facets\Entity\Facet;
+use Drupal\facets\Exception\InvalidProcessorException;
+use Drupal\facets\Hierarchy\HierarchyPluginManager;
+use Drupal\facets\Plugin\facets\widget\LinksWidget;
 use Drupal\facets\Processor\ProcessorInterface;
 use Drupal\facets\Result\Result;
+use Drupal\facets\Widget\WidgetPluginManager;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -59,7 +63,7 @@ class FacetTest extends KernelTestBase {
     $entity->setWidget('links');
 
     $manager = $entity->getWidgetManager();
-    $this->assertInstanceOf('\Drupal\facets\Widget\WidgetPluginManager', $manager);
+    $this->assertInstanceOf(WidgetPluginManager::class, $manager);
 
     $config = ['soft_limit' => 0, 'show_numbers' => FALSE];
     $this->assertEquals(['type' => 'links', 'config' => $config], $entity->getWidget());
@@ -69,7 +73,7 @@ class FacetTest extends KernelTestBase {
     $config['show_numbers'] = TRUE;
     $entity->setWidget('links', $config);
     $this->assertEquals(['type' => 'links', 'config' => $config], $entity->getWidget());
-    $this->assertInstanceOf('\Drupal\facets\Plugin\facets\widget\LinksWidget', $entity->getWidgetInstance());
+    $this->assertInstanceOf(LinksWidget::class, $entity->getWidgetInstance());
     $this->assertTrue($entity->getWidgetInstance()->getConfiguration()['show_numbers']);
   }
 
@@ -83,7 +87,7 @@ class FacetTest extends KernelTestBase {
     $entity = new Facet([], 'facets_facet');
     $this->assertNull($entity->getWidget());
 
-    $this->setExpectedException('\Drupal\facets\Exception\InvalidProcessorException');
+    $this->setExpectedException(InvalidProcessorException::class);
     $entity->getWidgetInstance();
   }
 
@@ -294,6 +298,32 @@ class FacetTest extends KernelTestBase {
   }
 
   /**
+   * Tests hard limit.
+   *
+   * @covers ::setHardLimit
+   * @covers ::getHardLimit
+   */
+  public function testHardLimit() {
+    $entity = new Facet([], 'facets_facet');
+    $this->assertEquals(0, $entity->getHardLimit());
+    $entity->setHardLimit(50);
+    $this->assertEquals(50, $entity->getHardLimit());
+  }
+
+  /**
+   * Tests minimum count.
+   *
+   * @covers ::setMinCount
+   * @covers ::getMinCount
+   */
+  public function testMinCount() {
+    $entity = new Facet([], 'facets_facet');
+    $this->assertEquals(1, $entity->getMinCount());
+    $entity->setMinCount(50);
+    $this->assertEquals(50, $entity->getMinCount());
+  }
+
+  /**
    * Tests hierarchy settings.
    *
    * @covers ::getHierarchy
@@ -303,6 +333,8 @@ class FacetTest extends KernelTestBase {
    * @covers ::getExpandHierarchy
    * @covers ::setEnableParentWhenChildGetsDisabled
    * @covers ::getEnableParentWhenChildGetsDisabled
+   * @covers ::getHierarchyManager
+   * @covers ::getHierarchyInstance
    */
   public function testHierarchySettings() {
     $entity = Facet::create();
@@ -321,6 +353,11 @@ class FacetTest extends KernelTestBase {
     $this->assertFalse($entity->getEnableParentWhenChildGetsDisabled());
     $entity->setEnableParentWhenChildGetsDisabled(TRUE);
     $this->assertTrue($entity->getEnableParentWhenChildGetsDisabled());
+
+    $manager = $entity->getHierarchyManager();
+    $this->assertInstanceOf(HierarchyPluginManager::class, $manager);
+
+    $this->assertInstanceOf('\Drupal\facets\Plugin\facets\hierarchy\Taxonomy', $entity->getHierarchyInstance());
 
     $this->assertEquals(['type' => 'taxonomy', 'config' => []], $entity->getHierarchy());
   }
