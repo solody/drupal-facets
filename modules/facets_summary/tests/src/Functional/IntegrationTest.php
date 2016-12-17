@@ -22,9 +22,9 @@ class IntegrationTest extends FacetsTestBase {
   /**
    * No config checking.
    *
-   * @todo Enable config checking again.
-   *
    * @var bool
+   *
+   * @todo Enable config checking again.
    */
   protected $strictConfigSchema = FALSE;
 

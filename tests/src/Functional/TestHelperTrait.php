@@ -122,7 +122,7 @@ trait TestHelperTrait {
   }
 
   /**
-   * Click a link by partial name
+   * Click a link by partial name.
    *
    * @param string $label
    *   The label of a link to click.
@@ -140,6 +140,7 @@ trait TestHelperTrait {
    *
    * @param string $label
    *   Label of a link to find.
+   *
    * @return array
    *   An array of links with the facets.
    */

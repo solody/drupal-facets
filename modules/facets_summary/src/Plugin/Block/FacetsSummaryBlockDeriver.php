@@ -24,7 +24,7 @@ class FacetsSummaryBlockDeriver implements ContainerDeriverInterface {
   /**
    * The entity storage used for facets summaries.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface $facetsSummaryStorage
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $facetsSummaryStorage;
 

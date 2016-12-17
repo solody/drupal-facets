@@ -231,7 +231,6 @@ class FacetsSummaryForm extends EntityForm {
         ),
       );
 
-
       $form['facets_summary_settings'][$processor_id]['settings'] = [];
       $processor_form_state = SubformState::createForSubform($form['facets_summary_settings'][$processor_id]['settings'], $form, $form_state);
       $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facets_summary);

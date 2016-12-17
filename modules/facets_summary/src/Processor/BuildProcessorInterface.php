@@ -19,7 +19,7 @@ interface BuildProcessorInterface extends ProcessorInterface {
    * @param \Drupal\facets\FacetInterface[] $facets
    *   The facets that are available.
    *
-   * @return array $build
+   * @return array
    *   The render array.
    */
   public function build(FacetsSummaryInterface $facet, array $build, array $facets);

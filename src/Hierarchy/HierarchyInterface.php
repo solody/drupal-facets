@@ -38,6 +38,6 @@ interface HierarchyInterface {
    * @return array
    *   Given parent ids as key, value is an array of child ids.
    */
-  public function getChildIds($ids);
+  public function getChildIds(array $ids);
 
 }

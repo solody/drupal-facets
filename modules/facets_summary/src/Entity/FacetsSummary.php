@@ -104,7 +104,7 @@ class FacetsSummary extends ConfigEntityBase implements FacetsSummaryInterface {
   /**
    * The facet weight.
    *
-   * @var integer
+   * @var int
    *   The weight of the facet.
    */
   protected $weight;

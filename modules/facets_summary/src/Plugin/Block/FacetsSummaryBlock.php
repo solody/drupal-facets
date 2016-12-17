@@ -46,7 +46,7 @@ class FacetsSummaryBlock extends BlockBase implements FacetsSummaryBlockInterfac
    * @param \Drupal\facets_summary\FacetsSummaryManager\DefaultFacetsSummaryManager $facets_summary_manager
    *   The facet manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, DefaultFacetsSummaryManager $facets_summary_manager) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, DefaultFacetsSummaryManager $facets_summary_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->facetsSummaryManager = $facets_summary_manager;
   }

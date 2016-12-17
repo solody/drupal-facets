@@ -128,7 +128,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * Hard limit for the facet items.
    *
-   * @var integer
+   * @var int
    */
   protected $hard_limit;
 
@@ -233,7 +233,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
    * A boolean that defines whether or not the facet is only visible when the
    * facet source is visible.
    *
-   * @var boolean
+   * @var bool
    */
   protected $only_visible_when_facet_source_is_visible;
 
@@ -247,7 +247,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * The no-result configuration.
    *
-   * @var string[];
+   * @var string[]
    */
   protected $empty_behavior;
 
@@ -277,7 +277,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * The facet weight.
    *
-   * @var integer
+   * @var int
    *   The weight of the facet.
    */
   protected $weight;
@@ -285,7 +285,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * The minimum amount of results to show.
    *
-   * @var integer
+   * @var int
    *   The minimum amount of results.
    */
   protected $min_count = 1;
@@ -377,7 +377,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     // TODO: do not hardcode on taxonomy, make this configurable (or better,
     // autoselected depending field type).
     return ['type' => 'taxonomy', 'config' => []];
-    // return $this->hierarchy;
+    return $this->hierarchy;
   }
 
   /**

@@ -400,7 +400,7 @@ class FacetForm extends EntityForm {
         'search_api_index' => $facet->getFacetSource()->getIndex()->id(),
       ]);
       $description = $this->t('Renders the items using hierarchy. Make sure to enable the hierarchy processor on the <a href=":processor-url">Search api index processor configuration</a> for this to work as expected. If disabled all items will be flatten.', [
-        ':processor-url' => $processor_url->toString()
+        ':processor-url' => $processor_url->toString(),
       ]);
       $form['facet_settings']['use_hierarchy']['#description'] = $description;
       $form['facet_settings']['use_hierarchy']['#description'] .= '<br />';

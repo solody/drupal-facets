@@ -265,8 +265,8 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
       $this->facetQueryExtender->join('node_field_data', 'n', 'n.nid = i.sid AND n.langcode = i.langcode');
       $this->facetQueryExtender
          // ->condition('n.status', 1).
-         ->addTag('node_access')
-         ->searchExpression($this->keys, 'node_search');
+        ->addTag('node_access')
+        ->searchExpression($this->keys, 'node_search');
     }
     return $this->facetQueryExtender;
   }

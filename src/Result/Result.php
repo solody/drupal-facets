@@ -11,11 +11,15 @@ class Result implements ResultInterface {
 
   /**
    * The facet value.
+   *
+   * @var string
    */
   protected $displayValue;
 
   /**
    * The raw facet value.
+   *
+   * @var string
    */
   protected $rawValue;
 
@@ -143,7 +147,7 @@ class Result implements ResultInterface {
   /**
    * Returns true if the value has active children(selected).
    *
-   * @return bool $active
+   * @return bool
    *   A boolean indicating the active state of children.
    */
   public function hasActiveChildren() {

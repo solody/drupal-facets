@@ -163,7 +163,7 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Returns the result for the facet.
    *
-   * @return \Drupal\facets\Result\ResultInterface[] $results
+   * @return \Drupal\facets\Result\ResultInterface[]
    *   The results of the facet.
    */
   public function getResults();

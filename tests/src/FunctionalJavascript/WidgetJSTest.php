@@ -170,8 +170,8 @@ class WidgetJSTest extends JavascriptTestBase {
     $entity_5->save();
 
     $inserted_entities = \Drupal::entityQuery('entity_test_mulrev_changed')
-        ->count()
-        ->execute();
+      ->count()
+      ->execute();
     $this->assertEquals(5, $inserted_entities, "5 items inserted.");
 
     /** @var \Drupal\search_api\IndexInterface $index */

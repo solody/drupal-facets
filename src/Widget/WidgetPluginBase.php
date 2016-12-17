@@ -98,7 +98,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
   /**
    * {@inheritdoc}
    */
-  public function getQueryType($query_types) {
+  public function getQueryType(array $query_types) {
     return $query_types['string'];
   }
 

@@ -50,7 +50,7 @@ class Taxonomy extends HierarchyPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getChildIds($ids) {
+  public function getChildIds(array $ids) {
     // TODO: refactor to swap out deprecated db_select.
     // TODO: also check if this query does not too much, plain d7 c/p here.
     $result = db_select('taxonomy_term_hierarchy', 'th')

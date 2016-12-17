@@ -67,6 +67,8 @@ class DefaultFacetManager {
 
   /**
    * An array of all entity ids in the active resultset which are a child.
+   *
+   * @var string[]
    */
   protected $childIds = [];
 

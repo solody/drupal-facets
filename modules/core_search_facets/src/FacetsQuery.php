@@ -11,8 +11,10 @@ class FacetsQuery extends SearchQuery {
 
   /**
    * Stores joined tables.
+   *
+   * @var array
    */
-  protected $joinedTables = array();
+  protected $joinedTables = [];
 
   /**
    * Adds the facet join, but only does so once.

@@ -68,7 +68,7 @@ interface ResultInterface {
   /**
    * Returns true if the value is active (selected).
    *
-   * @return bool $active
+   * @return bool
    *   A boolean indicating the active state.
    */
   public function isActive();
@@ -76,7 +76,7 @@ interface ResultInterface {
   /**
    * Returns true if the value has active children(selected).
    *
-   * @return bool $active
+   * @return bool
    *   A boolean indicating the active state of children.
    */
   public function hasActiveChildren();
@@ -100,7 +100,7 @@ interface ResultInterface {
   /**
    * Returns children results.
    *
-   * @return \Drupal\facets\Result\ResultInterface[] $children
+   * @return \Drupal\facets\Result\ResultInterface[]
    *   The children results.
    */
   public function getChildren();
