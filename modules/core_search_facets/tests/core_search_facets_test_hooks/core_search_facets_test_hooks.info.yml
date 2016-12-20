@@ -3,7 +3,7 @@ type: module
 description: 'Support module for core_search_facets tests, tests all the hooks.'
 package: Testing
 dependencies:
-  - facets
-  - core_search_facets
+  - facets:facets
+  - facets:core_search_facets
 core: 8.x
 hidden: true
