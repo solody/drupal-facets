@@ -61,7 +61,10 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
     return [
       '#theme' => 'item_list',
       '#items' => $items,
-      '#attributes' => ['data-drupal-facet-id' => $facet->id()],
+      '#attributes' => [
+        'data-drupal-facet-id' => $facet->id(),
+        'data-drupal-facet-alias' => $facet->getUrlAlias(),
+      ],
       '#cache' => [
         'contexts' => [
           'url.path',
@@ -166,6 +169,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
 
     $items['#wrapper_attributes'] = ['class' => $classes];
     $items['#attributes']['data-drupal-facet-item-id'] = $this->facet->getUrlAlias() . '-' . $result->getRawValue();
+    $items['#attributes']['data-drupal-facet-item-value'] = $result->getRawValue();
     return $items;
   }
 
