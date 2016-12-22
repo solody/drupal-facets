@@ -435,7 +435,7 @@ class DefaultFacetManager {
             $child_keyed_results[$child_id] = $keyed_results[$child_id];
           }
         }
-        $result->setChildren($this->buildHierarchicalTree($child_keyed_results, $parent_groups));
+        $result->setChildren($child_keyed_results);
         $this->childIds = array_merge($this->childIds, $child_ids);
       }
     }
