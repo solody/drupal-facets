@@ -215,4 +215,11 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function isPropertyRequired($name, $type) {
+    return FALSE;
+  }
+
 }

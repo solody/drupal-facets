@@ -50,4 +50,12 @@ class CheckboxWidgetTest extends WidgetTestBase {
     }
   }
 
+  /**
+   * Tests default configuration.
+   */
+  public function testDefaultConfiguration() {
+    $default_config = $this->widget->defaultConfiguration();
+    $this->assertEquals(['show_numbers' => FALSE, 'soft_limit' => 0], $default_config);
+  }
+
 }

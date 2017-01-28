@@ -138,6 +138,7 @@ class FacetForm extends EntityForm {
 
     /** @var \Drupal\facets\FacetInterface $facet */
     $facet = $this->entity;
+    $widget = $facet->getWidgetInstance();
 
     $widget_options = [];
     foreach ($this->getWidgetPluginManager()->getDefinitions() as $widget_id => $definition) {
@@ -213,13 +214,16 @@ class FacetForm extends EntityForm {
         ),
       ),
     );
+
     foreach ($all_processors as $processor_id => $processor) {
       if (!($processor instanceof SortProcessorInterface) && !($processor instanceof UrlProcessorInterface)) {
+
+        $default_value = $processor->isLocked() || $widget->isPropertyRequired($processor_id, 'processors') || !empty($enabled_processors[$processor_id]);
         $clean_css_id = Html::cleanCssIdentifier($processor_id);
         $form['facet_settings'][$processor_id]['status'] = array(
           '#type' => 'checkbox',
           '#title' => (string) $processor->getPluginDefinition()['label'],
-          '#default_value' => $processor->isLocked() || !empty($enabled_processors[$processor_id]),
+          '#default_value' => $default_value,
           '#description' => $processor->getDescription(),
           '#attributes' => array(
             'class' => array(
@@ -227,7 +231,7 @@ class FacetForm extends EntityForm {
             ),
             'data-id' => $clean_css_id,
           ),
-          '#disabled' => $processor->isLocked(),
+          '#disabled' => $processor->isLocked() || $widget->isPropertyRequired($processor_id, 'processors'),
           '#access' => !$processor->isHidden(),
         );
 
@@ -269,11 +273,12 @@ class FacetForm extends EntityForm {
     );
     foreach ($all_processors as $processor_id => $processor) {
       if ($processor instanceof SortProcessorInterface) {
+        $default_value = $processor->isLocked() || $widget->isPropertyRequired($processor_id, 'processors') || !empty($enabled_processors[$processor_id]);
         $clean_css_id = Html::cleanCssIdentifier($processor_id);
         $form['facet_sorting'][$processor_id]['status'] = array(
           '#type' => 'checkbox',
           '#title' => (string) $processor->getPluginDefinition()['label'],
-          '#default_value' => $processor->isLocked() || !empty($enabled_processors[$processor_id]),
+          '#default_value' => $default_value,
           '#description' => $processor->getDescription(),
           '#attributes' => array(
             'class' => array(
@@ -314,14 +319,16 @@ class FacetForm extends EntityForm {
       '#type' => 'checkbox',
       '#title' => $this->t('Hide facet when facet source is not rendered'),
       '#description' => $this->t('When checked, this facet will only be rendered when the facet source is rendered.  If you want to show facets on other pages too, you need to uncheck this setting.'),
-      '#default_value' => $facet->getOnlyVisibleWhenFacetSourceIsVisible(),
+      '#default_value' => $widget->isPropertyRequired('only_visible_when_facet_source_is_visible', 'settings') ?: $facet->getOnlyVisibleWhenFacetSourceIsVisible(),
+      '#disabled' => $widget->isPropertyRequired('only_visible_when_facet_source_is_visible', 'settings') ?: 0,
     ];
 
     $form['facet_settings']['show_only_one_result'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Make sure only one result can be shown.'),
       '#description' => $this->t('When checked, this will make sure that only one result can be selected for this facet at one time.'),
-      '#default_value' => $facet->getShowOnlyOneResult(),
+      '#default_value' => $widget->isPropertyRequired('show_only_one_result', 'settings') ?: $facet->getShowOnlyOneResult(),
+      '#disabled' => $widget->isPropertyRequired('show_only_one_result', 'settings') ?: 0,
     ];
 
     $form['facet_settings']['url_alias'] = [

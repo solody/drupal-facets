@@ -90,6 +90,13 @@ abstract class WidgetTestBase extends UnitTestCase {
   }
 
   /**
+   * Tests default for required properties.
+   */
+  public function testIsPropertyRequired() {
+    $this->assertFalse($this->widget->isPropertyRequired('llama', 'owl'));
+  }
+
+  /**
    * Build a formattable markup object to use as assertion.
    *
    * @param string $text
