@@ -247,7 +247,7 @@ class IntegrationTest extends FacetsTestBase {
     $this->blocks[$facet_id] = $this->createBlock($facet_id);
     $this->blocks[$depending_facet_id] = $this->createBlock($depending_facet_id);
 
-    // Go the the view and test that both facets are shown. Item and article
+    // Go to the view and test that both facets are shown. Item and article
     // come from the DependableFacet, orange and grape come from DependingFacet.
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('grape');

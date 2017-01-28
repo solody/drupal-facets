@@ -5,6 +5,7 @@ namespace Drupal\facets\Plugin\facets\processor;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
@@ -91,6 +92,8 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
   public function build(FacetInterface $facet, array $results) {
     $field_identifier = $facet->getFieldIdentifier();
     $entity = 'node';
+    $field = FALSE;
+    $allowed_values = [];
 
     // Support multiple entities when using Search API.
     if ($facet->getFacetSource() instanceof SearchApiFacetSourceInterface) {
@@ -115,34 +118,45 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
       $field = $this->configManager->loadConfigEntityByName($config_entity_name);
     }
 
-    if ($field) {
-      $function = $field->getSetting('allowed_values_function');
-
-      if (empty($function)) {
-        $allowed_values = $field->getSetting('allowed_values');
-      }
-      else {
-        $allowed_values = ${$function}($field);
-      }
-
-      // If no values are found for the current field, try to see if this is a
-      // bundle field.
-      if (empty($allowed_values) && $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity)) {
-        foreach ($bundles as $key => $bundle) {
-          $allowed_values[$key] = $bundle['label'];
-        }
-      }
-
-      if (is_array($allowed_values)) {
-        /** @var \Drupal\facets\Result\ResultInterface $result */
-        foreach ($results as &$result) {
-          if (isset($allowed_values[$result->getRawValue()])) {
-            $result->setDisplayValue($allowed_values[$result->getRawValue()]);
-          }
-        }
+    if ($field instanceof FieldStorageDefinitionInterface) {
+      if ($field->getType() !== 'entity_reference' && $field->getName() !== 'type') {
+        $allowed_values = options_allowed_values($field);
+        return $this->overWriteDisplayValues($results, $allowed_values);
       }
     }
 
+    // If no values are found for the current field, try to see if this is a
+    // bundle field.
+    $list_bundles = $this->entityTypeBundleInfo->getBundleInfo($entity);
+    if ($list_bundles) {
+      foreach ($list_bundles as $key => $bundle) {
+        $allowed_values[$key] = $bundle['label'];
+      }
+      return $this->overWriteDisplayValues($results, $allowed_values);
+    }
+
+    return $results;
+  }
+
+  /**
+   * Overwrite the display value of the result with a new text.
+   *
+   * @param \Drupal\facets\Result\ResultInterface[] $results
+   *   An array of results to work on.
+   * @param array $replacements
+   *   An array of values that contain possible replacements for the orignal
+   *   values.
+   *
+   * @return \Drupal\facets\Result\ResultInterface[]
+   *   The changed results.
+   */
+  protected function overWriteDisplayValues(array $results, array $replacements) {
+    /** @var \Drupal\facets\Result\ResultInterface $a */
+    foreach ($results as &$a) {
+      if (isset($replacements[$a->getRawValue()])) {
+        $a->setDisplayValue($replacements[$a->getRawValue()]);
+      }
+    }
     return $results;
   }
 
