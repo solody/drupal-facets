@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\spin_rest\Plugin\facets\widget;
+namespace Drupal\facets\Plugin\facets\widget;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\FacetInterface;

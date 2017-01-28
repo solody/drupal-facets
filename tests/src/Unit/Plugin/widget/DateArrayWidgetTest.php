@@ -3,22 +3,22 @@
 namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
 use Drupal\facets\Entity\Facet;
-use Drupal\facets\Plugin\facets\widget\ArrayWidget;
+use Drupal\facets\Plugin\facets\widget\DateArrayWidget;
 
 /**
  * Unit test for widget.
  *
  * @group facets
  */
-class ArrayWidgetTest extends WidgetTestBase {
+class DateArrayWidgetTest extends WidgetTestBase {
 
   /**
-   * {@inheritdoc}
+   * Creates a new processor object for use in the tests.
    */
   protected function setUp() {
     parent::setUp();
 
-    $this->widget = new ArrayWidget(['show_numbers' => 1]);
+    $this->widget = new DateArrayWidget(['show_numbers' => 1]);
   }
 
   /**
@@ -48,12 +48,25 @@ class ArrayWidgetTest extends WidgetTestBase {
   }
 
   /**
+   * Tests get query type.
+   */
+  public function testGetQueryType() {
+    $result = $this->widget->getQueryType($this->queryTypes);
+    $this->assertEquals('date', $result);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function testDefaultConfiguration() {
     $default_config = $this->widget->defaultConfiguration();
     $expected = [
       'show_numbers' => FALSE,
+      'display_relative' => FALSE,
+      'granularity' => 5,
+      'date_display' => '',
+      'relative_granularity' => 1,
+      'relative_text' => TRUE,
     ];
     $this->assertEquals($expected, $default_config);
   }
