@@ -401,11 +401,15 @@ class FacetsSummaryForm extends EntityForm {
       $facets_summary->addProcessor($new_settings);
     }
 
-    // Set our Facet Config.
-    $facets_summary->setFacets((array) $form_state->getValue(['facets']));
+    $value = $form_state->getValue('facets') ?: [];
+    $enabled_facets = array_filter($value, function ($item) {
+      return isset($item['checked']) && $item['checked'] == 1;
+    });
+
+    $facets_summary->setFacets((array) $enabled_facets);
     $facets_summary->save();
 
-    drupal_set_message(t('Facets Summary %name has been updated.', ['%name' => $facets_summary->getName()]));
+    drupal_set_message($this->t('Facets Summary %name has been updated.', ['%name' => $facets_summary->getName()]));
   }
 
   /**

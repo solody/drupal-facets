@@ -90,9 +90,20 @@ class IntegrationTest extends FacetsTestBase {
     $this->drupalGet('admin/config/search/facets');
     $this->assertText('Llama');
 
+    // Go back to the facet summary and check that the facets are not checked by
+    // default and that they show up in the list here.
     $this->drupalGet('admin/config/search/facets/facet-summary/owl/edit');
     $this->assertNoText('No facets found.');
     $this->assertText('Llama');
+    $this->assertNoFieldChecked('edit-facets-llama-checked');
+
+    // Post the form and check that no facets are checked after saving the form.
+    $this->drupalPostForm(NULL, [], 'Save');
+    $this->assertNoFieldChecked('edit-facets-llama-checked');
+
+    // Enable a facet and check it's status after saving.
+    $this->drupalPostForm(NULL, ['facets[llama][checked]' => TRUE], 'Save');
+    $this->assertFieldChecked('edit-facets-llama-checked');
   }
 
 }
