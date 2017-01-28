@@ -2,6 +2,9 @@
 
 namespace Drupal\Tests\facets\Functional;
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\search_api\Item\Field;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -132,6 +135,82 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->checkExcludeItems();
     $this->checkHideNonNarrowingProcessor();
     $this->checkHideActiveItems();
+  }
+
+  /**
+   * Tests the for processors in the frontend with a 'boolean' facet.
+   */
+  public function testBooleanProcessorIntegration() {
+    $field_name = 'field_boolean';
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test_mulrev_changed',
+      'type' => 'boolean',
+    ]);
+    $field_storage->save();
+    $field = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => 'item',
+    ]);
+    $field->save();
+
+    $index = $this->getIndex();
+
+    // Index the taxonomy and entity reference fields.
+    $boolean_field = new Field($index, $field_name);
+    $boolean_field->setType('integer');
+    $boolean_field->setPropertyPath($field_name);
+    $boolean_field->setDatasourceId('entity:entity_test_mulrev_changed');
+    $boolean_field->setLabel('BooleanField');
+    $index->addField($boolean_field);
+
+    $index->save();
+    $this->indexItems($this->indexId);
+
+    $entity_test_storage = \Drupal::entityTypeManager()
+      ->getStorage('entity_test_mulrev_changed');
+    $entity_test_storage->create([
+      'name' => 'foo bar baz',
+      'body' => 'test test',
+      'type' => 'item',
+      'keywords' => ['orange'],
+      'category' => 'item_category',
+      $field_name => TRUE,
+    ])->save();
+
+    $this->indexItems($this->indexId);
+
+    $facet_name = "Boolean";
+    $facet_id = "boolean";
+
+    // Create facet
+    $this->editForm = 'admin/config/search/facets/' . $facet_id . '/edit';
+    $this->createFacet($facet_name, $facet_id, $field_name);
+
+    // Check values
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertFacetLabel('1');
+
+    $form = [
+      'facet_settings[boolean_item][status]' => TRUE,
+      'facet_settings[boolean_item][settings][on_value]' => 'Yes',
+      'facet_settings[boolean_item][settings][off_value]' => 'No',
+    ];
+    $this->drupalPostForm($this->editForm, $form, 'Save');
+    $this->assertResponse(200);
+    $this->assertFieldChecked('edit-facet-settings-boolean-item-status');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertFacetLabel('Yes');
+
+    $form = [
+      'facet_settings[boolean_item][status]' => TRUE,
+      'facet_settings[boolean_item][settings][on_value]' => 'Øn',
+    ];
+    $this->drupalPostForm($this->editForm, $form, 'Save');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertFacetLabel('Øn');
   }
 
   /**
