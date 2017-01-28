@@ -73,6 +73,22 @@ class IntegrationTest extends FacetsTestBase {
   }
 
   /**
+   * Tests facets admin pages availability.
+   */
+  public function testAdminPages() {
+    $pages = [
+      '/admin/config/search/facets',
+      '/admin/config/search/facets/add-facet',
+      '/admin/config/search/facets/facet-sources/views_page/edit',
+    ];
+
+    foreach ($pages as $page) {
+      $this->drupalGet($page);
+      $this->assertSession()->statusCodeEquals(200);
+    }
+  }
+
+  /**
    * Tests various operations via the Facets' admin UI.
    */
   public function testFramework() {
