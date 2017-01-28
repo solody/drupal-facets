@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\facets\Exception\InvalidProcessorException;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
 use Drupal\facets\Processor\BuildProcessorInterface;
@@ -97,7 +98,10 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
       $index = $facet->getFacetSource()->getIndex();
       $field = $index->getField($field_identifier);
 
-      $entity = str_replace('entity:', '', $field->getDatasourceId());
+      if (!$field->getDatasourceId()) {
+        throw new InvalidProcessorException("This field has no datasource, there is no valid use for this processor with this facet");
+      }
+      $entity = $field->getDatasource()->getEntityTypeId();
     }
 
     // If it's an entity base field, we find it in the field definitions.
