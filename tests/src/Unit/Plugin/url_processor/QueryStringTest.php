@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\url_processor;
 
+use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Entity\FacetSource;
 use Drupal\facets\Plugin\facets\url_processor\QueryString;
@@ -238,11 +239,13 @@ class QueryStringTest extends UnitTestCase {
         ]
       );
 
+    $validator = $this->getMock('Drupal\Core\Path\PathValidatorInterface');
+
     $fsi = $this->getMockBuilder('\Drupal\facets\FacetSource\FacetSourcePluginInterface')
       ->disableOriginalConstructor()
       ->getMock();
     $fsi->method('getPath')
-      ->willReturn('search/test');
+      ->willReturn(new Url('test'));
 
     $manager = $this->getMockBuilder('\Drupal\facets\FacetSource\FacetSourcePluginManager')
       ->disableOriginalConstructor()
@@ -266,6 +269,7 @@ class QueryStringTest extends UnitTestCase {
     $container->set('plugin.manager.facets.facet_source', $manager);
     $container->set('entity_type.manager', $em);
     $container->set('entity.manager', $em);
+    $container->set('path.validator', $validator);
     \Drupal::setContainer($container);
   }
 

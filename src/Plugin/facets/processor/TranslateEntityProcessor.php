@@ -7,7 +7,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\facets\FacetInterface;
-use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
+use Drupal\facets\Plugin\facets\facet_source\SearchApiDisplay;
 use Drupal\facets\Processor\BuildProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -92,7 +92,7 @@ class TranslateEntityProcessor extends ProcessorPluginBase implements BuildProce
     $source = $facet->getFacetSource();
 
     // Support multiple entity types when using Search API.
-    if ($source instanceof SearchApiFacetSourceInterface) {
+    if ($source instanceof SearchApiDisplay) {
 
       $field_id = $facet->getFieldIdentifier();
 

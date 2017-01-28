@@ -3,7 +3,9 @@
 namespace Drupal\Tests\facets\Kernel\Entity;
 
 use Drupal\facets\Entity\Facet;
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\facets\FacetSourceInterface;
+use Drupal\facets\Plugin\facets\facet_source\SearchApiDisplay;
+use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 
 /**
  * Class FacetFacetSourceTest.
@@ -13,24 +15,19 @@ use Drupal\KernelTests\KernelTestBase;
  * @group facets
  * @coversDefaultClass \Drupal\facets\Entity\Facet
  */
-class FacetFacetSourceTest extends KernelTestBase {
+class FacetFacetSourceTest extends EntityKernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   public static $modules = [
     'facets',
-    'field',
+    'facets_search_api_dependency',
     'search_api',
     'search_api_db',
     'search_api_test_db',
     'search_api_test_example_content',
     'search_api_test_views',
-    'search_api_test',
-    'user',
-    'system',
-    'entity_test',
-    'text',
     'views',
     'rest',
     'serialization',
@@ -75,22 +72,28 @@ class FacetFacetSourceTest extends KernelTestBase {
     $entity = new Facet([], 'facets_facet');
     $this->assertNull($entity->getFacetSourceId());
 
-    $display_name = 'views_page:search_api_test_view__page_1';
-    $display_id = 'views_page__search_api_test_view__page_1';
+    // Check that the facet source is in the list of search api displays.
     $displays = $this->container
       ->get('plugin.manager.search_api.display')
       ->getDefinitions();
-    $this->assertArrayHasKey($display_name, $displays);
+    $this->assertTrue(isset($displays['views_page:search_api_test_view__page_1']));
+    $this->assertArrayHasKey('views_page:search_api_test_view__page_1', $displays);
 
+    // Check that has transformed into a facet source as expected.
+    $facet_sources = $this->container
+      ->get('plugin.manager.facets.facet_source')
+      ->getDefinitions();
+    $this->assertArrayHasKey('search_api:views_page__search_api_test_view__page_1', $facet_sources);
+
+    // Check the behavior of the facet sources.
+    $display_name = 'search_api:views_page__search_api_test_view__page_1';
     $entity->setFacetSourceId($display_name);
     $this->assertEquals($display_name, $entity->getFacetSourceId());
-    $this->assertInstanceOf('\Drupal\facets\FacetSource\SearchApiFacetSourceInterface', $entity->getFacetSources()[$display_name]);
-    $this->assertInstanceOf('\Drupal\facets\FacetSource\SearchApiFacetSourceInterface', $entity->getFacetSource());
-    $this->assertInstanceOf('\Drupal\facets\FacetSourceInterface', $entity->getFacetSourceConfig());
+    $this->assertInstanceOf(SearchApiDisplay::class, $entity->getFacetSources()[$display_name]);
+    $this->assertInstanceOf(SearchApiDisplay::class, $entity->getFacetSource());
+    $this->assertInstanceOf(FacetSourceInterface::class , $entity->getFacetSourceConfig());
     $this->assertEquals($display_name, $entity->getFacetSourceConfig()->getName());
-    $this->assertEquals($display_id, $entity->getFacetSourceConfig()->id());
     $this->assertEquals('f', $entity->getFacetSourceConfig()->getFilterKey());
-
   }
 
   /**
@@ -101,7 +104,7 @@ class FacetFacetSourceTest extends KernelTestBase {
   public function testInvalidQueryType() {
     $entity = new Facet([], 'facets_facet');
     $entity->setWidget('links');
-    $entity->setFacetSourceId('views_page:search_api_test_view__page_1');
+    $entity->setFacetSourceId('search_api:views_page__search_api_test_view__page_1');
 
     $this->setExpectedException('Drupal\facets\Exception\InvalidQueryTypeException');
     $entity->getQueryType();

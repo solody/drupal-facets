@@ -49,7 +49,7 @@ class FacetSourceTest extends FacetsTestBase {
     $this->assertResponse(200);
 
     $this->assertUrl('admin/config/search/facets');
-    $this->assertText('Facet source views_page:search_api_test_view__block_1 has been saved.');
+    $this->assertText('Facet source search_api:views_block__search_api_test_view__block_1 has been saved.');
     $this->clickLink('Configure');
 
     // Test that saving worked filter_key has the new value.
@@ -72,7 +72,7 @@ class FacetSourceTest extends FacetsTestBase {
     $this->assertResponse(200);
 
     $this->assertUrl('admin/config/search/facets');
-    $this->assertText('Facet source views_page:search_api_test_view__block_1 has been saved.');
+    $this->assertText('Facet source search_api:views_block__search_api_test_view__block_1 has been saved.');
     $this->clickLink('Configure');
 
     // Test that saving worked and that the url processor has the new value.

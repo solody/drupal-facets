@@ -3,6 +3,7 @@
 namespace Drupal\core_search_facets\Plugin\facets\facet_source;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\core_search_facets\Plugin\CoreSearchFacetSourceInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginBase;
@@ -110,9 +111,9 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   public function getPath() {
     $search_page = $this->request->attributes->get('entity');
     if ($search_page instanceof SearchPageInterface) {
-      return '/search/' . $search_page->getPath();
+      return Url::fromUserInput('/search/' . $search_page->getPath());
     }
-    return '/';
+    return Url::fromUserInput('/');
   }
 
   /**

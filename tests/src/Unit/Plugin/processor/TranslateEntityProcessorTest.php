@@ -7,7 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\facets\Entity\Facet;
-use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
+use Drupal\facets\Plugin\facets\facet_source\SearchApiDisplay;
 use Drupal\facets\Plugin\facets\processor\TranslateEntityProcessor;
 use Drupal\facets\Result\Result;
 use Drupal\field\FieldStorageConfigInterface;
@@ -66,7 +66,9 @@ class TranslateEntityProcessorTest extends UnitTestCase {
     $index->expects($this->any())
       ->method('getField')
       ->willReturn($field);
-    $facet_source = $this->getMock(SearchApiFacetSourceInterface::class);
+    $facet_source = $this->getMockBuilder(SearchApiDisplay::class)
+      ->disableOriginalConstructor()
+      ->getMock();
     $facet_source->expects($this->any())
       ->method('getIndex')
       ->willReturn($index);

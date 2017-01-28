@@ -59,10 +59,14 @@ function facets_search_api_query_alter(QueryInterface &$query) {
     /** @var \Drupal\facets\FacetManager\DefaultFacetManager $facet_manager */
     $facet_manager = \Drupal::service('facets.manager');
 
-    $search_id = $query->getSearchId();
+    // It's safe to hardcode this to the search api scheme because this is in a
+    // search_api_query_alter method. If this generated source is not correct,
+    // implementing the same alter and directly calling
+    // $manager->alterQuery($query, $your_facetsource_id); will fix that.
+    $facet_source = 'search_api:' . str_replace(':', '__', $query->getSearchId());
 
     // Add the active filters.
-    $facet_manager->alterQuery($query, $search_id);
+    $facet_manager->alterQuery($query, $facet_source);
   }
 }
 
@@ -88,7 +92,7 @@ function facets_entity_presave(EntityInterface $entity) {
         // Check if the current display is also a facet source plugin and that
         // is removed from the view. We use the double underscore here to make
         // sure that we use core convention of "plugin:derived_plugin".
-        $facets_source_plugin_id = 'views_page:' . $entity->id() . '__' . $display['id'];
+        $facets_source_plugin_id = 'search_api:views_' . $display['display_plugin'] . '__' . $entity->id() . '__' . $display['id'];
         if (array_key_exists($facets_source_plugin_id, $definitions) && !array_key_exists($k, $entity->get('display'))) {
           $entity_id = str_replace(':', '__', $facets_source_plugin_id);
           $source_entity = FacetSource::load($entity_id);
@@ -98,7 +102,6 @@ function facets_entity_presave(EntityInterface $entity) {
           }
         }
       }
-
 
       // Loop over all deleted sources and delete the facets that were linked to
       // that source.
@@ -152,7 +155,7 @@ function facets_entity_predelete(EntityInterface $entity) {
     }
 
     foreach ($definitions as $plugin_id => $definition) {
-      if (strpos($plugin_id, 'views_page:' . $entity->id() . '__') !== FALSE) {
+      if (strpos($plugin_id, 'search_api:' . $entity->id() . '__') !== FALSE) {
         try {
           $facetManager = \Drupal::getContainer()->get('facets.manager');
         } catch (ServiceNotFoundException $e) {

@@ -40,10 +40,11 @@ interface FacetSourcePluginInterface extends PluginFormInterface, DependentPlugi
   public function getQueryTypesForFacet(FacetInterface $facet);
 
   /**
-   * Returns the path where a facet should link to.
+   * Returns the url of the facet source, used to build the facet url.
    *
-   * @return string
-   *   The path of the facet.
+   * @return \Drupal\Core\Url
+   *   The url object for the facet if it's set, a url object to the current
+   *   page otherwise.
    */
   public function getPath();
 

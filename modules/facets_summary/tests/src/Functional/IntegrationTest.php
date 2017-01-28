@@ -74,7 +74,7 @@ class IntegrationTest extends FacetsTestBase {
     $values = [
       'name' => 'Owl',
       'id' => 'owl',
-      'facet_source_id' => 'views_page:search_api_test_view__page_1',
+      'facet_source_id' => 'search_api:views_page__search_api_test_view__page_1',
     ];
     $this->drupalPostForm('admin/config/search/facets/add-facet-summary', $values, 'Save');
     $this->drupalPostForm(NULL, [], 'Save');

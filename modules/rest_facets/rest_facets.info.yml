@@ -5,6 +5,7 @@ core: 8.x
 package: Search
 dependencies:
   - facets:facets
+  - drupal:rest
 test_dependencies:
   - search_api:search_api
   - facets:facets

@@ -2,7 +2,6 @@
 
 namespace Drupal\facets\Plugin\facets\url_processor;
 
-use Drupal\Core\Url;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\UrlProcessor\UrlProcessorPluginBase;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,15 +67,11 @@ class QueryString extends UrlProcessorPluginBase {
     // Set the url alias from the the facet object.
     $this->urlAlias = $facet->getUrlAlias();
 
-    $request = $this->request;
-    if ($facet->getFacetSource()->getPath()) {
-      $request = Request::create($facet->getFacetSource()->getPath());
-    }
+    $url = $facet->getFacetSource()->getPath();
+    $url->setOption('attributes', ['rel' => 'nofollow']);
+
     /** @var \Drupal\facets\Result\ResultInterface[] $results */
     foreach ($results as &$result) {
-      // Reset the URL for each result.
-      $url = Url::createFromRequest($request);
-      $url->setOption('attributes', ['rel' => 'nofollow']);
       // Sets the url for children.
       if ($children = $result->getChildren()) {
         $this->buildUrls($facet, $children);
@@ -133,12 +128,12 @@ class QueryString extends UrlProcessorPluginBase {
 
       $result_get_params->set($this->filterKey, array_values($filter_params));
 
-      $url = clone $url;
+      $new_url = clone $url;
       if ($result_get_params->all() !== [$this->filterKey => []]) {
-        $url->setOption('query', $result_get_params->all());
+        $new_url->setOption('query', $result_get_params->all());
       }
 
-      $result->setUrl($url);
+      $result->setUrl($new_url);
     }
 
     // Restore page parameter again. See https://www.drupal.org/node/2726455.

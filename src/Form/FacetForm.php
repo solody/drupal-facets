@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\facets\Plugin\facets\facet_source\SearchApiDisplay;
 use Drupal\facets\Processor\ProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\facets\UrlProcessor\UrlProcessorInterface;
@@ -373,7 +374,7 @@ class FacetForm extends EntityForm {
       '#options' => [0 => $this->t('No limit')] + array_combine($hard_limit_options, $hard_limit_options),
       '#description' => $this->t('Display no more than this number of facet items.'),
     ];
-    if (strpos($facet->getFacetSourceId(), 'views_') === FALSE) {
+    if (!$facet->getFacetSource() instanceof SearchApiDisplay) {
       $form['facet_settings']['hard_limit']['#disabled'] = TRUE;
       $form['facet_settings']['hard_limit']['#description'] .= '<br />';
       $form['facet_settings']['hard_limit']['#description'] .= $this->t('This setting only works with Search API based facets.');
@@ -391,7 +392,7 @@ class FacetForm extends EntityForm {
       '#title' => $this->t('Use hierarchy'),
       '#default_value' => $facet->getUseHierarchy(),
     ];
-    if (strpos($facet->getFacetSourceId(), 'views_') === FALSE) {
+    if (!$facet->getFacetSource() instanceof SearchApiDisplay) {
       $form['facet_settings']['use_hierarchy']['#disabled'] = TRUE;
       $form['facet_settings']['use_hierarchy']['#description'] = $this->t('This setting only works with Search API based facets.');
     }
@@ -439,7 +440,7 @@ class FacetForm extends EntityForm {
       '#maxlength' => 4,
       '#required' => TRUE,
     ];
-    if (strpos($facet->getFacetSourceId(), 'views_') === FALSE) {
+    if (!$facet->getFacetSource() instanceof SearchApiDisplay) {
       $form['facet_settings']['min_count']['#disabled'] = TRUE;
       $form['facet_settings']['min_count']['#description'] .= '<br />';
       $form['facet_settings']['min_count']['#description'] .= $this->t('This setting only works with Search API based facets.');
