@@ -49,7 +49,7 @@ class FacetSourceEditForm extends EntityForm {
 
     // Make sure we remove colons from the source id, those are disallowed in
     // the entity id.
-    $source_id = $this->getRequest()->get('source_id');
+    $source_id = $this->getRequest()->get('facets_facet_source');
     $source_id = str_replace(':', '__', $source_id);
 
     $facet_source = $facet_source_storage->load($source_id);
@@ -63,7 +63,7 @@ class FacetSourceEditForm extends EntityForm {
       $facet_source = new FacetSource(
         [
           'id' => $source_id,
-          'name' => $this->getRequest()->get('source_id'),
+          'name' => $this->getRequest()->get('facets_facet_source'),
         ],
         'facets_facet_source'
       );

@@ -46,7 +46,7 @@ function core_search_facets_search_plugin_alter(array &$definitions) {
  */
 function core_search_facets_form_facet_source_edit_form_alter(&$form, FormStateInterface $form_state) {
   $request = \Drupal::requestStack()->getMasterRequest();
-  $facet_source_id = str_replace(":", "__", $request->attributes->get('source_id'));
+  $facet_source_id = str_replace(":", "__", $request->attributes->get('facets_facet_source'));
   if (strpos($facet_source_id, 'core_node_search') !== FALSE) {
     $form['advanced_filters'] = array(
       '#type' => 'checkbox',

@@ -160,7 +160,7 @@ class FacetListBuilder extends ConfigEntityListBuilder {
           'data' => Link::createFromRoute(
             $this->t('Configure'),
             'entity.facets_facet_source.edit_form',
-            ['source_id' => $facet_source['id']]
+            ['facets_facet_source' => $facet_source['id']]
           )->toRenderable(),
         ),
       ),
