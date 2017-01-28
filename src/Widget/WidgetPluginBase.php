@@ -58,6 +58,8 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
       }
     }, $facet->getResults());
 
+    $widget = $facet->getWidget();
+
     return [
       '#theme' => 'item_list',
       '#items' => $items,
@@ -65,6 +67,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
         'data-drupal-facet-id' => $facet->id(),
         'data-drupal-facet-alias' => $facet->getUrlAlias(),
       ],
+      '#context' => ['list_style' => $widget['type']],
       '#cache' => [
         'contexts' => [
           'url.path',
