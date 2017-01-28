@@ -183,6 +183,29 @@ class QueryStringTest extends UnitTestCase {
   }
 
   /**
+   * Tests with only one result.
+   */
+  public function testWithOnlyOneResult() {
+    $facet = new Facet([], 'facets_facet');
+    $facet->setFieldIdentifier('test');
+    $facet->setUrlAlias('test');
+    $facet->setFacetSourceId('facet_source__dummy');
+    $facet->setShowOnlyOneResult(TRUE);
+
+    $this->originalResults[1]->setActiveState(TRUE);
+    $this->originalResults[2]->setActiveState(TRUE);
+
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], new Request());
+    $results = $this->processor->buildUrls($facet, $this->originalResults);
+
+    $this->assertEquals('route:test?f[0]=test%3A' . $results[0]->getRawValue(), $results[0]->getUrl()->toUriString());
+    $this->assertEquals('route:test?f[0]=test%3A' . $results[3]->getRawValue(), $results[3]->getUrl()->toUriString());
+    $this->assertEquals('route:test?f[0]=test%3A' . $results[4]->getRawValue(), $results[4]->getUrl()->toUriString());
+    $this->assertEquals('route:test', $results[1]->getUrl()->toUriString());
+    $this->assertEquals('route:test', $results[2]->getUrl()->toUriString());
+  }
+
+  /**
    * Tests that the facet source configuration filter key override works.
    */
   public function testFacetSourceFilterKeyOverride() {
@@ -232,12 +255,10 @@ class QueryStringTest extends UnitTestCase {
       ->getMock();
     $router->expects($this->any())
       ->method('matchRequest')
-      ->willReturn(
-        [
-          '_raw_variables' => new ParameterBag([]),
-          '_route' => 'test',
-        ]
-      );
+      ->willReturn([
+        '_raw_variables' => new ParameterBag([]),
+        '_route' => 'test',
+      ]);
 
     $validator = $this->getMock('Drupal\Core\Path\PathValidatorInterface');
 

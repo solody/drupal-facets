@@ -99,7 +99,10 @@ class FacetFacetSourceTest extends EntityKernelTestBase {
   /**
    * Tests invalid query type.
    *
+   * The error here is triggered because no field id is set.
+   *
    * @covers ::getQueryType
+   * @covers ::getFacetSource
    */
   public function testInvalidQueryType() {
     $entity = new Facet([], 'facets_facet');
@@ -108,6 +111,22 @@ class FacetFacetSourceTest extends EntityKernelTestBase {
 
     $this->setExpectedException('Drupal\facets\Exception\InvalidQueryTypeException');
     $entity->getQueryType();
+  }
+
+  /**
+   * Tests invalid query type.
+   *
+   * @covers ::getQueryType
+   * @covers ::getFacetSource
+   */
+  public function testQueryType() {
+    $entity = new Facet([], 'facets_facet');
+    $entity->setWidget('links');
+    $entity->setFacetSourceId('search_api:views_page__search_api_test_view__page_1');
+    $entity->setFieldIdentifier('name');
+
+    $aa = $entity->getQueryType();
+    $this->assertEquals('search_api_string', $aa);
   }
 
 }

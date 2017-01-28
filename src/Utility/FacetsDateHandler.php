@@ -374,15 +374,14 @@ class FacetsDateHandler {
    *   0 if they are equal.
    */
   public function gapCompare($gap1, $gap2) {
-
-    $gap_numbers = array(
+    $gap_numbers = [
       static::FACETS_DATE_YEAR => 6,
       static::FACETS_DATE_MONTH => 5,
       static::FACETS_DATE_DAY => 4,
       static::FACETS_DATE_HOUR => 3,
       static::FACETS_DATE_MINUTE => 2,
       static::FACETS_DATE_SECOND => 1,
-    );
+    ];
 
     $gap1_num = isset($gap_numbers[$gap1]) ? $gap_numbers[$gap1] : 6;
     $gap2_num = isset($gap_numbers[$gap2]) ? $gap_numbers[$gap2] : 6;
@@ -396,7 +395,7 @@ class FacetsDateHandler {
   }
 
   /**
-   * Extracts "start" and "end" dates from an active items.
+   * Extracts "start" and "end" dates from an active item.
    *
    * @param string $item
    *   The active item to extract the dates.
