@@ -22,7 +22,7 @@ class DropdownWidget extends WidgetPluginBase {
    */
   public function defaultConfiguration() {
     return [
-      'default_option_label' => $this->t('Choose'),
+      'default_option_label' => 'Choose',
     ] + parent::defaultConfiguration();
   }
 
