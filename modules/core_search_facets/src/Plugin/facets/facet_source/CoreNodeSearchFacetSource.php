@@ -28,14 +28,14 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManager|null
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|null
    */
   protected $entityTypeManager;
 
   /**
    * The typed data manager.
    *
-   * @var \Drupal\Core\TypedData\TypedDataManager|null
+   * @var \Drupal\Core\TypedData\TypedDataManagerInterface|null
    */
   protected $typedDataManager;
 

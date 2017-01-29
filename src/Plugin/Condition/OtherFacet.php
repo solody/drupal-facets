@@ -3,7 +3,7 @@
 namespace Drupal\facets\Plugin\Condition;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Block\BlockManager;
+use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -36,7 +36,7 @@ class OtherFacet extends ConditionPluginBase implements ContainerFactoryPluginIn
   /**
    * The block plugin manager.
    *
-   * @var \Drupal\Core\Block\BlockManager
+   * @var \Drupal\Core\Block\BlockManagerInterface
    */
   protected $blockManager;
 
@@ -59,7 +59,7 @@ class OtherFacet extends ConditionPluginBase implements ContainerFactoryPluginIn
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
    *   The entity storage.
-   * @param \Drupal\Core\Block\BlockManager $block_manager
+   * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
    *   The block plugin manager.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The currently logged in user.
@@ -75,7 +75,7 @@ class OtherFacet extends ConditionPluginBase implements ContainerFactoryPluginIn
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    */
-  public function __construct(EntityStorageInterface $entity_storage, BlockManager $block_manager, AccountProxyInterface $current_user, DefaultFacetManager $facet_manager, array $configuration, $plugin_id, $plugin_definition) {
+  public function __construct(EntityStorageInterface $entity_storage, BlockManagerInterface $block_manager, AccountProxyInterface $current_user, DefaultFacetManager $facet_manager, array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->facetStorage = $entity_storage;
     $this->blockManager = $block_manager;

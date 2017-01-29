@@ -4,7 +4,7 @@ namespace Drupal\facets_summary\Form;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\facets\FacetManager\DefaultFacetManager;
 use Drupal\Core\Form\FormStateInterface;
@@ -34,7 +34,7 @@ class FacetsSummaryForm extends EntityForm {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
@@ -62,7 +62,7 @@ class FacetsSummaryForm extends EntityForm {
   /**
    * Constructs an FacetDisplayForm object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity manager.
    * @param \Drupal\facets\FacetSource\FacetSourcePluginManager $facet_source_plugin_manager
    *   The plugin manager for facet sources.
@@ -71,7 +71,7 @@ class FacetsSummaryForm extends EntityForm {
    * @param \Drupal\facets_summary\Processor\ProcessorPluginManager $processor_plugin_manager
    *   The Facets Summary Processor Plugin Manager.
    */
-  public function __construct(EntityTypeManager $entity_type_manager, FacetSourcePluginManager $facet_source_plugin_manager, DefaultFacetManager $facet_manager, ProcessorPluginManager $processor_plugin_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, FacetSourcePluginManager $facet_source_plugin_manager, DefaultFacetManager $facet_manager, ProcessorPluginManager $processor_plugin_manager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->facetSourcePluginManager = $facet_source_plugin_manager;
     $this->facetSummaryStorage = $entity_type_manager->getStorage('facets_summary');

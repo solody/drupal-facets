@@ -2,7 +2,7 @@
 
 namespace Drupal\facets\Utility;
 
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DateFormatterInterface;
 
 /**
  * Dates Handler service.
@@ -62,17 +62,17 @@ class FacetsDateHandler {
   /**
    * The date formatting service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
   /**
    * FacetsDateHandler constructor.
    *
-   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatting service.
    */
-  public function __construct(DateFormatter $date_formatter) {
+  public function __construct(DateFormatterInterface $date_formatter) {
     $this->dateFormatter = $date_formatter;
   }
 

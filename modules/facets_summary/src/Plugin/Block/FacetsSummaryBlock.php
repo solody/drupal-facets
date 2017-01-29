@@ -11,7 +11,7 @@ use Drupal\facets_summary\FacetsSummaryManager\DefaultFacetsSummaryManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Exposes a summary based on all the facets as a blcok.
+ * Exposes a summary based on all the facets as a block.
  *
  * @Block(
  *   id = "facets_summary_block",
