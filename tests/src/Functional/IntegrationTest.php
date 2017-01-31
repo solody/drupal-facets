@@ -701,6 +701,50 @@ class IntegrationTest extends FacetsTestBase {
   }
 
   /**
+   * Tests behavior with multiple enabled facets and their interaction.
+   */
+  public function testMultipleFacets() {
+    // Create 2 facets.
+    $this->createFacet('Snow Owl', 'snow_owl');
+    // Clear all the caches between building the 2 facets - because things fail
+    // otherwise.
+    $this->resetAll();
+    $this->createFacet('Forest Owl', 'forest_owl', 'category');
+
+    // Make sure numbers are displayed.
+    $edit = [
+      'widget_config[show_numbers]' => 1,
+      'facet_settings[min_count]' => 0,
+    ];
+    $this->drupalPostForm('admin/config/search/facets/snow_owl/edit', $edit, 'Save');
+    $this->drupalPostForm('admin/config/search/facets/forest_owl/edit', $edit, 'Save');
+
+    // Go to the view and check the default behavior.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 5 search results');
+    $this->assertFacetLabel('item (3)');
+    $this->assertFacetLabel('article (2)');
+    $this->assertFacetLabel('item_category (2)');
+    $this->assertFacetLabel('article_category (2)');
+
+    // Start filtering.
+    $this->clickPartialLink('item_category');
+    $this->assertText('Displaying 2 search results');
+    $this->checkFacetIsActive('item_category');
+    $this->assertFacetLabel('item (2)');
+
+    // Go back to the overview and start another filter, from the second facet
+    // block this time.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 5 search results');
+    $this->clickPartialLink('article (2)');
+    $this->assertText('Displaying 2 search results');
+    $this->checkFacetIsActive('article');
+    $this->assertFacetLabel('article_category (2)');
+    $this->assertFacetLabel('item_category (0)');
+  }
+
+  /**
    * Configures empty behavior option to show a text on empty results.
    *
    * @param string $facet_name
