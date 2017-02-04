@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains facets.module
+ * Contains facets.module.
  */
 
 use Drupal\Component\Utility\Html;
@@ -26,8 +26,10 @@ function facets_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('Facets test') . '</p>';
       return $output;
+
     case 'facets.overview':
       return t('Below is a list of facets grouped by facetsources they are associated with. A facetsource is the instance where the facet does the actual filtering, for example a View on a Search API index.');
+
   }
 }
 
@@ -50,9 +52,10 @@ function facets_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implementation of hook_search_api_query_alter.
+ * Implements hook_search_api_query_alter().
  *
  * @param \Drupal\search_api\Query\QueryInterface $query
+ *   Generates query for facet search.
  */
 function facets_search_api_query_alter(QueryInterface &$query) {
   if ($query->getIndex()->getServerInstance()->supportsFeature('search_api_facets')) {

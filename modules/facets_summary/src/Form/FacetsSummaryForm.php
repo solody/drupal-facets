@@ -258,7 +258,7 @@ class FacetsSummaryForm extends EntityForm {
 
     $form['weights'] = array(
       '#type' => 'details',
-      '#title' => t('Advanced settings'),
+      '#title' => $this->t('Advanced settings'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );

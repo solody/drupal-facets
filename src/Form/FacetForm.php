@@ -343,9 +343,9 @@ class FacetForm extends EntityForm {
     $empty_behavior_config = $facet->getEmptyBehavior();
     $form['facet_settings']['empty_behavior'] = [
       '#type' => 'radios',
-      '#title' => t('Empty facet behavior'),
+      '#title' => $this->t('Empty facet behavior'),
       '#default_value' => $empty_behavior_config['behavior'] ?: 'none',
-      '#options' => ['none' => t('Do not display facet'), 'text' => t('Display text')],
+      '#options' => ['none' => $this->t('Do not display facet'), 'text' => $this->t('Display text')],
       '#description' => $this->t('The action to take when a facet has no items.'),
       '#required' => TRUE,
     ];
@@ -464,7 +464,7 @@ class FacetForm extends EntityForm {
 
     $form['weights'] = array(
       '#type' => 'details',
-      '#title' => t('Advanced settings'),
+      '#title' => $this->t('Advanced settings'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
@@ -659,7 +659,7 @@ class FacetForm extends EntityForm {
     $facet->setEnableParentWhenChildGetsDisabled($form_state->getValue(['facet_settings', 'enable_parent_when_child_gets_disabled']));
 
     $facet->save();
-    drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
+    drupal_set_message($this->t('Facet %name has been updated.', ['%name' => $facet->getName()]));
   }
 
   /**

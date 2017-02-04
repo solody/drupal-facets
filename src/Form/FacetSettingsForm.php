@@ -337,7 +337,7 @@ class FacetSettingsForm extends EntityForm {
       }
     }
     else {
-      drupal_set_message(t('Facet %name has been updated.', ['%name' => $facet->getName()]));
+      drupal_set_message($this->t('Facet %name has been updated.', ['%name' => $facet->getName()]));
     }
 
     // Clear Drupal cache for blocks to reflect recent changes.
