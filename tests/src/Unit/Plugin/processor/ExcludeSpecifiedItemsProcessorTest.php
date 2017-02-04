@@ -56,7 +56,7 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
       'default_enabled' => TRUE,
       'stages' => [
         "build" => 50,
-      ]
+      ],
     ]);
 
     $processor_definitions = [

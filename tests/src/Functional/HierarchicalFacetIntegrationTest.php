@@ -6,7 +6,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\search_api\Item\Field;
 use Drupal\taxonomy\Entity\Term;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\taxonomy\Tests\TaxonomyTestTrait;
 use Drupal\field\Tests\EntityReference\EntityReferenceTestTrait;
 

@@ -32,7 +32,7 @@ class BooleanItemProcessor extends ProcessorPluginBase implements BuildProcessor
       if ($result->getRawValue() == 0) {
         $result->setDisplayValue($config['off_value']);
       }
-      else if ($result->getRawValue() == 1) {
+      elseif ($result->getRawValue() == 1) {
         $result->setDisplayValue($config['on_value']);
       }
     }
@@ -84,4 +84,5 @@ class BooleanItemProcessor extends ProcessorPluginBase implements BuildProcessor
       'off_value' => 'Off',
     ];
   }
+
 }

@@ -132,7 +132,7 @@ class FacetSourcePluginManagerTest extends UnitTestCase {
       'only id' => ['id' => 'owl'],
       'only display_id' => ['display_id' => 'search_api:owl'],
       'only label' => ['label' => 'Owl'],
-      'no label' => ['id' => 'owl', 'display_id' => 'Owl']
+      'no label' => ['id' => 'owl', 'display_id' => 'Owl'],
     ];
   }
 

@@ -91,7 +91,7 @@ class FacetFacetSourceTest extends EntityKernelTestBase {
     $this->assertEquals($display_name, $entity->getFacetSourceId());
     $this->assertInstanceOf(SearchApiDisplay::class, $entity->getFacetSources()[$display_name]);
     $this->assertInstanceOf(SearchApiDisplay::class, $entity->getFacetSource());
-    $this->assertInstanceOf(FacetSourceInterface::class , $entity->getFacetSourceConfig());
+    $this->assertInstanceOf(FacetSourceInterface::class, $entity->getFacetSourceConfig());
     $this->assertEquals($display_name, $entity->getFacetSourceConfig()->getName());
     $this->assertEquals('f', $entity->getFacetSourceConfig()->getFilterKey());
   }

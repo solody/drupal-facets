@@ -5,7 +5,6 @@ namespace Drupal\Tests\facets\Functional;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\search_api\Item\Field;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the processor functionality.
@@ -164,11 +163,11 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $facet_name = "Boolean";
     $facet_id = "boolean";
 
-    // Create facet
+    // Create facet.
     $this->editForm = 'admin/config/search/facets/' . $facet_id . '/edit';
     $this->createFacet($facet_name, $facet_id, $field_name);
 
-    // Check values
+    // Check values.
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('1');
 

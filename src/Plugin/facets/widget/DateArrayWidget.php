@@ -4,7 +4,6 @@ namespace Drupal\facets\Plugin\facets\widget;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\FacetInterface;
-use Drupal\facets\Plugin\facets\widget\ArrayWidget;
 use Drupal\facets\Plugin\facets\query_type\SearchApiDate;
 
 /**

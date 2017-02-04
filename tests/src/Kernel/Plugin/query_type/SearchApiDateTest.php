@@ -43,10 +43,10 @@ class SearchApiDateTest extends KernelTestBase {
       ->getMock();
     $widget->method('getConfiguration')
       ->will($this->returnValue([
-      'granularity' => $granularity,
-      'date_display' => '',
-      'display_relative' => FALSE,
-    ]));
+        'granularity' => $granularity,
+        'date_display' => '',
+        'display_relative' => FALSE,
+      ]));
     $widget_instance = $facetReflection->getProperty('widgetInstance');
     $widget_instance->setAccessible(TRUE);
     $widget_instance->setValue($facet, $widget);

@@ -424,7 +424,7 @@ class DefaultFacetManager {
    * @return \Drupal\facets\Result\ResultInterface[]
    *   An array of results structured hierarchicaly.
    */
-  protected function buildHierarchicalTree($keyed_results, $parent_groups) {
+  protected function buildHierarchicalTree(array $keyed_results, array $parent_groups) {
     foreach ($keyed_results as &$result) {
       $current_id = $result->getRawValue();
       if (isset($parent_groups[$current_id]) && $parent_groups[$current_id]) {

@@ -469,7 +469,11 @@ class FacetForm extends EntityForm {
       '#collapsed' => TRUE,
     );
 
-    $form['weights']['order'] = ['#markup' => "<h3>" . t('Processor order') . "</h3>"];
+    $form['weights']['order'] = [
+      '#markup' => $this->t('Processor order'),
+      '#prefix' => '<h3>',
+      '#suffix' => '</h3>',
+    ];
 
     // Order enabled processors per stage, create all the containers for the
     // different stages.

@@ -2,7 +2,6 @@
 
 namespace Drupal\facets_query_processor\Plugin\facets\url_processor;
 
-use Drupal\Core\Url;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\UrlProcessor\UrlProcessorPluginBase;
 use Symfony\Component\HttpFoundation\Request;

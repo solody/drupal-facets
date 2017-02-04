@@ -41,7 +41,7 @@ interface WidgetPluginInterface extends ConfigurablePluginInterface {
    *
    * @param string $name
    *   The name of the property. Something like
-   *   'hide_non_narrowing_result_processor' or 'show_only_one_result'
+   *   'hide_non_narrowing_result_processor' or 'show_only_one_result'.
    * @param string $type
    *   The type of the property. Either 'processors' or 'settings'. Another
    *   value will not be picked up by the widgets.
