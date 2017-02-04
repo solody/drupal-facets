@@ -87,3 +87,6 @@ plugin.plugin_configuration.facets_processor.hide_non_narrowing_result_processor
 
 plugin.plugin_configuration.facets_processor.hide_active_items_processor:
   type: config_object
+
+plugin.plugin_configuration.facets_processor.list_item:
+  type: config_object

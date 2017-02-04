@@ -23,6 +23,13 @@ class ProcessorIntegrationTest extends FacetsTestBase {
   /**
    * {@inheritdoc}
    */
+  public static $modules = [
+    'options',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp();
 
@@ -590,6 +597,47 @@ class ProcessorIntegrationTest extends FacetsTestBase {
       $path = $this->editForm;
     }
     $this->drupalPostForm($path, $settings, 'Save');
+  }
+
+  /**
+   * Checks if the list processor changes machine name to the display label.
+   */
+  public function testListProcessor() {
+    entity_test_create_bundle('basic', "Basic page", 'entity_test_mulrev_changed');
+    $entity_test_storage = \Drupal::entityTypeManager()
+      ->getStorage('entity_test_mulrev_changed');
+
+    // Add an entity with basic page content type.
+    $entity_test_storage->create([
+      'name' => 'AC0871108',
+      'body' => 'Eamus Catuli',
+      'type' => 'basic',
+    ])->save();
+    $this->indexItems($this->indexId);
+
+    $facet_name = "Eamus Catuli";
+    $facet_id = "eamus_catuli";
+    $editForm = 'admin/config/search/facets/' . $facet_id . '/edit';
+    $this->createFacet($facet_name, $facet_id);
+
+    // Go to the overview and check that the machine names are used as facets.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 11 search results');
+    $this->assertFacetLabel('basic');
+
+    // Edit the facet to use the list_item processor.
+    $edit = [
+      'facet_settings[list_item][status]' => TRUE,
+    ];
+    $this->drupalPostForm($editForm, $edit, 'Save');
+    $this->assertResponse(200);
+    $this->assertFieldChecked('edit-facet-settings-list-item-status');
+
+    // Go back to the overview and check that now the label is being used
+    // instead.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 11 search results');
+    $this->assertFacetLabel('Basic page');
   }
 
 }
