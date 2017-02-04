@@ -78,7 +78,7 @@ class LinksWidgetTest extends WidgetTestBase {
       $this->assertEquals($value, $output['#items'][$index]['#title']);
       $this->assertEquals('link', $output['#items'][$index]['#type']);
       if ($index === 0 || $index === 3) {
-        $this->assertEquals('is-active', $output['#items'][$index]['#attributes']['class']);
+        $this->assertEquals(['is-active'], $output['#items'][$index]['#attributes']['class']);
       }
       $this->assertEquals(['facet-item'], $output['#items'][$index]['#wrapper_attributes']['class']);
     }
@@ -111,7 +111,7 @@ class LinksWidgetTest extends WidgetTestBase {
       $this->assertEquals($value, $output['#items'][$index]['#title']);
       $this->assertEquals('link', $output['#items'][$index]['#type']);
       if ($index === 1) {
-        $this->assertEquals('is-active', $output['#items'][$index]['#attributes']['class']);
+        $this->assertEquals(['is-active'], $output['#items'][$index]['#attributes']['class']);
       }
       $this->assertEquals(['facet-item'], $output['#items'][$index]['#wrapper_attributes']['class']);
     }
@@ -136,7 +136,7 @@ class LinksWidgetTest extends WidgetTestBase {
       $this->assertEquals($value, $output['#items'][$index]['#title']);
       $this->assertEquals('link', $output['#items'][$index]['#type']);
       if ($index === 1) {
-        $this->assertEquals('is-active', $output['#items'][$index]['#attributes']['class']);
+        $this->assertEquals(['is-active'], $output['#items'][$index]['#attributes']['class']);
       }
       $this->assertEquals(['facet-item'], $output['#items'][$index]['#wrapper_attributes']['class']);
     }
@@ -172,7 +172,7 @@ class LinksWidgetTest extends WidgetTestBase {
       $this->assertEquals($value, $output['#items'][$index]['#title']);
       $this->assertEquals('link', $output['#items'][$index]['#type']);
       if ($index === 1) {
-        $this->assertEquals('is-active', $output['#items'][$index]['#attributes']['class']);
+        $this->assertEquals(['is-active'], $output['#items'][$index]['#attributes']['class']);
         $this->assertEquals(['facet-item', 'facet-item--expanded'], $output['#items'][$index]['#wrapper_attributes']['class']);
       }
       else {
