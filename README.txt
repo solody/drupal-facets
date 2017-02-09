@@ -25,7 +25,9 @@ Before adding a facet, there should be a facet source. Facet sources can be:
 - A page from the search_api_page module.
 
 After adding one of those, you can add a facet on the facets configuration page:
-/admin/config/search/facets
+/admin/config/search/facets, there's an `add facet` link, that links to:
+admin/config/search/facets/add-facet. Use that page to add the facet by
+selecting the correct facet source and field from that source.
 
 If you're using Search API views, make sure to disable views cache when using
 facets for that view.
