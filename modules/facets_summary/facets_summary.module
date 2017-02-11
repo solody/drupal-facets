@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Hook implementations for the facets summary module.
+ */
+
+/**
  * Implements hook_theme().
  */
 function facets_summary_theme($existing, $type, $theme, $path) {

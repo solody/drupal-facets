@@ -161,7 +161,8 @@ function facets_entity_predelete(EntityInterface $entity) {
       if (strpos($plugin_id, 'search_api:' . $entity->id() . '__') !== FALSE) {
         try {
           $facetManager = \Drupal::getContainer()->get('facets.manager');
-        } catch (ServiceNotFoundException $e) {
+        }
+        catch (ServiceNotFoundException $e) {
           \Drupal::logger('facets')->log(RfcLogLevel::DEBUG, 'Facet manager not found on trying to delete a view.');
           return;
         }
