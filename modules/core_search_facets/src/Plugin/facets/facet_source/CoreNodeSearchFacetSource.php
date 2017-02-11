@@ -61,7 +61,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   protected $facetQueryExtender;
 
   /**
-   * The master request.
+   * The clone of the master request.
    *
    * @var \Symfony\Component\HttpFoundation\Request
    */
@@ -86,7 +86,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   public function __construct(array $configuration, $plugin_id, $plugin_definition, QueryTypePluginManager $query_type_plugin_manager, SearchPluginManager $search_manager, Request $request) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
     $this->searchManager = $search_manager;
-    $this->request = $request;
+    $this->request = clone $request;
     $this->setSearchKeys($this->request->query->get('keys'));
   }
 

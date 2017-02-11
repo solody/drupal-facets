@@ -50,7 +50,7 @@ class SearchApiDisplay extends FacetSourcePluginBase {
   protected $searchApiQueryHelper;
 
   /**
-   * The current request.
+   * The clone of the current request.
    *
    * @var \Symfony\Component\HttpFoundation\Request
    */
@@ -79,7 +79,7 @@ class SearchApiDisplay extends FacetSourcePluginBase {
 
     $this->searchApiQueryHelper = $search_results_cache;
     $this->displayPluginManager = $display_plugin_manager;
-    $this->request = $request;
+    $this->request = clone $request;
   }
 
   /**

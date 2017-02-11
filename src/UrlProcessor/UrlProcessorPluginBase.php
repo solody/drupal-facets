@@ -22,10 +22,9 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
   protected $filterKey = 'f';
 
   /**
-   * The current request object.
+   * The clone of the current.
    *
-   * @var Request
-   *  The current request object.
+   * @var \Symfony\Component\HttpFoundation\Request
    */
   protected $request;
 
@@ -52,7 +51,7 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->request = $request;
+    $this->request = clone $request;
 
     if (!isset($configuration['facet'])) {
       throw new InvalidProcessorException("The url processor doesn't have the required 'facet' in the configuration array.");
