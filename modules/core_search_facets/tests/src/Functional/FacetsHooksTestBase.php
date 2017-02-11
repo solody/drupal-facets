@@ -91,6 +91,7 @@ abstract class FacetsHooksTestBase extends BrowserTestBase {
       $node->addTranslation('es', [
         'title' => 'test page' . $i . ' ES',
         'created' => $created_time_es->format('U'),
+        'changed' => ((int) $created_time_es->format('U') + 250),
       ]);
       $node->save();
 
@@ -102,7 +103,7 @@ abstract class FacetsHooksTestBase extends BrowserTestBase {
       'body' => 'test page10',
       'type' => 'page',
       'created' => $created_time->format('U'),
-      'changed' => $created_time_en->format('U'),
+      'changed' => ((int) $created_time->format('U') + 250),
       'langcode' => 'en',
     ));
 
@@ -114,7 +115,7 @@ abstract class FacetsHooksTestBase extends BrowserTestBase {
         'body' => 'test article' . $i,
         'type' => 'article',
         'created' => $created_time->format('U'),
-        'changed' => $created_time_en->format('U'),
+        'changed' => ((int) $created_time->format('U') + 250),
         'langcode' => 'en',
       ));
     }
