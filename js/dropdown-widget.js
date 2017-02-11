@@ -62,7 +62,7 @@
 
       // Replace links with dropdown.
       $ul.after($dropdown).remove();
-      Drupal.attachBehaviors(document, Drupal.settings);
+      Drupal.attachBehaviors($dropdown.parent()[0], Drupal.settings);
     });
   };
 
