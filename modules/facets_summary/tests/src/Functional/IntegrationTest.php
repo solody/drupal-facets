@@ -46,25 +46,6 @@ class IntegrationTest extends FacetsTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function installModulesFromClassProperty(ContainerInterface $container) {
-    // This will just set the Drupal state to include the necessary bundles for
-    // our test entity type. Otherwise, fields from those bundles won't be found
-    // and thus removed from the test index. (We can't do it in setUp(), before
-    // calling the parent method, since the container isn't set up at that
-    // point.)
-    $bundles = array(
-      'entity_test_mulrev_changed' => array('label' => 'Entity Test Bundle'),
-      'item' => array('label' => 'item'),
-      'article' => array('label' => 'article'),
-    );
-    \Drupal::state()->set('entity_test_mulrev_changed.bundles', $bundles);
-
-    parent::installModulesFromClassProperty($container);
-  }
-
-  /**
    * Tests the overall functionality of the Facets summary admin UI.
    */
   public function testFramework() {
@@ -106,4 +87,87 @@ class IntegrationTest extends FacetsTestBase {
     $this->assertFieldChecked('edit-facets-llama-checked');
   }
 
+  /**
+   * Tests with multiple facets.
+   *
+   * Includes a regression test for #2841357
+   */
+  public function testMultipleFacets() {
+    // Create facets.
+    $this->createFacet('Giraffe', 'giraffe', 'keywords');
+    // Clear all the caches between building the 2 facets - because things fail
+    // otherwise.
+    $this->resetAll();
+    $this->createFacet('Llama', 'llama');
+
+    // Add a summary.
+    $values = [
+      'name' => 'Owlß',
+      'id' => 'owl',
+      'facet_source_id' => 'search_api:views_page__search_api_test_view__page_1',
+    ];
+    $this->drupalPostForm('admin/config/search/facets/add-facet-summary', $values, 'Save');
+    $this->drupalPostForm(NULL, [], 'Save');
+
+    // Edit the summary and enable the giraffe's.
+    $summaries = [
+      'facets[giraffe][checked]' => TRUE,
+      'facets[giraffe][label]' => 'Summary giraffe',
+    ];
+    $this->drupalPostForm('admin/config/search/facets/facet-summary/owl/edit', $summaries, 'Save');
+
+    $block = [
+      'region' => 'footer',
+      'id' => str_replace('_', '-', 'owl'),
+      'weight' => 50,
+    ];
+    $block = $this->drupalPlaceBlock('facets_summary_block:owl', $block);
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 5 search results');
+    $this->assertText($block->label());
+    $this->assertFacetBlocksAppear();
+
+    $this->clickLink('apple');
+    $list_items = $this->getSession()
+      ->getPage()
+      ->findById('block-' . $block->id())
+      ->findAll('css', 'li');
+    $this->assertCount(1, $list_items);
+
+    $this->clickLink('item');
+    $list_items = $this->getSession()
+      ->getPage()
+      ->findById('block-' . $block->id())
+      ->findAll('css', 'li');
+    $this->assertCount(1, $list_items);
+
+    // Edit the summary and enable the giraffe's.
+    $summaries = [
+      'facets[giraffe][checked]' => TRUE,
+      'facets[giraffe][label]' => 'Summary giraffe',
+      'facets[llama][checked]' => TRUE,
+      'facets[llama][label]' => 'Summary llama',
+    ];
+    $this->drupalPostForm('admin/config/search/facets/facet-summary/owl/edit', $summaries, 'Save');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 5 search results');
+    $this->assertText($block->label());
+    $this->assertFacetBlocksAppear();
+
+    $this->clickLink('apple');
+    $list_items = $this->getSession()
+      ->getPage()
+      ->findById('block-' . $block->id())
+      ->findAll('css', 'li');
+    $this->assertCount(1, $list_items);
+
+    $this->clickLink('item');
+    $list_items = $this->getSession()
+      ->getPage()
+      ->findById('block-' . $block->id())
+      ->findAll('css', 'li');
+    $this->assertCount(2, $list_items);
+  }
 }
