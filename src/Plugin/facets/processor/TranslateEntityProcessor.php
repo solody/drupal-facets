@@ -101,14 +101,12 @@ class TranslateEntityProcessor extends ProcessorPluginBase implements BuildProce
       /** @var \Drupal\facets\FacetSource\SearchApiFacetSourceInterface $source */
       $index = $source->getIndex();
       $field = $index->getField($field_id);
-      $datasource = $field->getDatasource();
 
-      // Load the field from the entity manager and find the entity type trough
-      // that.
-      $entity_id = $datasource->getEntityTypeId() . '.' . $field_id;
-      $field_storage = $this->entityTypeManager->getStorage('field_storage_config');
-      $field_config = $field_storage->load($entity_id);
-      $entity_type = $field_config->getSetting('target_type');
+      // Determine the target entity type.
+      $entity_type = $field->getDataDefinition()
+        ->getPropertyDefinition('entity')
+        ->getTargetDefinition()
+        ->getEntityTypeId();
     }
 
     // Load all indexed entities of this type.
