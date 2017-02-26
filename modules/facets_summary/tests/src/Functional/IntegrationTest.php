@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\facets_summary\Tests;
+namespace Drupal\Tests\facets_summary\Functional;
 
 use Drupal\Tests\facets\Functional\FacetsTestBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
