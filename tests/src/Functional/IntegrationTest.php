@@ -744,6 +744,32 @@ class IntegrationTest extends FacetsTestBase {
   }
 
   /**
+   * Tests cloning of a facet.
+   */
+  public function testClone() {
+    $id = "western_screech_owl";
+    $name = "Western screech owl";
+    $this->createFacet($name, $id);
+
+    $this->drupalGet('admin/config/search/facets');
+    $this->assertText('Western screech owl');
+    $this->assertLink('Clone facet');
+    $this->clickLink('Clone facet');
+
+    $clone_edit = [
+      'destination_facet_source' => 'search_api:views_block__search_api_test_view__block_1',
+      'name' => 'Eastern screech owl',
+      'id' => 'eastern_screech_owl',
+    ];
+    $this->submitForm($clone_edit, 'Duplicate');
+    $this->assertText('Facet cloned to Eastern screech owl');
+
+    $this->drupalGet('admin/config/search/facets');
+    $this->assertText('Western screech owl');
+    $this->assertText('Eastern screech owl');
+  }
+
+  /**
    * Configures empty behavior option to show a text on empty results.
    *
    * @param string $facet_name

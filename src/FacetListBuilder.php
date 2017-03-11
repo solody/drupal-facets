@@ -45,6 +45,13 @@ class FacetListBuilder extends ConfigEntityListBuilder {
           'url' => $entity->toUrl('settings-form'),
         );
       }
+      if ($entity->access('update') && $entity->hasLinkTemplate('clone-form')) {
+        $operations['clone'] = array(
+          'title' => $this->t('Clone facet'),
+          'weight' => 90,
+          'url' => $entity->toUrl('clone-form'),
+        );
+      }
       if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
         $operations['delete'] = array(
           'title' => $this->t('Delete'),
