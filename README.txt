@@ -5,6 +5,10 @@ CONTENTS OF THIS FILE
  * Configuration
  * FAQ
 
+INTRODUCTION
+------------
+Todo
+
 REQUIREMENTS
 ------------
 No other modules required, we're supporting drupal core as a source for creating
@@ -14,8 +18,8 @@ tested.
 INSTALLATION
 ------------
  * Install as you would normally install a contributed drupal module. See:
-  https://www.drupal.org/docs/8/extending-drupal-8/installing-contributed-modules-find-import-enable-configure-drupal-8
-  for further information.
+   https://drupal.org/documentation/install/modules-themes/modules-7
+   for further information.
 
 CONFIGURATION
 -------------
@@ -54,7 +58,6 @@ further details see: https://www.drupal.org/node/2834730
 
 FAQ
 ---
-
 Q: Why do the facets disappear after a refresh.
 A: We don't support cached views, change the view to disable caching.
 

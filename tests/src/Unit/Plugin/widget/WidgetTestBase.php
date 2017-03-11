@@ -70,6 +70,7 @@ abstract class WidgetTestBase extends UnitTestCase {
       'date' => 'date',
       'string' => 'string',
       'numeric' => 'numeric',
+      'range' => 'range',
     ];
   }
 

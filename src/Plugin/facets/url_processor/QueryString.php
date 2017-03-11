@@ -18,11 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 class QueryString extends UrlProcessorPluginBase {
 
   /**
-   * A string that separates the filters in the query string.
-   */
-  const SEPARATOR = ':';
-
-  /**
    * A string of how to represent the facet in the url.
    *
    * @var string
@@ -77,7 +72,7 @@ class QueryString extends UrlProcessorPluginBase {
         $this->buildUrls($facet, $children);
       }
 
-      $filter_string = $this->urlAlias . self::SEPARATOR . $result->getRawValue();
+      $filter_string = $this->urlAlias . $this->getSeparator() . $result->getRawValue();
       $result_get_params = clone $get_params;
 
       $filter_params = $result_get_params->get($this->filterKey, [], TRUE);
@@ -92,7 +87,7 @@ class QueryString extends UrlProcessorPluginBase {
           // Enable parent id again if exists.
           $parent_ids = $facet->getHierarchyInstance()->getParentIds($result->getRawValue());
           if (isset($parent_ids[0]) && $parent_ids[0]) {
-            $filter_params[] = $this->urlAlias . self::SEPARATOR . $parent_ids[0];
+            $filter_params[] = $this->urlAlias . $this->getSeparator() . $parent_ids[0];
           }
         }
       }
@@ -107,7 +102,7 @@ class QueryString extends UrlProcessorPluginBase {
           $child_ids = $facet->getHierarchyInstance()->getNestedChildIds($result->getRawValue());
           $parents_and_child_ids = array_merge($parent_ids, $child_ids);
           foreach ($parents_and_child_ids as $id) {
-            $filter_params = array_diff($filter_params, [$this->urlAlias . self::SEPARATOR . $id]);
+            $filter_params = array_diff($filter_params, [$this->urlAlias . $this->getSeparator() . $id]);
           }
         }
         // Exclude currently active results from the filter params if we are in
@@ -115,7 +110,7 @@ class QueryString extends UrlProcessorPluginBase {
         if ($facet->getShowOnlyOneResult()) {
           foreach ($results as $result2) {
             if ($result2->isActive()) {
-              $active_filter_string = $this->urlAlias . self::SEPARATOR . $result2->getRawValue();
+              $active_filter_string = $this->urlAlias . $this->getSeparator() . $result2->getRawValue();
               foreach ($filter_params as $key2 => $filter_param2) {
                 if ($filter_param2 == $active_filter_string) {
                   unset($filter_params[$key2]);
@@ -173,13 +168,13 @@ class QueryString extends UrlProcessorPluginBase {
 
     // Explode the active params on the separator.
     foreach ($active_params as $param) {
-      $explosion = explode(self::SEPARATOR, $param);
+      $explosion = explode($this->getSeparator(), $param);
       $key = array_shift($explosion);
       $value = '';
       while (count($explosion) > 0) {
         $value .= array_shift($explosion);
         if (count($explosion) > 0) {
-          $value .= self::SEPARATOR;
+          $value .= $this->getSeparator();
         }
       }
       if (!isset($this->activeFilters[$key])) {

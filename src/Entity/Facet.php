@@ -571,6 +571,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * {@inheritdoc}
    */
+  public function setActiveItems(array $values) {
+    $this->active_values = $values;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFieldIdentifier() {
     return $this->field_identifier;
   }

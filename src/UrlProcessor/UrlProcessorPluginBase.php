@@ -22,7 +22,15 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
   protected $filterKey = 'f';
 
   /**
-   * The clone of the current.
+   * The url separator variable.
+   *
+   * @var string
+   *   The sepatator to use between field and value.
+   */
+  protected $separator;
+
+  /**
+   * The clone of the current request object.
    *
    * @var \Symfony\Component\HttpFoundation\Request
    */
@@ -33,6 +41,13 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
    */
   public function getFilterKey() {
     return $this->filterKey;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSeparator() {
+    return $this->separator;
   }
 
   /**
@@ -64,6 +79,13 @@ abstract class UrlProcessorPluginBase extends ProcessorPluginBase implements Url
     $facet_source_config = $facet->getFacetSourceConfig();
 
     $this->filterKey = $facet_source_config->getFilterKey() ?: 'f';
+
+    // Set the separator to the predefined colon char but override if passed
+    // along as part of the plugin configuration.
+    $this->separator = ':';
+    if (isset($configuration['separator'])) {
+      $this->separator = $configuration['separator'];
+    }
   }
 
   /**

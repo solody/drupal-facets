@@ -20,7 +20,7 @@ class DummyQuery extends UrlProcessorPluginBase {
   /**
    * A string that separates the filters in the query string.
    */
-  const SEPARATOR = '||';
+  protected $separator = '||';
 
   /**
    * A string of how to represent the facet in the url.
@@ -63,7 +63,7 @@ class DummyQuery extends UrlProcessorPluginBase {
 
     /** @var \Drupal\facets\Result\ResultInterface $result */
     foreach ($results as &$result) {
-      $filter_string = $this->urlAlias . self::SEPARATOR . $result->getRawValue();
+      $filter_string = $this->urlAlias . $this->getSeparator() . $result->getRawValue();
       $result_get_params = clone $get_params;
 
       $filter_params = $result_get_params->get($this->filterKey, [], TRUE);
@@ -121,7 +121,7 @@ class DummyQuery extends UrlProcessorPluginBase {
 
     // Explode the active params on the separator.
     foreach ($active_params as $param) {
-      list($key, $value) = explode(self::SEPARATOR, $param);
+      list($key, $value) = explode($this->getSeparator(), $param);
       if (!isset($this->activeFilters[$key])) {
         $this->activeFilters[$key] = [$value];
       }

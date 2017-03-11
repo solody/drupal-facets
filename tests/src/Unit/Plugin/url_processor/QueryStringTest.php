@@ -247,6 +247,23 @@ class QueryStringTest extends UnitTestCase {
   }
 
   /**
+   * Tests that the separator works as expected.
+   */
+  public function testSeparator() {
+    $facet = new Facet([], 'facets_facet');
+    $facet->setFieldIdentifier('test');
+    $facet->setUrlAlias('test');
+    $facet->setFacetSourceId('facet_source__dummy');
+
+    $this->processor = new QueryString(['facet' => $facet, 'separator' => '__'], 'query_string', [], new Request());
+    $results = $this->processor->buildUrls($facet, $this->originalResults);
+
+    foreach ($results as $result) {
+      $this->assertEquals('route:test?f[0]=test__' . $result->getRawValue(), $result->getUrl()->toUriString());
+    }
+  }
+
+  /**
    * Sets up a container.
    */
   protected function setContainer() {
