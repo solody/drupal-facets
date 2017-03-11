@@ -10,7 +10,7 @@ use Drupal\node\Entity\Node;
  *
  * @group facets
  */
-class IntegrationTest extends FacetsHooksTestBase {
+class IntegrationTestCoreSearchBase extends CoreSearchFacetsTestBase {
 
   use BlockTestTrait;
 
@@ -157,12 +157,13 @@ class IntegrationTest extends FacetsHooksTestBase {
     search_update_totals();
 
     $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
+    $this->clickLink('2016 (21)');
     $this->assertFacetLabel('June 2016 (1)');
     $this->clickPartialLink('June 2016');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertFacetLabel('June 3, 2016 (1)');
     $this->clickPartialLink('June 3, 2016');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
