@@ -3,6 +3,7 @@ CONTENTS OF THIS FILE
  * Requirements
  * Installation
  * Configuration
+ * Features
  * FAQ
 
 INTRODUCTION
@@ -11,15 +12,17 @@ Todo
 
 REQUIREMENTS
 ------------
-No other modules required, we're supporting drupal core as a source for creating
-facets. Though we recommend using Search API, as that integration is better
-tested.
+No other modules required, we're supporting drupal core's search as a source for
+creating facets. Though we recommend using Search API, as that integration is
+better tested.
+
 
 INSTALLATION
 ------------
  * Install as you would normally install a contributed drupal module. See:
    https://drupal.org/documentation/install/modules-themes/modules-7
    for further information.
+
 
 CONFIGURATION
 -------------
@@ -35,6 +38,7 @@ selecting the correct facet source and field from that source.
 
 If you're using Search API views, make sure to disable views cache when using
 facets for that view.
+
 
 KNOWN ISSUES
 ------------
@@ -56,10 +60,6 @@ case the raw facet value with the lower value is preferred:
 "Clown" will be cut off due to its higher internal value (entity-id). For
 further details see: https://www.drupal.org/node/2834730
 
-FAQ
----
-Q: Why do the facets disappear after a refresh.
-A: We don't support cached views, change the view to disable caching.
 
 FEATURES
 --------
@@ -125,3 +125,18 @@ A filter is a string with one of the following forms:
   a filter for all negative values.
 - `!`: Filter for items without a value for this field (i.e., the "missing"
   facet).
+
+
+FAQ
+---
+
+Q: Why do the facets disappear after a refresh.
+A: We don't support cached views, change the view to disable caching.
+
+Q: Why doesn't chosen (or similiar javascript dropdown replacement) not work
+with the dropdown widget.
+A: Because the dropdown we create for the widget is created trough javascript,
+the chosen module (and others, probably) doesn't find the select element.
+So the library should be attached to the block in custom code, we haven't done
+this in facets because we don't want to support all possible frameworks.
+See https://www.drupal.org/node/2853121 for more information.
