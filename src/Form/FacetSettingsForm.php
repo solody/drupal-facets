@@ -9,6 +9,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\facets\FacetInterface;
+use Drupal\facets\FacetSource\FacetSourcePluginInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginManager;
 use Drupal\facets\Processor\ProcessorPluginManager;
 use Drupal\views\Views;
@@ -308,21 +309,28 @@ class FacetSettingsForm extends EntityForm {
     $facet->save();
 
     // Ensure that the caching of the view display is disabled, so the search
-    // correctly returns the facets. Only apply this when the facet source is
-    // actually a view by exploding on :.
-    list($type,) = explode(':', $facet_source_id);
+    // correctly returns the facets. First, get the plugin definition of the
+    // Search API display.
+    if (isset($facet_source) && $facet_source instanceof FacetSourcePluginInterface) {
+      $facet_source_display_id = $facet_source->getPluginDefinition()['display_id'];
+      $search_api_display = \Drupal::service('plugin.manager.search_api.display')
+        ->createInstance($facet_source_display_id);
+      $search_api_display_definition = $search_api_display->getPluginDefinition();
 
-    if ($type === 'search_api_views') {
-      list(, $view_id, $display) = explode(':', $facet_source_id);
-    }
+      // Get the view of the Search API display and disable caching.
+      if (!empty($search_api_display_definition['view_id'])) {
+        $view_id = $search_api_display_definition['view_id'];
+        $view_display = $search_api_display_definition['view_display'];
 
-    if (isset($view_id)) {
-      $view = Views::getView($view_id);
-      $view->setDisplay($display);
-      $view->display_handler->overrideOption('cache', ['type' => 'none']);
-      $view->save();
+        $view = Views::getView($view_id);
+        $view->setDisplay($view_display);
+        $view->display_handler->overrideOption('cache', ['type' => 'none']);
+        $view->save();
 
-      $display_plugin = $view->getDisplay()->getPluginId();
+        drupal_set_message($this->t('Caching of view %view has been disabled.', ['%view' => $view->storage->label()]));
+
+        $display_plugin = $view->getDisplay()->getPluginId();
+      }
     }
 
     if ($is_new) {
@@ -332,7 +340,7 @@ class FacetSettingsForm extends EntityForm {
         $form_state->setRedirect('entity.facets_facet.edit_form', ['facets_facet' => $facet->id()]);
       }
 
-      if (isset($view_id) && $display_plugin === 'block') {
+      if (isset($view_id, $display_plugin) && $display_plugin === 'block') {
         $facet->setOnlyVisibleWhenFacetSourceIsVisible(FALSE);
       }
     }

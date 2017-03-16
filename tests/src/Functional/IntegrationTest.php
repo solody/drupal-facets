@@ -5,6 +5,7 @@ namespace Drupal\Tests\facets\Functional;
 use Drupal\Core\Url;
 use Drupal\facets\Entity\Facet;
 use Drupal\views\Entity\View;
+use Drupal\views\Views;
 
 /**
  * Tests the overall functionality of the Facets admin UI.
@@ -767,6 +768,34 @@ class IntegrationTest extends FacetsTestBase {
     $this->drupalGet('admin/config/search/facets');
     $this->assertText('Western screech owl');
     $this->assertText('Eastern screech owl');
+  }
+
+  /**
+   * Check that the disabling of the cache works.
+   */
+  public function testViewsCacheDisable() {
+    // Load the view, verify cache settings.
+    $view = Views::getView('search_api_test_view');
+    $view->setDisplay('page_1');
+    $current_cache = $view->display_handler->getOption('cache');
+    $this->assertEquals('none', $current_cache['type']);
+    $view->display_handler->setOption('cache', ['type' => 'tag']);
+    $view->save();
+    $current_cache = $view->display_handler->getOption('cache');
+    $this->assertEquals('tag', $current_cache['type']);
+
+    // Create a facet and check for the cache disabled message.
+    $id = "western_screech_owl";
+    $name = "Western screech owl";
+    $this->createFacet($name, $id);
+    $this->drupalPostForm('admin/config/search/facets/' . $id . '/settings', [], 'Save');
+    $this->assertSession()->pageTextContains('Caching of view Search API Test Fulltext search view has been disabled.');
+
+    // Check the view's cache settings again to see if they've been updated.
+    $view = Views::getView('search_api_test_view');
+    $view->setDisplay('page_1');
+    $current_cache = $view->display_handler->getOption('cache');
+    $this->assertEquals('none', $current_cache['type']);
   }
 
   /**

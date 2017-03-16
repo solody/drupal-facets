@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\facets\FacetManager\DefaultFacetManager;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\facets\FacetSource\FacetSourcePluginInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginManager;
 use Drupal\facets_summary\Processor\ProcessorPluginManager;
 use Drupal\Core\Routing\UrlGeneratorInterface;
@@ -206,18 +207,27 @@ class FacetsSummarySettingsForm extends EntityForm {
     $facets_summary->save();
 
     // Ensure that the caching of the view display is disabled, so the search
-    // correctly returns the facets. Only apply this when the facet source is
-    // actually a view by exploding on :.
+    // correctly returns the facets. First, get the plugin definition of the
+    // Search API display.
     $facet_source_id = $form_state->getValue('facet_source_id');
-    list($type,) = explode(':', $facet_source_id);
+    $facet_source = $this->facetSourcePluginManager->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
+    if (isset($facet_source) && $facet_source instanceof FacetSourcePluginInterface) {
+      $facet_source_display_id = $facet_source->getPluginDefinition()['display_id'];
+      $search_api_display = \Drupal::service('plugin.manager.search_api.display')
+        ->createInstance($facet_source_display_id);
+      $search_api_display_definition = $search_api_display->getPluginDefinition();
 
-    if ($type === 'search_api_views') {
-      list(, $view_id, $display) = explode(':', $facet_source_id);
-      if (isset($view_id)) {
+      // Get the view of the Search API display and disable caching.
+      if (!empty($search_api_display_definition['view_id'])) {
+        $view_id = $search_api_display_definition['view_id'];
+        $view_display = $search_api_display_definition['view_display'];
+
         $view = Views::getView($view_id);
-        $view->setDisplay($display);
+        $view->setDisplay($view_display);
         $view->display_handler->overrideOption('cache', ['type' => 'none']);
         $view->save();
+
+        drupal_set_message($this->t('Caching of view %view has been disabled.', ['%view' => $view->storage->label()]));
       }
     }
 
