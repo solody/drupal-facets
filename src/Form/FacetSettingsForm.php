@@ -326,7 +326,8 @@ class FacetSettingsForm extends EntityForm {
     // Clear Drupal cache for blocks to reflect recent changes.
     $this->blockManager->clearCachedDefinitions();
 
-    if (!\Drupal::moduleHandler()->moduleExists('search_api')) {
+    list($type,) = explode(':', $facet_source_id);
+    if ($type !== 'search_api') {
       return $facet;
     }
 

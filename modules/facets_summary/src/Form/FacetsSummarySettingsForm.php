@@ -242,15 +242,15 @@ class FacetsSummarySettingsForm extends EntityForm {
 
     // Clear Drupal cache for blocks to reflect recent changes.
     $this->blockManager->clearCachedDefinitions();
-
-    if (!\Drupal::moduleHandler()->moduleExists('search_api')) {
+    $facet_source_id = $form_state->getValue('facet_source_id');
+    list($type,) = explode(':', $facet_source_id);
+    if ($type !== 'search_api') {
       return $facets_summary;
     }
 
     // Ensure that the caching of the view display is disabled, so the search
     // correctly returns the facets. First, get the plugin definition of the
     // Search API display.
-    $facet_source_id = $form_state->getValue('facet_source_id');
     $facet_source = $this->facetSourcePluginManager->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
     if (isset($facet_source) && $facet_source instanceof FacetSourcePluginInterface) {
       $facet_source_display_id = $facet_source->getPluginDefinition()['display_id'];
