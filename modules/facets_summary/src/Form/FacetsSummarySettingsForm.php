@@ -206,31 +206,6 @@ class FacetsSummarySettingsForm extends EntityForm {
     $is_new = $facets_summary->isNew();
     $facets_summary->save();
 
-    // Ensure that the caching of the view display is disabled, so the search
-    // correctly returns the facets. First, get the plugin definition of the
-    // Search API display.
-    $facet_source_id = $form_state->getValue('facet_source_id');
-    $facet_source = $this->facetSourcePluginManager->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
-    if (isset($facet_source) && $facet_source instanceof FacetSourcePluginInterface) {
-      $facet_source_display_id = $facet_source->getPluginDefinition()['display_id'];
-      $search_api_display = \Drupal::service('plugin.manager.search_api.display')
-        ->createInstance($facet_source_display_id);
-      $search_api_display_definition = $search_api_display->getPluginDefinition();
-
-      // Get the view of the Search API display and disable caching.
-      if (!empty($search_api_display_definition['view_id'])) {
-        $view_id = $search_api_display_definition['view_id'];
-        $view_display = $search_api_display_definition['view_display'];
-
-        $view = Views::getView($view_id);
-        $view->setDisplay($view_display);
-        $view->display_handler->overrideOption('cache', ['type' => 'none']);
-        $view->save();
-
-        drupal_set_message($this->t('Caching of view %view has been disabled.', ['%view' => $view->storage->label()]));
-      }
-    }
-
     if ($is_new) {
       if ($this->moduleHandler->moduleExists('block')) {
         $message = $this->t('Facet Summary %name has been created. Go to the <a href=":block_overview">Block overview page</a> to place the new block in the desired region.', ['%name' => $facets_summary->getName(), ':block_overview' => $this->urlGenerator->generateFromRoute('block.admin_display')]);
@@ -267,6 +242,35 @@ class FacetsSummarySettingsForm extends EntityForm {
 
     // Clear Drupal cache for blocks to reflect recent changes.
     $this->blockManager->clearCachedDefinitions();
+
+    if (!\Drupal::moduleHandler()->moduleExists('search_api')) {
+      return $facets_summary;
+    }
+
+    // Ensure that the caching of the view display is disabled, so the search
+    // correctly returns the facets. First, get the plugin definition of the
+    // Search API display.
+    $facet_source_id = $form_state->getValue('facet_source_id');
+    $facet_source = $this->facetSourcePluginManager->createInstance($facet_source_id, ['facet' => $this->getEntity()]);
+    if (isset($facet_source) && $facet_source instanceof FacetSourcePluginInterface) {
+      $facet_source_display_id = $facet_source->getPluginDefinition()['display_id'];
+      $search_api_display = \Drupal::service('plugin.manager.search_api.display')
+        ->createInstance($facet_source_display_id);
+      $search_api_display_definition = $search_api_display->getPluginDefinition();
+
+      // Get the view of the Search API display and disable caching.
+      if (!empty($search_api_display_definition['view_id'])) {
+        $view_id = $search_api_display_definition['view_id'];
+        $view_display = $search_api_display_definition['view_display'];
+
+        $view = Views::getView($view_id);
+        $view->setDisplay($view_display);
+        $view->display_handler->overrideOption('cache', ['type' => 'none']);
+        $view->save();
+
+        drupal_set_message($this->t('Caching of view %view has been disabled.', ['%view' => $view->storage->label()]));
+      }
+    }
 
     return $facets_summary;
   }

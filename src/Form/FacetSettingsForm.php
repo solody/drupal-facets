@@ -308,6 +308,28 @@ class FacetSettingsForm extends EntityForm {
     }
     $facet->save();
 
+    if ($is_new) {
+      if ($this->moduleHandler->moduleExists('block')) {
+        $message = $this->t('Facet %name has been created. Go to the <a href=":block_overview">Block overview page</a> to place the new block in the desired region.', ['%name' => $facet->getName(), ':block_overview' => $this->urlGenerator->generateFromRoute('block.admin_display')]);
+        drupal_set_message($message);
+        $form_state->setRedirect('entity.facets_facet.edit_form', ['facets_facet' => $facet->id()]);
+      }
+
+      if (isset($view_id, $display_plugin) && $display_plugin === 'block') {
+        $facet->setOnlyVisibleWhenFacetSourceIsVisible(FALSE);
+      }
+    }
+    else {
+      drupal_set_message($this->t('Facet %name has been updated.', ['%name' => $facet->getName()]));
+    }
+
+    // Clear Drupal cache for blocks to reflect recent changes.
+    $this->blockManager->clearCachedDefinitions();
+
+    if (!\Drupal::moduleHandler()->moduleExists('search_api')) {
+      return $facet;
+    }
+
     // Ensure that the caching of the view display is disabled, so the search
     // correctly returns the facets. First, get the plugin definition of the
     // Search API display.
@@ -328,28 +350,8 @@ class FacetSettingsForm extends EntityForm {
         $view->save();
 
         drupal_set_message($this->t('Caching of view %view has been disabled.', ['%view' => $view->storage->label()]));
-
-        $display_plugin = $view->getDisplay()->getPluginId();
       }
     }
-
-    if ($is_new) {
-      if ($this->moduleHandler->moduleExists('block')) {
-        $message = $this->t('Facet %name has been created. Go to the <a href=":block_overview">Block overview page</a> to place the new block in the desired region.', ['%name' => $facet->getName(), ':block_overview' => $this->urlGenerator->generateFromRoute('block.admin_display')]);
-        drupal_set_message($message);
-        $form_state->setRedirect('entity.facets_facet.edit_form', ['facets_facet' => $facet->id()]);
-      }
-
-      if (isset($view_id, $display_plugin) && $display_plugin === 'block') {
-        $facet->setOnlyVisibleWhenFacetSourceIsVisible(FALSE);
-      }
-    }
-    else {
-      drupal_set_message($this->t('Facet %name has been updated.', ['%name' => $facet->getName()]));
-    }
-
-    // Clear Drupal cache for blocks to reflect recent changes.
-    $this->blockManager->clearCachedDefinitions();
 
     return $facet;
   }
