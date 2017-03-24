@@ -8,6 +8,7 @@ use Drupal\Core\Url;
 use Drupal\facets\Exception\InvalidQueryTypeException;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginBase;
+use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
 use Drupal\facets\QueryType\QueryTypePluginManager;
 use Drupal\search_api\Backend\BackendInterface;
 use Drupal\search_api\Display\DisplayPluginManager;
@@ -26,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   deriver = "Drupal\facets\Plugin\facets\facet_source\SearchApiDisplayDeriver"
  * )
  */
-class SearchApiDisplay extends FacetSourcePluginBase {
+class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSourceInterface {
 
   /**
    * The search index the query should is executed on.
@@ -311,12 +312,9 @@ class SearchApiDisplay extends FacetSourcePluginBase {
   }
 
   /**
-   * Retrieves the Search API display plugin associated with this facet source.
-   *
-   * @return \Drupal\search_api\Display\DisplayInterface
-   *   The Search API display plugin associated with this facet source.
+   * {@inheritdoc}
    */
-  protected function getDisplay() {
+  public function getDisplay() {
     return $this->displayPluginManager
       ->createInstance($this->pluginDefinition['display_id']);
   }
