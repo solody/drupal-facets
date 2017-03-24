@@ -37,17 +37,26 @@ function facets_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_theme().
  */
 function facets_theme($existing, $type, $theme, $path) {
-  $result_item_variables = [
-    'variables' => [
-      'value' => '',
-      'show_count' => FALSE,
-      'count' => NULL,
-      'is_active' => FALSE,
-    ],
-  ];
-
   return [
-    'facets_result_item' => $result_item_variables,
+    'facets_result_item' => [
+      'variables' => [
+        'value' => '',
+        'show_count' => FALSE,
+        'count' => NULL,
+        'is_active' => FALSE,
+      ],
+    ],
+    'facets_item_list' => [
+      'variables' => [
+        'items' => [],
+        'title' => '',
+        'list_type' => 'ul',
+        'wrapper_attributes' => [],
+        'attributes' => [],
+        'empty' => NULL,
+        'context' => [],
+      ],
+    ],
   ];
 }
 
@@ -178,4 +187,27 @@ function facets_entity_predelete(EntityInterface $entity) {
     // show stale data.
     $facet_source_plugin_manager->clearCachedDefinitions();
   }
+}
+
+/**
+ * Prepares variables for facets item list templates.
+ *
+ * Default template: facets-item-list.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - items: An array of items to be displayed in the list. Each item can be
+ *     either a string or a render array. If #type, #theme, or #markup
+ *     properties are not specified for child render arrays, they will be
+ *     inherited from the parent list, allowing callers to specify larger
+ *     nested lists without having to explicitly specify and repeat the
+ *     render properties for all nested child lists.
+ *   - title: A title to be prepended to the list.
+ *   - list_type: The type of list to return (e.g. "ul", "ol").
+ *   - wrapper_attributes: HTML attributes to be applied to the list wrapper.
+ *
+ * @see https://www.drupal.org/node/1842756
+ */
+function facets_preprocess_facets_item_list(&$variables) {
+  template_preprocess_item_list($variables);
 }
