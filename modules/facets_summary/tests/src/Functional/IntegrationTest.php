@@ -88,6 +88,7 @@ class IntegrationTest extends FacetsTestBase {
     $this->drupalPostForm(NULL, ['facets[llama][checked]' => TRUE], 'Save');
     $this->assertFieldChecked('edit-facets-llama-checked');
 
+    $this->configureShowCountProcessor();
     $this->configureResetFacetsProcessor();
   }
 
@@ -174,6 +175,7 @@ class IntegrationTest extends FacetsTestBase {
       ->findAll('css', 'li');
     $this->assertCount(2, $list_items);
 
+    $this->checkShowCountProcessor();
     $this->checkResetFacetsProcessor();
   }
 
@@ -210,6 +212,16 @@ class IntegrationTest extends FacetsTestBase {
   }
 
   /**
+   * Tests configuring show_count processor.
+   */
+  protected function configureShowCountProcessor() {
+    $this->assertSession()->checkboxNotChecked('edit-facets-summary-settings-show-count-status');
+    $this->drupalPostForm(NULL, ['facets_summary_settings[show_count][status]' => TRUE], 'Save');
+    $this->assertSession()->checkboxChecked('edit-facets-summary-settings-show-count-status');
+    $this->assertSession()->pageTextContains(t('Facets Summary Owl has been updated.'));
+  }
+
+  /**
    * Tests configuring reset facets processor.
    */
   protected function configureResetFacetsProcessor() {
@@ -222,6 +234,55 @@ class IntegrationTest extends FacetsTestBase {
     $this->drupalPostForm(NULL, ['facets_summary_settings[reset_facets][settings][link_text]' => 'Reset facets'], 'Save');
     $this->assertSession()->pageTextContains(t('Facets Summary Owl has been updated.'));
     $this->assertSession()->fieldValueEquals('facets_summary_settings[reset_facets][settings][link_text]', 'Reset facets');
+  }
+
+  /**
+   * Tests show_count processor.
+   */
+  protected function checkShowCountProcessor() {
+    // Create new facets summary.
+    FacetsSummary::create([
+      'id' => 'show_count',
+      'name' => 'Show count summary',
+      'facet_source_id' => 'search_api:views_page__search_api_test_view__page_1',
+      'facets' => [
+        'giraffe' => [
+          'checked' => 1,
+          'label' => 'Giraffe',
+          'separator' => ',',
+          'weight' => 0,
+          'show_count' => 0,
+        ],
+        'llama' => [
+          'checked' => 1,
+          'label' => 'Llama',
+          'separator' => ',',
+          'weight' => 0,
+          'show_count' => 0,
+        ],
+      ],
+      'processor_configs' => [
+        'show_count' => [
+          'processor_id' => 'show_count',
+          'weights' => ['build' => -10],
+        ],
+      ],
+    ])->save();
+
+    // Clear the cache after the new facet summary entity was created.
+    $this->resetAll();
+
+    // Place a block and test show_count processor.
+    $this->drupalPlaceBlock('facets_summary_block:show_count', ['region' => 'footer', 'id' => 'show-count']);
+    $this->drupalGet('search-api-test-fulltext');
+
+    $this->assertSession()->pageTextNotContains('5 results found');
+
+    $this->clickLink('apple');
+    $this->assertSession()->pageTextContains('2 results found');
+
+    $this->clickLink('item');
+    $this->assertSession()->pageTextContains('1 result found');
   }
 
   /**
