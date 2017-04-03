@@ -578,7 +578,7 @@ class FacetForm extends EntityForm {
     // Only widgets that return an array can work with rest facet sources, so if
     // the user has selected another widget, we should point them to their
     // misconfiguration.
-    if ($facet->getFacetSource()->getDisplay() instanceof \Drupal\search_api\Plugin\search_api\display\ViewsRestDisplay) {
+    if ($facet->getFacetSource()->getDisplay() instanceof \Drupal\search_api\Plugin\search_api\display\ViewsRest) {
       if (strpos($values['widget'], 'array') === FALSE) {
         $form_state->setErrorByName('widget', $this->t('The Facet source is a Rest export. Please select a raw widget.'));
       }
