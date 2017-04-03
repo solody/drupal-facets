@@ -116,14 +116,14 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
    * {@inheritdoc}
    */
   public function getPath() {
-    // The implementation in search api tells us that this is a url object only
-    // if a path is defined, and null if that isn't done. This means that we
-    // have to check for this + create our own Url object if that's needed.
-    if ($this->getDisplay()->getUrl() instanceof Url) {
-      return $this->getDisplay()->getUrl();
+    // The implementation in search api tells us that this is a base path only
+    // if a path is defined, and false if that isn't done. This means that we
+    // have to check for this + create our own uri if that's needed.
+    if ($this->getDisplay()->getPath()) {
+      return $this->getDisplay()->getPath();
     }
 
-    return Url::createFromRequest($this->request);
+    return \Drupal::service('path.current')->getPath();
   }
 
   /**
