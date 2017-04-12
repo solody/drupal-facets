@@ -31,8 +31,10 @@ function facets_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     case 'facets.overview':
-      return t('Below is a list of facets grouped by facetsources they are associated with. A facetsource is the instance where the facet does the actual filtering, for example a View on a Search API index.');
-
+      $output = '';
+      $output .= '<p>' . t('Below is a list of facets grouped by facetsources they are associated with. A facetsource is the instance where the facet does the actual filtering, for example a View on a Search API index.') . '</p>';
+      $output .= '<p>' . t('The facets weight can be changed with drag and drop withing the same facet source. Although you can drag and drop a facet under any facet source, this change will not be performed on save.') . '</p>';
+      return $output;
   }
 }
 
