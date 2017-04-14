@@ -256,7 +256,7 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
 
     // If the facet source is not loaded, or the facet source doesn't have
     // breadcrumbs enabled, don't do anything.
-    if (!($facet_source && $facet_source->getBreadcrumbSettings()['active'])) {
+    if (!($facet_source && !empty($facet_source->getBreadcrumbSettings()['active']))) {
       continue;
     }
 
