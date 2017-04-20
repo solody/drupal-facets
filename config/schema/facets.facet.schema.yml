@@ -91,11 +91,3 @@ facets.facet.*:
               label: 'The processor''s weight for this stage'
           settings:
             type: plugin.plugin_configuration.facets_processor.[%parent.processor_id]
-
-condition.plugin.other_facet:
-  type: condition.plugin
-  mapping:
-    facet_value:
-      type: string
-    facets:
-      type: string
