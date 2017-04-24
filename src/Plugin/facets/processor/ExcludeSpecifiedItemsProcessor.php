@@ -13,7 +13,7 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  * @FacetsProcessor(
  *   id = "exclude_specified_items",
  *   label = @Translation("Exclude specified items"),
- *   description = @Translation("Excludes items by node id or title."),
+ *   description = @Translation("Exclude items depending on their raw or display value (such as node IDs or titles)."),
  *   stages = {
  *     "build" = 50
  *   }

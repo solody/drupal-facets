@@ -13,7 +13,7 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  * @FacetsProcessor(
  *   id = "count_limit",
  *   label = @Translation("Count limit"),
- *   description = @Translation("Show or hide facets with based on item count."),
+ *   description = @Translation("Show or hide depending on the number of results."),
  *   stages = {
  *     "build" = 50
  *   }

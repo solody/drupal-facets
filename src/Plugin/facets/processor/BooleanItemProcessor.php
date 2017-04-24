@@ -13,7 +13,7 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  * @FacetsProcessor(
  *   id = "boolean_item",
  *   label = @Translation("Boolean item label"),
- *   description = @Translation("Fields that are boolean can use this processor to show the configured On/Off values instead of values 0,1"),
+ *   description = @Translation("Display configurable On/Off labels instead 1/0 values for boolean fields."),
  *   stages = {
  *     "build" = 35
  *   }
@@ -51,7 +51,7 @@ class BooleanItemProcessor extends ProcessorPluginBase implements BuildProcessor
       '#title' => $this->t('On value'),
       '#type' => 'textfield',
       '#default_value' => !is_null($config) ? $config->getConfiguration()['on_value'] : $this->defaultConfiguration()['on_value'],
-      '#description' => $this->t('Set the display value for "On" facet result.'),
+      '#description' => $this->t('Use this label instead of <em>0</em> for the <em>On</em> or <em>True</em> value.'),
       '#states' => [
         'required' => ['input[name="facet_settings[boolean_item][status]"' => ['checked' => TRUE]],
       ],
@@ -61,7 +61,7 @@ class BooleanItemProcessor extends ProcessorPluginBase implements BuildProcessor
       '#title' => $this->t('Off value'),
       '#type' => 'textfield',
       '#default_value' => !is_null($config) ? $config->getConfiguration()['off_value'] : $this->defaultConfiguration()['off_value'],
-      '#description' => $this->t('Set the display value for "Off" facet result.'),
+      '#description' => $this->t('Use this label instead of <em>1</em> for the <em>Off</em> or <em>False</em> value.'),
       '#states' => [
         'required' => ['input[name="facet_settings[boolean_item][status]"' => ['checked' => TRUE]],
       ],

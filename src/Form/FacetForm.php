@@ -320,23 +320,23 @@ class FacetForm extends EntityForm {
     $form['facet_settings']['only_visible_when_facet_source_is_visible'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Hide facet when facet source is not rendered'),
-      '#description' => $this->t('When checked, this facet will only be rendered when the facet source is rendered.  If you want to show facets on other pages too, you need to uncheck this setting.'),
+      '#description' => $this->t('Only display the facet if the facet source is rendered. If you want to display the facets on other pages too, you need to uncheck this setting.'),
       '#default_value' => $widget->isPropertyRequired('only_visible_when_facet_source_is_visible', 'settings') ?: $facet->getOnlyVisibleWhenFacetSourceIsVisible(),
       '#disabled' => $widget->isPropertyRequired('only_visible_when_facet_source_is_visible', 'settings') ?: 0,
     ];
 
     $form['facet_settings']['show_only_one_result'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Make sure only one result can be shown.'),
-      '#description' => $this->t('When checked, this will make sure that only one result can be selected for this facet at one time.'),
+      '#title' => $this->t('Ensure that only one result can be displayed'),
+      '#description' => $this->t('Check this to ensure that only <em>one</em> result at a time can be selected for this facet.'),
       '#default_value' => $widget->isPropertyRequired('show_only_one_result', 'settings') ?: $facet->getShowOnlyOneResult(),
       '#disabled' => $widget->isPropertyRequired('show_only_one_result', 'settings') ?: 0,
     ];
 
     $form['facet_settings']['url_alias'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Url alias'),
-      '#description' => $this->t('This will appear in the URL to identify this facet. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed.'),
+      '#title' => $this->t('URL alias'),
+      '#description' => $this->t('The alias appears in the URL to identify this facet. It cannot be blank. Allowed are only letters, digits and the following characters: dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~").'),
       '#default_value' => $facet->getUrlAlias(),
       '#maxlength' => 50,
       '#required' => TRUE,
@@ -348,7 +348,7 @@ class FacetForm extends EntityForm {
       '#title' => $this->t('Empty facet behavior'),
       '#default_value' => $empty_behavior_config['behavior'] ?: 'none',
       '#options' => ['none' => $this->t('Do not display facet'), 'text' => $this->t('Display text')],
-      '#description' => $this->t('The action to take when a facet has no items.'),
+      '#description' => $this->t('Take this action if a facet has no items.'),
       '#required' => TRUE,
     ];
     $form['facet_settings']['empty_behavior_container'] = [
@@ -392,7 +392,7 @@ class FacetForm extends EntityForm {
     $form['facet_settings']['exclude'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Exclude'),
-      '#description' => $this->t('Make the search exclude selected facets, instead of restricting it to them.'),
+      '#description' => $this->t('Exclude the selected facets from the search result instead of restricting it to them.'),
       '#default_value' => $facet->getExclude(),
     ];
 
@@ -445,7 +445,7 @@ class FacetForm extends EntityForm {
       '#type' => 'number',
       '#title' => $this->t('Minimum count'),
       '#default_value' => $facet->getMinCount(),
-      '#description' => $this->t('The minimum amount a result needs to have for it to show up in the results.'),
+      '#description' => $this->t('Only display the results if there is this minimum amount of results.'),
       '#maxlength' => 4,
       '#required' => TRUE,
     ];
@@ -593,10 +593,10 @@ class FacetForm extends EntityForm {
     // Validate url alias.
     $url_alias = $form_state->getValue(['facet_settings', 'url_alias']);
     if ($url_alias == 'page') {
-      $form_state->setErrorByName('url_alias', $this->t('This url alias is not allowed.'));
+      $form_state->setErrorByName('url_alias', $this->t('This URL alias is not allowed.'));
     }
     elseif (preg_match('/[^a-zA-Z0-9_~\.\-]/', $url_alias)) {
-      $form_state->setErrorByName('url_alias', $this->t('Url alias has illegal characters.'));
+      $form_state->setErrorByName('url_alias', $this->t('The URL alias contains characters that are not allowed.'));
     }
     // @todo: validate if url_alias is already used by another facet with the
     // same facet source.
