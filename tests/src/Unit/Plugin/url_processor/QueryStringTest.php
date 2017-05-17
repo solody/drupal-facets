@@ -147,7 +147,7 @@ class QueryStringTest extends UnitTestCase {
     /** @var \Drupal\facets\Result\ResultInterface $r */
     foreach ($results as $r) {
       $this->assertInstanceOf('\Drupal\facets\Result\ResultInterface', $r);
-      $this->assertEquals('route:test?f[0]=test%3A' . $r->getRawValue(), $r->getUrl()->toUriString());
+      $this->assertEquals('route:test?f%5B0%5D=test%3A' . $r->getRawValue(), $r->getUrl()->toUriString());
     }
   }
 
@@ -173,10 +173,10 @@ class QueryStringTest extends UnitTestCase {
     foreach ($results as $k => $r) {
       $this->assertInstanceOf('\Drupal\facets\Result\ResultInterface', $r);
       if ($k === 2) {
-        $this->assertEquals('route:test?f[0]=king%3Akong', $r->getUrl()->toUriString());
+        $this->assertEquals('route:test?f%5B0%5D=king%3Akong', $r->getUrl()->toUriString());
       }
       else {
-        $this->assertEquals('route:test?f[0]=king%3Akong&f[1]=test%3A' . $r->getRawValue(), $r->getUrl()->toUriString());
+        $this->assertEquals('route:test?f%5B0%5D=king%3Akong&f%5B1%5D=test%3A' . $r->getRawValue(), $r->getUrl()->toUriString());
       }
     }
   }
@@ -197,9 +197,9 @@ class QueryStringTest extends UnitTestCase {
     $this->processor = new QueryString(['facet' => $facet], 'query_string', [], new Request());
     $results = $this->processor->buildUrls($facet, $this->originalResults);
 
-    $this->assertEquals('route:test?f[0]=test%3A' . $results[0]->getRawValue(), $results[0]->getUrl()->toUriString());
-    $this->assertEquals('route:test?f[0]=test%3A' . $results[3]->getRawValue(), $results[3]->getUrl()->toUriString());
-    $this->assertEquals('route:test?f[0]=test%3A' . $results[4]->getRawValue(), $results[4]->getUrl()->toUriString());
+    $this->assertEquals('route:test?f%5B0%5D=test%3A' . $results[0]->getRawValue(), $results[0]->getUrl()->toUriString());
+    $this->assertEquals('route:test?f%5B0%5D=test%3A' . $results[3]->getRawValue(), $results[3]->getUrl()->toUriString());
+    $this->assertEquals('route:test?f%5B0%5D=test%3A' . $results[4]->getRawValue(), $results[4]->getUrl()->toUriString());
     $this->assertEquals('route:test', $results[1]->getUrl()->toUriString());
     $this->assertEquals('route:test', $results[2]->getUrl()->toUriString());
   }
@@ -240,7 +240,7 @@ class QueryStringTest extends UnitTestCase {
     /** @var \Drupal\facets\Result\ResultInterface $r */
     foreach ($results as $r) {
       $this->assertInstanceOf('\Drupal\facets\Result\ResultInterface', $r);
-      $this->assertEquals('route:test?ab[0]=test%3A' . $r->getRawValue(), $r->getUrl()->toUriString());
+      $this->assertEquals('route:test?ab%5B0%5D=test%3A' . $r->getRawValue(), $r->getUrl()->toUriString());
     }
 
   }
@@ -258,7 +258,7 @@ class QueryStringTest extends UnitTestCase {
     $results = $this->processor->buildUrls($facet, $this->originalResults);
 
     foreach ($results as $result) {
-      $this->assertEquals('route:test?f[0]=test__' . $result->getRawValue(), $result->getUrl()->toUriString());
+      $this->assertEquals('route:test?f%5B0%5D=test__' . $result->getRawValue(), $result->getUrl()->toUriString());
     }
   }
 
