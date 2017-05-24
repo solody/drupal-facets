@@ -171,6 +171,38 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
   }
 
   /**
+   * Tests sorting of hierarchy.
+   */
+  public function testHierarchySorting() {
+    // Expand the hierarchy and verify that all items are visible initially.
+    $edit = [
+      'facet_settings[expand_hierarchy]' => '1',
+      'facet_settings[use_hierarchy]' => '1',
+      'facet_settings[translate_entity][status]' => '1',
+      'facet_sorting[count_widget_order][status]' => '0',
+      'facet_sorting[active_widget_order][status]' => '0',
+    ];
+    $this->drupalPostForm($this->facetEditPage, $edit, 'Save');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertStringPosition('Parent 1', 'Parent 2');
+    $this->assertStringPosition('Child 1', 'Child 2');
+    $this->assertStringPosition('Child 2', 'Child 3');
+    $this->assertStringPosition('Child 3', 'Child 4');
+
+    $edit = [
+      'facet_sorting[display_value_widget_order][settings][sort]' => 'DESC',
+    ];
+    $this->drupalPostForm($this->facetEditPage, $edit, 'Save');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertStringPosition('Parent 2', 'Parent 1');
+    $this->assertStringPosition('Child 4', 'Child 3');
+    $this->assertStringPosition('Child 3', 'Child 2');
+    $this->assertStringPosition('Child 2', 'Child 1');
+  }
+
+  /**
    * Verify the "Enable parent when child gets disabled" option is working.
    */
   protected function verifyEnableParentWhenChildGetsDisabledOption() {

@@ -330,18 +330,11 @@ class DefaultFacetManager {
     foreach ($facet->getProcessorsByStage(ProcessorInterface::STAGE_SORT) as $processor) {
       $active_sort_processors[] = $processor;
     }
-    uasort($results, function ($a, $b) use ($active_sort_processors) {
-      $return = 0;
-      foreach ($active_sort_processors as $sort_processor) {
-        if ($return = $sort_processor->sortResults($a, $b)) {
-          if ($sort_processor->getConfiguration()['sort'] == 'DESC') {
-            $return *= -1;
-          }
-          break;
-        }
-      }
-      return $return;
-    });
+
+    // Sort the actual results if we have enabled sort processors.
+    if (!empty($active_sort_processors)) {
+      $results = $this->sortFacetResults($active_sort_processors, $results);
+    }
 
     $facet->setResults($results);
 
@@ -441,6 +434,44 @@ class DefaultFacetManager {
     }
 
     return $keyed_results;
+  }
+
+  /**
+   * Sort the facet results, and recurse to children to do the same.
+   *
+   * @param \Drupal\facets\Processor\SortProcessorInterface[] $active_sort_processors
+   *   An array of sort processors.
+   * @param \Drupal\facets\Result\ResultInterface[] $results
+   *   An array of results.
+   *
+   * @return \Drupal\facets\Result\ResultInterface[]
+   *   A sorted array of results.
+   */
+  protected function sortFacetResults(array $active_sort_processors, $results) {
+    uasort($results, function ($a, $b) use ($active_sort_processors) {
+      $return = 0;
+      foreach ($active_sort_processors as $sort_processor) {
+        if ($return = $sort_processor->sortResults($a, $b)) {
+          if ($sort_processor->getConfiguration()['sort'] == 'DESC') {
+            $return *= -1;
+          }
+          break;
+        }
+      }
+      return $return;
+    });
+
+    // Loop over the results and see if they have any children, if they do, fire
+    // a request to this same method again with the children.
+    foreach ($results as &$result) {
+      if (!empty($result->getChildren())) {
+        $children = $this->sortFacetResults($active_sort_processors, $result->getChildren());
+        $result->setChildren($children);
+      }
+    }
+
+    // Return the sorted results.
+    return $results;
   }
 
 }
