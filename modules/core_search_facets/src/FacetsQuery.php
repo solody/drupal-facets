@@ -2,6 +2,7 @@
 
 namespace Drupal\core_search_facets;
 
+use Drupal\Core\Database\Query\Condition;
 use Drupal\search\SearchQuery;
 
 /**
@@ -41,7 +42,7 @@ class FacetsQuery extends SearchQuery {
    *   An associative array of query information.
    *
    * @return FacetsQuery
-   *    An instance of this class.
+   *   An instance of this class.
    */
   public function addFacetField(array $query_info) {
     foreach ($query_info['fields'] as $field_info) {
@@ -58,7 +59,7 @@ class FacetsQuery extends SearchQuery {
 
     // Adds OR conditions.
     if (!empty($this->words)) {
-      $or = db_or();
+      $or = new Condition('OR');
       foreach ($this->words as $word) {
         $or->condition('i.word', $word);
       }
@@ -91,7 +92,7 @@ class FacetsQuery extends SearchQuery {
       ->addMetaData('normalize', $this->normalize);
 
     // Adds subquery to group the results in the r table.
-    $subquery = db_select($this->query, 'r')
+    $subquery = \Drupal::database()->select($this->query, 'r')
       ->fields('r', array('value'))
       ->groupBy('r.value');
 
