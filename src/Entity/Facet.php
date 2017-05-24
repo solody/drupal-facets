@@ -3,6 +3,7 @@
 namespace Drupal\facets\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\facets\Exception\Exception;
 use Drupal\facets\Exception\InvalidProcessorException;
 use Drupal\facets\FacetInterface;
@@ -899,6 +900,42 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     }
 
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+    if (!$update) {
+      self::clearBlockCache();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    parent::postDelete($storage, $entities);
+    self::clearBlockCache();
+  }
+
+  /**
+   * Clear the block cache.
+   *
+   * This includes resetting the shared plugin block manager as this can result
+   * in the block definition cache being rebuilt in the same request with stale
+   * static caches in the deriver.
+   */
+  protected static function clearBlockCache() {
+    $container = \Drupal::getContainer();
+
+    // If the block manager has already been loaded, we may have stale static
+    // caches in the facet deriver, so lets clear it out.
+    $container->set('plugin.manager.block', NULL);
+
+    // Now rebuild the cache to force a fresh set of data.
+    $container->get('plugin.manager.block')->clearCachedDefinitions();
   }
 
 }
