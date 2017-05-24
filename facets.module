@@ -310,6 +310,7 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
     // @see https://www.drupal.org/node/2861586
     // TODO handle not grouped facets.
 
+    /** @var \Drupal\facets\Result\ResultInterface[] $facet_results */
     foreach ($active_results as $facet_alias => $facet_results) {
       $facet_used_result[] = $facet_alias;
       $facet_crumb_items = [];
@@ -323,13 +324,15 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
         $facet_url = $res->getUrl();
         /** @var \Drupal\Core\Url $facet_url */
         $query = $facet_url->getOption('query');
-        $source_filter = $query[$facet_source->getFilterKey()];
+        $source_filter = isset($query[$facet_source->getFilterKey()]) ? $query[$facet_source->getFilterKey()] : [];
         $source_filter = array_unique($source_filter);
         $source_filter = array_filter($source_filter);
         $matches = preg_grep('/^' . implode('|^', $facet_used_result) . '/', $source_filter);
         $query[$facet_source->getFilterKey()] = $matches;
         $facet_crumb_items[] = $res->getDisplayValue();
       }
+
+      sort($facet_crumb_items);
 
       // Set the new query and create the link.
       $facet_url->setOption('query', $query);
@@ -338,5 +341,4 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
       $breadcrumb->addLink($link);
     }
   }
-
 }
