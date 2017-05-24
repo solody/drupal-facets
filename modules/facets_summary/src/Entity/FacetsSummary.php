@@ -35,7 +35,6 @@ use Drupal\facets_summary\FacetsSummaryInterface;
  *     "facets",
  *     "facet_source_id",
  *     "processor_configs",
- *     "empty_behavior",
  *   },
  *   links = {
  *     "canonical" = "/admin/config/search/facets",
