@@ -74,7 +74,7 @@ class FacetsQuery extends SearchQuery {
       ->groupBy('value')
       ->groupBy('i.type')
       ->groupBy('i.sid')
-      ->having('COUNT(*) >= :matches', array(':matches' => $this->matches));
+      ->having('COUNT(*) >= :matches', [':matches' => $this->matches]);
 
     // For complex search queries, add the LIKE conditions.
     /*if (!$this->simple) {
@@ -93,7 +93,7 @@ class FacetsQuery extends SearchQuery {
 
     // Adds subquery to group the results in the r table.
     $subquery = \Drupal::database()->select($this->query, 'r')
-      ->fields('r', array('value'))
+      ->fields('r', ['value'])
       ->groupBy('r.value');
 
     // Adds COUNT() expression to get facet counts.

@@ -196,122 +196,122 @@ class FacetForm extends EntityForm {
     $enabled_processors = $facet->getProcessors(TRUE);
 
     $stages = $this->processorPluginManager->getProcessingStages();
-    $processors_by_stage = array();
+    $processors_by_stage = [];
     foreach ($stages as $stage => $definition) {
       $processors_by_stage[$stage] = $facet->getProcessorsByStage($stage, FALSE);
     }
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'facets/drupal.facets.index-active-formatters';
-    $form['#title'] = $this->t('Edit %label facet', array('%label' => $facet->label()));
+    $form['#title'] = $this->t('Edit %label facet', ['%label' => $facet->label()]);
 
     // Add the list of all other processors with checkboxes to enable/disable
     // them.
-    $form['facet_settings'] = array(
+    $form['facet_settings'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Facet settings'),
-      '#attributes' => array(
-        'class' => array(
+      '#attributes' => [
+        'class' => [
           'search-api-status-wrapper',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     foreach ($all_processors as $processor_id => $processor) {
       if (!($processor instanceof SortProcessorInterface) && !($processor instanceof UrlProcessorInterface)) {
 
         $default_value = $processor->isLocked() || $widget->isPropertyRequired($processor_id, 'processors') || !empty($enabled_processors[$processor_id]);
         $clean_css_id = Html::cleanCssIdentifier($processor_id);
-        $form['facet_settings'][$processor_id]['status'] = array(
+        $form['facet_settings'][$processor_id]['status'] = [
           '#type' => 'checkbox',
           '#title' => (string) $processor->getPluginDefinition()['label'],
           '#default_value' => $default_value,
           '#description' => $processor->getDescription(),
-          '#attributes' => array(
-            'class' => array(
+          '#attributes' => [
+            'class' => [
               'search-api-processor-status-' . $clean_css_id,
-            ),
+            ],
             'data-id' => $clean_css_id,
-          ),
+          ],
           '#disabled' => $processor->isLocked() || $widget->isPropertyRequired($processor_id, 'processors'),
           '#access' => !$processor->isHidden(),
-        );
+        ];
 
         $form['facet_settings'][$processor_id]['settings'] = [];
         $processor_form_state = SubformState::createForSubform($form['facet_settings'][$processor_id]['settings'], $form, $form_state);
         $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facet);
         if ($processor_form) {
-          $form['facet_settings'][$processor_id]['settings'] = array(
+          $form['facet_settings'][$processor_id]['settings'] = [
             '#type' => 'details',
             '#title' => $this->t('%processor settings', ['%processor' => (string) $processor->getPluginDefinition()['label']]),
             '#open' => TRUE,
-            '#attributes' => array(
-              'class' => array(
+            '#attributes' => [
+              'class' => [
                 'facets-processor-settings-' . Html::cleanCssIdentifier($processor_id),
                 'facets-processor-settings-facet',
                 'facets-processor-settings',
-              ),
-            ),
-            '#states' => array(
-              'visible' => array(
-                ':input[name="facet_settings[' . $processor_id . '][status]"]' => array('checked' => TRUE),
-              ),
-            ),
-          );
+              ],
+            ],
+            '#states' => [
+              'visible' => [
+                ':input[name="facet_settings[' . $processor_id . '][status]"]' => ['checked' => TRUE],
+              ],
+            ],
+          ];
           $form['facet_settings'][$processor_id]['settings'] += $processor_form;
         }
       }
     }
     // Add the list of widget sort processors with checkboxes to enable/disable
     // them.
-    $form['facet_sorting'] = array(
+    $form['facet_sorting'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Facet sorting'),
-      '#attributes' => array(
-        'class' => array(
+      '#attributes' => [
+        'class' => [
           'search-api-status-wrapper',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
     foreach ($all_processors as $processor_id => $processor) {
       if ($processor instanceof SortProcessorInterface) {
         $default_value = $processor->isLocked() || $widget->isPropertyRequired($processor_id, 'processors') || !empty($enabled_processors[$processor_id]);
         $clean_css_id = Html::cleanCssIdentifier($processor_id);
-        $form['facet_sorting'][$processor_id]['status'] = array(
+        $form['facet_sorting'][$processor_id]['status'] = [
           '#type' => 'checkbox',
           '#title' => (string) $processor->getPluginDefinition()['label'],
           '#default_value' => $default_value,
           '#description' => $processor->getDescription(),
-          '#attributes' => array(
-            'class' => array(
+          '#attributes' => [
+            'class' => [
               'search-api-processor-status-' . $clean_css_id,
-            ),
+            ],
             'data-id' => $clean_css_id,
-          ),
+          ],
           '#disabled' => $processor->isLocked(),
           '#access' => !$processor->isHidden(),
-        );
+        ];
 
         $form['facet_sorting'][$processor_id]['settings'] = [];
         $processor_form_state = SubformState::createForSubform($form['facet_sorting'][$processor_id]['settings'], $form, $form_state);
         $processor_form = $processor->buildConfigurationForm($form, $processor_form_state, $facet);
         if ($processor_form) {
-          $form['facet_sorting'][$processor_id]['settings'] = array(
+          $form['facet_sorting'][$processor_id]['settings'] = [
             '#type' => 'container',
             '#open' => TRUE,
-            '#attributes' => array(
-              'class' => array(
+            '#attributes' => [
+              'class' => [
                 'facets-processor-settings-' . Html::cleanCssIdentifier($processor_id),
                 'facets-processor-settings-sorting',
                 'facets-processor-settings',
-              ),
-            ),
-            '#states' => array(
-              'visible' => array(
-                ':input[name="facet_sorting[' . $processor_id . '][status]"]' => array('checked' => TRUE),
-              ),
-            ),
-          );
+              ],
+            ],
+            '#states' => [
+              'visible' => [
+                ':input[name="facet_sorting[' . $processor_id . '][status]"]' => ['checked' => TRUE],
+              ],
+            ],
+          ];
           $form['facet_sorting'][$processor_id]['settings'] += $processor_form;
         }
       }
@@ -353,11 +353,11 @@ class FacetForm extends EntityForm {
     ];
     $form['facet_settings']['empty_behavior_container'] = [
       '#type' => 'container',
-      '#states' => array(
-        'visible' => array(
-          ':input[name="facet_settings[empty_behavior]"]' => array('value' => 'text'),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="facet_settings[empty_behavior]"]' => ['value' => 'text'],
+        ],
+      ],
     ];
     $form['facet_settings']['empty_behavior_container']['empty_behavior_text'] = [
       '#type' => 'text_format',
@@ -422,11 +422,11 @@ class FacetForm extends EntityForm {
       '#title' => $this->t('Always expand hierarchy'),
       '#description' => $this->t('Render entire tree, regardless of whether the parents are active or not.'),
       '#default_value' => $facet->getExpandHierarchy(),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="facet_settings[use_hierarchy]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="facet_settings[use_hierarchy]"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
 
     $form['facet_settings']['enable_parent_when_child_gets_disabled'] = [
@@ -434,11 +434,11 @@ class FacetForm extends EntityForm {
       '#title' => $this->t('Enable parent when child gets disabled'),
       '#description' => $this->t('Uncheck this if you want to allow de-activating an entire hierarchical trail by clicking an active child.'),
       '#default_value' => $facet->getEnableParentWhenChildGetsDisabled(),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="facet_settings[use_hierarchy]"]' => array('checked' => TRUE),
-        ),
-      ),
+      '#states' => [
+        'visible' => [
+          ':input[name="facet_settings[use_hierarchy]"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
 
     $form['facet_settings']['min_count'] = [
@@ -464,12 +464,12 @@ class FacetForm extends EntityForm {
       '#required' => TRUE,
     ];
 
-    $form['weights'] = array(
+    $form['weights'] = [
       '#type' => 'details',
       '#title' => $this->t('Advanced settings'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-    );
+    ];
 
     $form['weights']['order'] = [
       '#markup' => $this->t('Processor order'),
@@ -480,24 +480,24 @@ class FacetForm extends EntityForm {
     // Order enabled processors per stage, create all the containers for the
     // different stages.
     foreach ($stages as $stage => $description) {
-      $form['weights'][$stage] = array(
+      $form['weights'][$stage] = [
         '#type' => 'fieldset',
         '#title' => $description['label'],
-        '#attributes' => array(
-          'class' => array(
+        '#attributes' => [
+          'class' => [
             'search-api-stage-wrapper',
             'search-api-stage-wrapper-' . Html::cleanCssIdentifier($stage),
-          ),
-        ),
-      );
-      $form['weights'][$stage]['order'] = array(
+          ],
+        ],
+      ];
+      $form['weights'][$stage]['order'] = [
         '#type' => 'table',
-      );
-      $form['weights'][$stage]['order']['#tabledrag'][] = array(
+      ];
+      $form['weights'][$stage]['order']['#tabledrag'][] = [
         'action' => 'order',
         'relationship' => 'sibling',
         'group' => 'search-api-processor-weight-' . Html::cleanCssIdentifier($stage),
-      );
+      ];
     }
 
     $processor_settings = $facet->getProcessorConfigs();
@@ -511,38 +511,38 @@ class FacetForm extends EntityForm {
           ? $processor_settings[$processor_id]['weights'][$stage]
           : $processor->getDefaultWeight($stage);
         if ($processor->isHidden()) {
-          $form['processors'][$processor_id]['weights'][$stage] = array(
+          $form['processors'][$processor_id]['weights'][$stage] = [
             '#type' => 'value',
             '#value' => $weight,
-          );
+          ];
           continue;
         }
         $form['weights'][$stage]['order'][$processor_id]['#attributes']['class'][] = 'draggable';
         $form['weights'][$stage]['order'][$processor_id]['#attributes']['class'][] = 'search-api-processor-weight--' . Html::cleanCssIdentifier($processor_id);
         $form['weights'][$stage]['order'][$processor_id]['#weight'] = $weight;
         $form['weights'][$stage]['order'][$processor_id]['label']['#plain_text'] = (string) $processor->getPluginDefinition()['label'];
-        $form['weights'][$stage]['order'][$processor_id]['weight'] = array(
+        $form['weights'][$stage]['order'][$processor_id]['weight'] = [
           '#type' => 'weight',
-          '#title' => $this->t('Weight for processor %title', array('%title' => (string) $processor->getPluginDefinition()['label'])),
+          '#title' => $this->t('Weight for processor %title', ['%title' => (string) $processor->getPluginDefinition()['label']]),
           '#title_display' => 'invisible',
           '#default_value' => $weight,
-          '#parents' => array('processors', $processor_id, 'weights', $stage),
-          '#attributes' => array(
-            'class' => array(
+          '#parents' => ['processors', $processor_id, 'weights', $stage],
+          '#attributes' => [
+            'class' => [
               'search-api-processor-weight-' . Html::cleanCssIdentifier($stage),
-            ),
-          ),
-        );
+            ],
+          ],
+        ];
       }
     }
 
     // Add vertical tabs containing the settings for the processors. Tabs for
     // disabled processors are hidden with JS magic, but need to be included in
     // case the processor is enabled.
-    $form['processor_settings'] = array(
+    $form['processor_settings'] = [
       '#title' => $this->t('Processor settings'),
       '#type' => 'vertical_tabs',
-    );
+    ];
 
     return $form;
   }
@@ -622,11 +622,11 @@ class FacetForm extends EntityForm {
         $facet->removeProcessor($processor_id);
         continue;
       }
-      $new_settings = array(
+      $new_settings = [
         'processor_id' => $processor_id,
-        'weights' => array(),
-        'settings' => array(),
-      );
+        'weights' => [],
+        'settings' => [],
+      ];
       if (!empty($values['processors'][$processor_id]['weights'])) {
         $new_settings['weights'] = $values['processors'][$processor_id]['weights'];
       }

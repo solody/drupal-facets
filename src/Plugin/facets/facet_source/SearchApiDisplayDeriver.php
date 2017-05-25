@@ -20,7 +20,7 @@ class SearchApiDisplayDeriver extends FacetSourceDeriverBase {
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     $base_plugin_id = $base_plugin_definition['id'];
-    $plugin_derivatives = array();
+    $plugin_derivatives = [];
 
     $display_plugin_manager = $this->getSearchApiDisplayPluginManager();
     foreach ($display_plugin_manager->getDefinitions() as $display_id => $display_definition) {

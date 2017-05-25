@@ -45,11 +45,11 @@ class RestIntegrationTest extends FacetsTestBase {
     // and thus removed from the test index. (We can't do it in setUp(), before
     // calling the parent method, since the container isn't set up at that
     // point.)
-    $bundles = array(
-      'entity_test_mulrev_changed' => array('label' => 'Entity Test Bundle'),
-      'item' => array('label' => 'item'),
-      'article' => array('label' => 'article'),
-    );
+    $bundles = [
+      'entity_test_mulrev_changed' => ['label' => 'Entity Test Bundle'],
+      'item' => ['label' => 'item'],
+      'article' => ['label' => 'article'],
+    ];
     \Drupal::state()->set('entity_test_mulrev_changed.bundles', $bundles);
 
     parent::installModulesFromClassProperty($container);

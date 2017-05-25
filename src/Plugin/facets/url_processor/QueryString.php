@@ -171,7 +171,7 @@ class QueryString extends UrlProcessorPluginBase {
     $url_parameters = $this->request->query;
 
     // Get the active facet parameters.
-    $active_params = $url_parameters->get($this->filterKey, array(), TRUE);
+    $active_params = $url_parameters->get($this->filterKey, [], TRUE);
 
     // Explode the active params on the separator.
     foreach ($active_params as $param) {

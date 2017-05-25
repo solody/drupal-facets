@@ -102,8 +102,8 @@ class FacetSourceEditForm extends EntityForm {
       ),
     ];
 
-    $url_processors = array();
-    $url_processors_description = array();
+    $url_processors = [];
+    $url_processors_description = [];
     foreach ($this->urlProcessorPluginManager->getDefinitions() as $definition) {
       $url_processors[$definition['id']] = $definition['label'];
       $url_processors_description[] = $definition['description'];

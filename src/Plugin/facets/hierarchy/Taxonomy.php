@@ -90,7 +90,7 @@ class Taxonomy extends HierarchyPluginBase {
    */
   public function getChildIds(array $ids) {
     $result = $this->database->select('taxonomy_term_hierarchy', 'th')
-      ->fields('th', array('tid', 'parent'))
+      ->fields('th', ['tid', 'parent'])
       ->condition('th.parent', '0', '>')
       ->condition((new Condition('OR'))
         ->condition('th.tid', $ids, 'IN')
@@ -98,7 +98,7 @@ class Taxonomy extends HierarchyPluginBase {
       )
       ->execute();
 
-    $parents = array();
+    $parents = [];
     foreach ($result as $record) {
       $parents[$record->parent][] = $record->tid;
     }

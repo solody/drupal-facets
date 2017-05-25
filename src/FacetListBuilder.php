@@ -33,53 +33,53 @@ class FacetListBuilder extends DraggableListBuilder {
     if ($entity instanceof FacetInterface) {
 
       if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
-        $operations['edit'] = array(
+        $operations['edit'] = [
           'title' => $this->t('Edit'),
           'weight' => 10,
           'url' => $entity->toUrl('edit-form'),
-        );
+        ];
       }
       if ($entity->access('update') && $entity->hasLinkTemplate('settings-form')) {
-        $operations['settings'] = array(
+        $operations['settings'] = [
           'title' => $this->t('Facet settings'),
           'weight' => 20,
           'url' => $entity->toUrl('settings-form'),
-        );
+        ];
       }
       if ($entity->access('update') && $entity->hasLinkTemplate('clone-form')) {
-        $operations['clone'] = array(
+        $operations['clone'] = [
           'title' => $this->t('Clone facet'),
           'weight' => 90,
           'url' => $entity->toUrl('clone-form'),
-        );
+        ];
       }
       if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
-        $operations['delete'] = array(
+        $operations['delete'] = [
           'title' => $this->t('Delete'),
           'weight' => 100,
           'url' => $entity->toUrl('delete-form'),
-        );
+        ];
       }
     }
     elseif ($entity instanceof FacetsSummaryInterface) {
-      $operations['edit'] = array(
+      $operations['edit'] = [
         'title' => $this->t('Edit'),
         'weight' => 10,
         'url' => $entity->toUrl('edit-form'),
-      );
+      ];
       if ($entity->access('update') && $entity->hasLinkTemplate('settings-form')) {
-        $operations['settings'] = array(
+        $operations['settings'] = [
           'title' => $this->t('Facet Summary settings'),
           'weight' => 20,
           'url' => $entity->toUrl('settings-form'),
-        );
+        ];
       }
       if ($entity->access('delete') && $entity->hasLinkTemplate('delete-form')) {
-        $operations['delete'] = array(
+        $operations['delete'] = [
           'title' => $this->t('Delete'),
           'weight' => 100,
           'url' => $entity->toUrl('delete-form'),
-        );
+        ];
       }
     }
 
@@ -105,31 +105,31 @@ class FacetListBuilder extends DraggableListBuilder {
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\facets\FacetInterface $entity */
     $facet = $entity;
-    $row = array(
-      'type' => array(
-        '#theme_wrappers' => array(
-          'container' => array(
-            '#attributes' => array('class' => 'facets-type'),
-          ),
-        ),
+    $row = [
+      'type' => [
+        '#theme_wrappers' => [
+          'container' => [
+            '#attributes' => ['class' => 'facets-type'],
+          ],
+        ],
         '#type' => 'markup',
         '#markup' => 'Facet',
-      ),
-      'title' => array(
+      ],
+      'title' => [
         '#type' => 'link',
         '#title' => $facet->label(),
         '#suffix' => '<div>' . $entity->getFieldAlias() . ' - ' . $facet->getWidget()['type'] . '</div>',
-        '#attributes' => array(
-          'class' => array('search-api-title'),
-        ),
-      ) + $facet->toUrl('edit-form')->toRenderArray(),
-      '#attributes' => array(
-        'title' => $this->t('ID: @name', array('@name' => $facet->id())),
-        'class' => array(
+        '#attributes' => [
+          'class' => ['search-api-title'],
+        ],
+      ] + $facet->toUrl('edit-form')->toRenderArray(),
+      '#attributes' => [
+        'title' => $this->t('ID: @name', ['@name' => $facet->id()]),
+        'class' => [
           'facet',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
     return array_merge_recursive($row, parent::buildRow($entity));
   }
 
@@ -140,79 +140,79 @@ class FacetListBuilder extends DraggableListBuilder {
     /** @var \Drupal\facets\FacetInterface $entity */;
     $facet = $entity;
     $row = parent::buildRow($entity);
-    return array(
-      'type' => array(
-        '#theme_wrappers' => array(
-          'container' => array(
-            '#attributes' => array('class' => 'facets-summary-type'),
-          ),
-        ),
+    return [
+      'type' => [
+        '#theme_wrappers' => [
+          'container' => [
+            '#attributes' => ['class' => 'facets-summary-type'],
+          ],
+        ],
         '#type' => 'markup',
         '#markup' => 'Facets Summary',
-      ),
-      'title' => array(
-          '#theme_wrappers' => array(
-            'container' => array(
-              '#attributes' => array('class' => 'facets-title'),
-            )
-          ),
+      ],
+      'title' => [
+          '#theme_wrappers' => [
+            'container' => [
+              '#attributes' => ['class' => 'facets-title'],
+            ]
+          ],
           '#type' => 'link',
           '#title' => $facet->label(),
-          '#attributes' => array(
-            'class' => array('search-api-title'),
-          ),
-          '#wrapper_attributes' => array(
+          '#attributes' => [
+            'class' => ['search-api-title'],
+          ],
+          '#wrapper_attributes' => [
             'colspan' => 2,
-          ),
-        ) + $facet->toUrl('edit-form')->toRenderArray(),
+          ],
+        ] + $facet->toUrl('edit-form')->toRenderArray(),
       'oprations' => $row['operations'],
-      '#attributes' => array(
-        'title' => $this->t('ID: @name', array('@name' => $facet->id())),
-        'class' => array(
+      '#attributes' => [
+        'title' => $this->t('ID: @name', ['@name' => $facet->id()]),
+        'class' => [
           'facet',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
   }
 
   /**
    * Builds an array of facet sources for display in the overview.
    */
   public function buildFacetSourceRow(array $facet_source = []) {
-    return array(
-      'type' => array(
-        '#theme_wrappers' => array(
-          'container' => array(
-            '#attributes' => array('class' => 'facets-type'),
-          ),
-        ),
+    return [
+      'type' => [
+        '#theme_wrappers' => [
+          'container' => [
+            '#attributes' => ['class' => 'facets-type'],
+          ],
+        ],
         '#type' => 'markup',
         '#markup' => 'Facet source',
-      ),
-      'title' => array(
-        '#theme_wrappers' => array(
-          'container' => array(
-            '#attributes' => array('class' => 'facets-title'),
-          )
-        ),
+      ],
+      'title' => [
+        '#theme_wrappers' => [
+          'container' => [
+            '#attributes' => ['class' => 'facets-title'],
+          ]
+        ],
         '#type' => 'markup',
         '#markup' => $facet_source['id'],
-        '#wrapper_attributes' => array(
+        '#wrapper_attributes' => [
           'colspan' => 2,
-        ),
-      ),
-      'operations' => array(
+        ],
+      ],
+      'operations' => [
         'data' => Link::createFromRoute(
           $this->t('Configure'),
           'entity.facets_facet_source.edit_form',
           ['facets_facet_source' => $facet_source['id']]
         )->toRenderable(),
-      ),
-      '#attributes' => array(
-        'class' => array('facet-source', 'facet-source-' . $facet_source['id']),
+      ],
+      '#attributes' => [
+        'class' => ['facet-source', 'facet-source-' . $facet_source['id']],
         'no_striping' => TRUE,
-      ),
-    );
+      ],
+    ];
   }
 
   /**
@@ -221,16 +221,16 @@ class FacetListBuilder extends DraggableListBuilder {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $groups = $this->loadGroups();
 
-    $form['facets'] = array(
+    $form['facets'] = [
       '#type' => 'table',
       '#header' => $this->buildHeader(),
       '#empty' => $groups['lone_facets'] ? '' : $this->t('There are no facet sources or facets defined.'),
-      '#attributes' => array(
-        'class' => array(
+      '#attributes' => [
+        'class' => [
           'facets-groups-list',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
     // When no facet sources are found, we should show a message that you can't
     // add facets yet.
@@ -250,12 +250,12 @@ class FacetListBuilder extends DraggableListBuilder {
       $subgroup_class = Html::cleanCssIdentifier('facets-weight-' . $facet_source_group['facet_source']['id']);
       $delta = round(count($facet_source_group['facets']) / 2);
 
-      $form['facets']['#tabledrag'][] = array(
+      $form['facets']['#tabledrag'][] = [
         'action' => 'order',
         'relationship' => 'sibling',
         'group' => 'weight',
         'subgroup' => $subgroup_class,
-      );
+      ];
       $form['facets'][$facet_source_group['facet_source']['id']] = $this->buildFacetSourceRow($facet_source_group['facet_source']);
       foreach ($facet_source_group['facets'] as $i => $facet) {
         if ($facet instanceof FacetInterface) {
@@ -272,26 +272,26 @@ class FacetListBuilder extends DraggableListBuilder {
     // Output the list of facets without a facet source separately.
     if (!empty($groups['lone_facets'])) {
       $subgroup_class = 'facets-weight-lone-facets';
-      $form['facets']['#tabledrag'][] = array(
+      $form['facets']['#tabledrag'][] = [
         'action' => 'order',
         'relationship' => 'sibling',
         'group' => 'weight',
         'subgroup' => $subgroup_class,
-      );
-      $form['facets']['lone_facets'] = array(
-        'type' => array(
-          '#theme_wrappers' => array(
-            'container' => array(
-              '#attributes' => array('class' => 'facets-type'),
-            ),
-          ),
+      ];
+      $form['facets']['lone_facets'] = [
+        'type' => [
+          '#theme_wrappers' => [
+            'container' => [
+              '#attributes' => ['class' => 'facets-type'],
+            ],
+          ],
           '#type' => 'markup',
           '#markup' => '<h3>' . $this->t('Facets not currently associated with any facet source') . '</h3>',
-        ),
-        '#wrapper_attributes' => array(
+        ],
+        '#wrapper_attributes' => [
           'colspan' => 4,
-        ),
-      );
+        ],
+      ];
       foreach ($facet_source_group['facets'] as $i => $facet) {
         $form['facets'][$facet->id()] = $this->buildRow($facet);
         $form['facets'][$facet->id()]['weight']['#attributes']['class'][] = $subgroup_class;
@@ -299,11 +299,11 @@ class FacetListBuilder extends DraggableListBuilder {
     }
 
     $form['actions']['#type'] = 'actions';
-    $form['actions']['submit'] = array(
+    $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => t('Save'),
       '#button_type' => 'primary',
-    );
+    ];
 
     return $form;
   }
@@ -315,7 +315,7 @@ class FacetListBuilder extends DraggableListBuilder {
     $entities = $this->storage->loadMultiple(array_keys($form_state->getValue('facets')));
     /** @var \Drupal\block\BlockInterface[] $entities */
     foreach ($entities as $entity_id => $entity) {
-      $entity_values = $form_state->getValue(array('facets', $entity_id));
+      $entity_values = $form_state->getValue(['facets', $entity_id]);
       $entity->setWeight($entity_values['weight']);
       $entity->save();
     }
@@ -340,7 +340,7 @@ class FacetListBuilder extends DraggableListBuilder {
     }
     $facet_sources = $facet_source_plugin_manager->getDefinitions();
 
-    $facet_source_groups = array();
+    $facet_source_groups = [];
     foreach ($facet_sources as $facet_source) {
       $facet_source_groups[$facet_source['id']] = [
         'facet_source' => $facet_source,

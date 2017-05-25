@@ -48,22 +48,22 @@ class CountLimitProcessor extends ProcessorPluginBase implements BuildProcessorI
     $processors = $facet->getProcessors();
     $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : NULL;
 
-    $build['minimum_items'] = array(
+    $build['minimum_items'] = [
       '#title' => $this->t('Minimum items'),
       '#type' => 'number',
       '#min' => 1,
       '#default_value' => !is_null($config) ? $config->getConfiguration()['minimum_items'] : $this->defaultConfiguration()['minimum_items'],
       '#description' => $this->t('Hide block if the facet contains less than this number of results.'),
-    );
+    ];
 
     $max_default_value = !is_null($config) ? $config->getConfiguration()['maximum_items'] : $this->defaultConfiguration()['maximum_items'];
-    $build['maximum_items'] = array(
+    $build['maximum_items'] = [
       '#title' => $this->t('Maximum items'),
       '#type' => 'number',
       '#min' => 1,
       '#default_value' => $max_default_value ? $max_default_value : '',
       '#description' => $this->t('Hide block if the facet contains more than this number of results.'),
-    );
+    ];
 
     return $build;
   }
@@ -83,10 +83,10 @@ class CountLimitProcessor extends ProcessorPluginBase implements BuildProcessorI
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'minimum_items' => 1,
       'maximum_items' => 0,
-    );
+    ];
   }
 
 }

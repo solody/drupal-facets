@@ -422,10 +422,10 @@ class Facet extends ConfigEntityBase implements FacetInterface {
       }
       elseif (!class_exists($processor_definition['class'])) {
         \Drupal::logger('facets')
-          ->warning('Processor @id specifies a non-existing @class.', array(
+          ->warning('Processor @id specifies a non-existing @class.', [
             '@id' => $name,
             '@class' => $processor_definition['class'],
-          ));
+          ]);
       }
     }
 
@@ -800,7 +800,7 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     // Sort requested processors by weight.
     asort($processor_weights);
 
-    $return_processors = array();
+    $return_processors = [];
     foreach ($processor_weights as $name => $weight) {
       $return_processors[$name] = $processors[$name];
     }

@@ -193,10 +193,10 @@ class FacetsSummary extends ConfigEntityBase implements FacetsSummaryInterface {
         }
         elseif (!class_exists($processor_definition['class'])) {
           \Drupal::logger('facets_summary')
-            ->warning('Processor @id specifies a non-existing @class.', array(
+            ->warning('Processor @id specifies a non-existing @class.', [
               '@id' => $name,
               '@class' => $processor_definition['class'],
-            ));
+            ]);
         }
       }
     }
@@ -232,7 +232,7 @@ class FacetsSummary extends ConfigEntityBase implements FacetsSummaryInterface {
   public function getProcessorsByStage($stage, $only_enabled = TRUE) {
     $processors = $this->getProcessors($only_enabled);
     $processor_settings = $this->getProcessorConfigs();
-    $processor_weights = array();
+    $processor_weights = [];
 
     // Get a list of all processors for given stage.
     foreach ($processors as $name => $processor) {
@@ -249,7 +249,7 @@ class FacetsSummary extends ConfigEntityBase implements FacetsSummaryInterface {
     // Sort requested processors by weight.
     asort($processor_weights);
 
-    $return_processors = array();
+    $return_processors = [];
     foreach ($processor_weights as $name => $weight) {
       $return_processors[$name] = $processors[$name];
     }

@@ -143,10 +143,10 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
    */
   public function fillFacetsWithResults(array $facets) {
     foreach ($facets as $facet) {
-      $configuration = array(
+      $configuration = [
         'query' => NULL,
         'facet' => $facet,
-      );
+      ];
 
       // Get the Facet Specific Query Type so we can process the results
       // using the build() function of the query type.
@@ -240,7 +240,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
     $facet_fields = $this->getDefaultFields();
 
     // Get the allowed field types.
-    $allowed_field_types = $this->moduleHandler->invokeAll('facets_core_allowed_field_types', array($field_types = []));
+    $allowed_field_types = $this->moduleHandler->invokeAll('facets_core_allowed_field_types', [$field_types = []]);
 
     // Get the current field instances and detect if the field type is allowed.
     $fields = FieldConfig::loadMultiple();
@@ -283,7 +283,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
   public function getFacetQueryExtender() {
     if (!$this->facetQueryExtender) {
       $this->facetQueryExtender = $this->database
-        ->select('search_index', 'i', array('target' => 'replica'))
+        ->select('search_index', 'i', ['target' => 'replica'])
         ->extend('Drupal\core_search_facets\FacetsQuery');
       $this->facetQueryExtender->join('node_field_data', 'n', 'n.nid = i.sid AND n.langcode = i.langcode');
       $this->facetQueryExtender
@@ -332,19 +332,19 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
         $column = $facet->getFieldIdentifier() . '_value';
       }
 
-      $query_info['fields'][$field_name . '.' . $column] = array(
+      $query_info['fields'][$field_name . '.' . $column] = [
         'table_alias' => $table,
         'field' => $column,
-      );
+      ];
 
       // Adds the join on the node table.
-      $query_info['joins'] = array(
-        $table => array(
+      $query_info['joins'] = [
+        $table => [
           'table' => $table,
           'alias' => $table,
           'condition' => "n.vid = $table.revision_id AND i.langcode = $table.langcode",
-        ),
-      );
+        ],
+      ];
     }
 
     // Returns query info, makes sure all keys are present.
