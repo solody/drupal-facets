@@ -173,6 +173,11 @@ class QueryString extends UrlProcessorPluginBase {
     // Get the active facet parameters.
     $active_params = $url_parameters->get($this->filterKey, [], TRUE);
 
+    // When an invalid parameter is passed in the url, we can't do anything.
+    if (!is_array($active_params)) {
+      return;
+    }
+
     // Explode the active params on the separator.
     foreach ($active_params as $param) {
       $explosion = explode($this->getSeparator(), $param);
