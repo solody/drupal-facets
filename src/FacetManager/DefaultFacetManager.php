@@ -430,6 +430,14 @@ class DefaultFacetManager {
           if (isset($keyed_results[$child_id])) {
             $child_keyed_results[$child_id] = $keyed_results[$child_id];
           }
+          else {
+            // Children could already be built by Facets Summary manager, if
+            // they are, just loading them will suffice.
+            $children = $keyed_results[$current_id]->getChildren();
+            if (!empty($children[$child_id])) {
+              $child_keyed_results[$child_id] = $children[$child_id];
+            }
+          }
         }
         $result->setChildren($child_keyed_results);
         $this->childIds = array_merge($this->childIds, $child_ids);

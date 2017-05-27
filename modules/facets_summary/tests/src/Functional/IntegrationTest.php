@@ -267,7 +267,7 @@ class IntegrationTest extends FacetsTestBase {
     $this->drupalPlaceBlock('facets_summary_block:show_count', ['region' => 'footer', 'id' => 'show-count']);
     $this->drupalGet('search-api-test-fulltext');
 
-    $this->assertSession()->pageTextNotContains('5 results found');
+    $this->assertSession()->pageTextContains('5 results found');
 
     $this->clickLink('apple');
     $this->assertSession()->pageTextContains('2 results found');

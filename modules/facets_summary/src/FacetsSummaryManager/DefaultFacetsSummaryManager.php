@@ -153,20 +153,7 @@ class DefaultFacetsSummaryManager {
       return $return;
     });
 
-    /** @var \Drupal\facets\Result\Result $result */
-    foreach ($results as $result) {
-      if ($result->isActive()) {
-        $item = [
-          '#theme' => 'facets_result_item',
-          '#value' => $result->getDisplayValue(),
-          '#show_count' => $result->getCount() !== NULL,
-          '#count' => $result->getCount(),
-          '#is_active' => TRUE,
-        ];
-        $item = (new Link($item, $result->getUrl()))->toRenderable();
-        $build['#items'][] = $item;
-      }
-    }
+    $build['#items'] = $this->buildResultTree($results);
 
     // Allow our Facets Summary processors to alter the build array in a
     // configured order.
@@ -178,6 +165,36 @@ class DefaultFacetsSummaryManager {
     }
 
     return $build;
+  }
+
+  /**
+   * Build result tree, taking possible children into account.
+   *
+   * @param array $results
+   *   Facet results array.
+   *
+   * @return array
+   *   Facet render items.
+   */
+  protected function buildResultTree($results) {
+    $items = [];
+    foreach ($results as $result) {
+      if ($result->isActive()) {
+        $item = [
+          '#theme' => 'facets_result_item',
+          '#value' => $result->getDisplayValue(),
+          '#show_count' => $result->getCount() !== NULL,
+          '#count' => $result->getCount(),
+          '#is_active' => TRUE,
+        ];
+        $item = (new Link($item, $result->getUrl()))->toRenderable();
+        $items[] = $item;
+      }
+      if ($children = $result->getChildren()) {
+        $items = array_merge($items, $this->buildResultTree($children));
+      }
+    }
+    return $items;
   }
 
 }
