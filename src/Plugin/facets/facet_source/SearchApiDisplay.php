@@ -87,6 +87,13 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    // If the Search API module is not enabled, we should just return an empty
+    // object. This allows us to have this class in the module without having a
+    // dependency on the Search API module.
+    if (!$container->get('module_handler')->moduleExists('search_api')) {
+      return new \stdClass();
+    }
+
     return new static(
       $configuration,
       $plugin_id,
