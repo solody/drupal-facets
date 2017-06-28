@@ -324,11 +324,12 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
         $facet_url = $res->getUrl();
         /** @var \Drupal\Core\Url $facet_url */
         $query = $facet_url->getOption('query');
-        $source_filter = isset($query[$facet_source->getFilterKey()]) ? $query[$facet_source->getFilterKey()] : [];
+        $filter_key = $facet_source->getFilterKey() ?: 'f';
+        $source_filter = $query[$filter_key];
         $source_filter = array_unique($source_filter);
         $source_filter = array_filter($source_filter);
         $matches = preg_grep('/^' . implode('|^', $facet_used_result) . '/', $source_filter);
-        $query[$facet_source->getFilterKey()] = $matches;
+        $query[$filter_key] = $matches;
         $facet_crumb_items[] = $res->getDisplayValue();
       }
 

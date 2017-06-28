@@ -48,16 +48,7 @@ class BreadcrumbIntegrationTest extends FacetsTestBase {
    * Tests Breadcrumb integration with grouping.
    */
   public function testGroupingIntegration() {
-    $this->drupalGet('admin/config/search/facets');
-    $this->clickLink('Configure', 1);
-    $edit = [
-      'filter_key' => 'f',
-      'url_processor' => 'query_string',
-      'breadcrumb[active]' => TRUE,
-      'breadcrumb[group]' => TRUE,
-    ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
-
+    $this->editFacetConfig();
     $id = 'keywords';
     $name = 'Keywords';
     $this->createFacet($name, $id, 'keywords');
@@ -71,6 +62,42 @@ class BreadcrumbIntegrationTest extends FacetsTestBase {
     $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
     $this->drupalPostForm(NULL, ['facet_settings[weight]' => '1'], 'Save');
 
+    // Test with a default filter key.
+    $this->editFacetConfig(['filter_key' => 'f']);
+    $this->breadcrumbTest();
+
+    // Test with an empty filter key.
+    $this->editFacetConfig(['filter_key' => '']);
+    $this->breadcrumbTest();
+
+    // Test with a specific filter key.
+    $this->editFacetConfig(['filter_key' => 'my_filter_key']);
+    $this->breadcrumbTest();
+  }
+
+  /**
+   * Edit the facet configuration with the given values.
+   *
+   * @param array $config
+   *   The new configuration for the facet
+   */
+  public function editFacetConfig(array $config = []) {
+    $this->drupalGet('admin/config/search/facets');
+    $this->clickLink('Configure', 1);
+    $default_config = [
+      'filter_key' => 'f',
+      'url_processor' => 'query_string',
+      'breadcrumb[active]' => TRUE,
+      'breadcrumb[group]' => TRUE,
+    ];
+    $edit = array_merge($default_config, $config);
+    $this->drupalPostForm(NULL, $edit, 'Save');
+  }
+
+  /**
+   * Tests Breadcrumb with the given config.
+   */
+  protected function breadcrumbTest() {
     // Breadcrumb should show Keywords: orange > Type: article, item
 
     $initial_query = ['search_api_fulltext' => 'foo', 'test_param' => 1];
