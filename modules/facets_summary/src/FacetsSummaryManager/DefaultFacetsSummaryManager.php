@@ -84,6 +84,7 @@ class DefaultFacetsSummaryManager {
     // Let the facet_manager build the facets.
     $facetsource_id = $facets_summary->getFacetSourceId();
 
+    /** @var \Drupal\facets\Entity\Facet[] $facets */
     $facets = $this->facetManager->getFacetsByFacetSourceId($facetsource_id);
     // Get the current results from the facets and let all processors that
     // trigger on the build step do their build processing.
@@ -104,7 +105,6 @@ class DefaultFacetsSummaryManager {
       // The first facet therefor will trigger the processing. Note that
       // processing is done only once, so repeatedly calling this method will
       // not trigger the processing more than once.
-      $this->facetManager->processFacets($facetsource_id);
       $this->facetManager->build($facet);
     }
 
@@ -116,44 +116,11 @@ class DefaultFacetsSummaryManager {
     ];
 
     $results = [];
-
-    // Go through each facet and get the results. After, check if we have to
-    // show the counts for each facet and respectively set those to NULL if this
-    // should not be shown. We do that here so that we can use our sort
-    // processors on all the facet items accordingly.
     foreach ($facets as $facet) {
-      $facet_results = $facet->getResults();
       $show_count = $facets_config[$facet->id()]['show_count'];
-      if (!$show_count) {
-        foreach ($facet_results as $facet_result_id => $facet_result) {
-          $facet_results[$facet_result_id]->setCount(NULL);
-        }
-      }
-      $results = array_merge($facet_results, $results);
+      $results = array_merge($results, $this->buildResultTree($show_count, $facet->getResults()));
     }
-
-    // Trigger sort stage.
-    $active_sort_processors = [];
-    foreach ($facets_summary->getProcessorsByStage(ProcessorInterface::STAGE_SORT) as $processor) {
-      $active_sort_processors[] = $processor;
-    }
-
-    // Sort the results.
-    uasort($results, function ($a, $b) use ($active_sort_processors) {
-      $return = 0;
-      /** @var \Drupal\facets_summary\Processor\SortProcessorPluginBase $sort_processor */
-      foreach ($active_sort_processors as $sort_processor) {
-        if ($return = $sort_processor->sortResults($a, $b)) {
-          if ($sort_processor->getConfiguration()['sort'] == 'DESC') {
-            $return *= -1;
-          }
-          break;
-        }
-      }
-      return $return;
-    });
-
-    $build['#items'] = $this->buildResultTree($results);
+    $build['#items'] = $results;
 
     // Allow our Facets Summary processors to alter the build array in a
     // configured order.
@@ -170,20 +137,22 @@ class DefaultFacetsSummaryManager {
   /**
    * Build result tree, taking possible children into account.
    *
-   * @param array $results
+   * @param bool $show_count
+   *   Show the count next to the facet.
+   * @param \Drupal\facets\Result\ResultInterface[] $results
    *   Facet results array.
    *
    * @return array
-   *   Facet render items.
+   *   The rendered links to the active facets.
    */
-  protected function buildResultTree($results) {
+  protected function buildResultTree($show_count, $results) {
     $items = [];
     foreach ($results as $result) {
       if ($result->isActive()) {
         $item = [
           '#theme' => 'facets_result_item',
           '#value' => $result->getDisplayValue(),
-          '#show_count' => $result->getCount() !== NULL,
+          '#show_count' => $show_count,
           '#count' => $result->getCount(),
           '#is_active' => TRUE,
         ];
@@ -191,7 +160,7 @@ class DefaultFacetsSummaryManager {
         $items[] = $item;
       }
       if ($children = $result->getChildren()) {
-        $items = array_merge($items, $this->buildResultTree($children));
+        $items = array_merge($items, $this->buildResultTree($show_count, $children));
       }
     }
     return $items;
