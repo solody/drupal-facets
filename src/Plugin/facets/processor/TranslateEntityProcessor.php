@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @FacetsProcessor(
  *   id = "translate_entity",
  *   label = @Translation("Transform entity ID to label"),
- *   description = @Translation("Display the entity label instead of its ID (for example the term name instead of the taxonomy term ID)."),
+ *   description = @Translation("Display the entity label instead of its ID (for example the term name instead of the taxonomy term ID). This only works when an actual entity is indexed, not for the entity id or aggregated fields."),
  *   stages = {
  *     "build" = 5
  *   }
