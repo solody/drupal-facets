@@ -32,7 +32,7 @@
     var facetsList = $('ul[data-drupal-facet-id="' + facet + '"]');
 
     // Hide facets over the limit.
-    facetsList.find('li:gt(' + zero_based_limit + ')').once().hide();
+    facetsList.children('li:gt(' + zero_based_limit + ')').once().hide();
 
     // Add "Show more" / "Show less" links.
     facetsList.once().filter(function () {
