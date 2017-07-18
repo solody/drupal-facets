@@ -106,7 +106,7 @@ class ListItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
       $field = $index->getField($field_identifier);
 
       if (!$field->getDatasourceId()) {
-        throw new InvalidProcessorException("This field has no datasource, there is no valid use for this processor with this facet");
+        throw new InvalidProcessorException("The {$field_identifier} field has no datasource, there is no valid use for the {$this->pluginId} processor with this facet");
       }
       $entity = $field->getDatasource()->getEntityTypeId();
     }
