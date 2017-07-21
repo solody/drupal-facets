@@ -458,7 +458,7 @@ class DefaultFacetManager {
    * @return \Drupal\facets\Result\ResultInterface[]
    *   A sorted array of results.
    */
-  protected function sortFacetResults(array $active_sort_processors, $results) {
+  protected function sortFacetResults(array $active_sort_processors, array $results) {
     uasort($results, function ($a, $b) use ($active_sort_processors) {
       $return = 0;
       foreach ($active_sort_processors as $sort_processor) {

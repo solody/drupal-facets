@@ -79,7 +79,7 @@ class BreadcrumbIntegrationTest extends FacetsTestBase {
    * Edit the facet configuration with the given values.
    *
    * @param array $config
-   *   The new configuration for the facet
+   *   The new configuration for the facet.
    */
   public function editFacetConfig(array $config = []) {
     $this->drupalGet('admin/config/search/facets');
@@ -98,8 +98,7 @@ class BreadcrumbIntegrationTest extends FacetsTestBase {
    * Tests Breadcrumb with the given config.
    */
   protected function breadcrumbTest() {
-    // Breadcrumb should show Keywords: orange > Type: article, item
-
+    // Breadcrumb should show Keywords: orange > Type: article, item.
     $initial_query = ['search_api_fulltext' => 'foo', 'test_param' => 1];
     $this->drupalGet('search-api-test-fulltext', ['query' => $initial_query]);
 
@@ -139,4 +138,5 @@ class BreadcrumbIntegrationTest extends FacetsTestBase {
   public function testNonGroupingIntegration() {
     $this->markTestSkipped('Not yet implemented.');
   }
+
 }

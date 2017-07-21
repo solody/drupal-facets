@@ -107,4 +107,5 @@ class FacetSourceTest extends FacetsTestBase {
     $this->assertSession()->checkboxChecked('breadcrumb[group]');
     $this->assertSession()->checkboxChecked('breadcrumb[active]');
   }
+
 }

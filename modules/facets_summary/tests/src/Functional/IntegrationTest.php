@@ -5,7 +5,6 @@ namespace Drupal\Tests\facets_summary\Functional;
 use Drupal\Tests\facets\Functional\FacetsTestBase;
 use Drupal\facets_summary\Entity\FacetsSummary;
 use Drupal\views\Views;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the overall functionality of the Facets summary admin UI.

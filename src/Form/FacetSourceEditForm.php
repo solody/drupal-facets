@@ -134,8 +134,8 @@ class FacetSourceEditForm extends EntityForm {
       '#states' => [
         'visible' => [
           ':input[name="breadcrumb[active]"]' => ['checked' => TRUE],
-        ]
-      ]
+        ],
+      ],
     ];
 
     // The parent's form build method will add a save button.

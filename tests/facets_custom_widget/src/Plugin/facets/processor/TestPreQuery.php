@@ -28,14 +28,14 @@ class TestPreQuery extends ProcessorPluginBase implements PreQueryProcessorInter
     return [
       'test_value' => [
         '#type' => 'textfield',
-      ]
+      ],
     ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function preQuery(\Drupal\facets\FacetInterface $facet) {
+  public function preQuery(FacetInterface $facet) {
     drupal_set_message($this->getConfiguration()['test_value']);
   }
 

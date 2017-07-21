@@ -2,6 +2,7 @@
  * @file
  * Provides the slider functionality.
  */
+
 (function ($) {
 
   'use strict';

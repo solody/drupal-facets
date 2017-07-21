@@ -4,7 +4,6 @@ namespace Drupal\facets\Plugin\facets\facet_source;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\facets\Exception\InvalidQueryTypeException;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginBase;

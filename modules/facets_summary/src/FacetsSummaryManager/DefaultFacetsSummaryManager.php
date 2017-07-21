@@ -95,7 +95,7 @@ class DefaultFacetsSummaryManager {
     $facets_config = $facets_summary->getFacets();
     // Exclude facets which were not selected for this summary.
     $facets = array_filter($facets,
-      function($item) use ($facets_config) {
+      function ($item) use ($facets_config) {
         return (isset($facets_config[$item->id()]));
       }
     );
@@ -145,7 +145,7 @@ class DefaultFacetsSummaryManager {
    * @return array
    *   The rendered links to the active facets.
    */
-  protected function buildResultTree($show_count, $results) {
+  protected function buildResultTree($show_count, array $results) {
     $items = [];
     foreach ($results as $result) {
       if ($result->isActive()) {

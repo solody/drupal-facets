@@ -58,7 +58,7 @@ class FacetSourcePluginManager extends DefaultPluginManager {
     // Definitions that are based on search api when search api is not enabled
     // should not exist, so make sure we do exactly that, we do this in
     // ::findDefinitions because this one is called before the result is saved.
-    $defs = array_filter($defs, function($item) {
+    $defs = array_filter($defs, function ($item) {
       if ($item['id'] === 'search_api' && !$this->moduleHandler->moduleExists('search_api')) {
         return FALSE;
       }
