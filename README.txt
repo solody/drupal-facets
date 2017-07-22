@@ -4,6 +4,7 @@ CONTENTS OF THIS FILE
  * Installation
  * Configuration
  * Features
+ * Extension modules
  * FAQ
 
 INTRODUCTION
@@ -126,6 +127,11 @@ A filter is a string with one of the following forms:
 - `!`: Filter for items without a value for this field (i.e., the "missing"
   facet).
 
+EXTENSION MODULES
+-----------------
+
+- https://www.drupal.org/project/entity_reference_facet_link
+ Provides a link the a facet trough an entity reference field.
 
 FAQ
 ---
