@@ -150,7 +150,7 @@ class DefaultFacetsSummaryManager {
     foreach ($results as $result) {
       if ($result->isActive()) {
         $item = [
-          '#theme' => 'facets_result_item',
+          '#theme' => 'facets_result_item__summary',
           '#value' => $result->getDisplayValue(),
           '#show_count' => $show_count,
           '#count' => $result->getCount(),
