@@ -300,7 +300,9 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
             $active_results[$facet->getUrlAlias()][] = $cloned_result;
           }
         }
-        $url_processor->buildUrls($facet, $active_results[$facet->getUrlAlias()]);
+        if (!empty($active_results[$facet->getUrlAlias()])) {
+          $url_processor->buildUrls($facet, $active_results[$facet->getUrlAlias()]);
+        }
         $active_facets[$facet->getUrlAlias()] = $facet;
       }
     }
