@@ -41,7 +41,7 @@ class ArrayWidget extends WidgetPluginBase {
         $items[$facet->getFieldIdentifier()][] = $text;
       }
       else {
-        $items[$facet->getFieldIdentifier()][] = $this->buildListItems($result);
+        $items[$facet->getFieldIdentifier()][] = $this->buildListItems($facet, $result);
       }
     }
 
@@ -51,7 +51,7 @@ class ArrayWidget extends WidgetPluginBase {
   /**
    * {@inheritdoc}
    */
-  protected function buildListItems(ResultInterface $result) {
+  protected function buildListItems($facet, ResultInterface $result) {
     if ($children = $result->getChildren()) {
       $items = $this->prepare($result);
 

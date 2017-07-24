@@ -99,17 +99,17 @@ class DateBasicWidget extends WidgetPluginBase {
   public function build(FacetInterface $facet) {
     $this->facet = $facet;
 
-    $items = array_map(function (Result $result) {
+    $items = array_map(function (Result $result) use ($facet) {
       if (empty($result->getUrl())) {
         return ['#markup' => $this->extractText($result)];
       }
       else {
-        return $this->buildListItems($result);
+        return $this->buildListItems($facet, $result);
       }
     }, $facet->getResults());
 
     return [
-      '#theme' => 'facets_item_list',
+      '#theme' => $this->getFacetItemListThemeHook($facet),
       '#items' => $items,
       '#attributes' => ['data-drupal-facet-id' => $facet->id()],
       '#cache' => [
