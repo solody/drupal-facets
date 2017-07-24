@@ -129,6 +129,12 @@ class QueryString extends UrlProcessorPluginBase {
       }
 
       $result_get_params->set($this->filterKey, array_values($filter_params));
+      // Grab any route params from the original request.
+      $routeParameters = Url::createFromRequest($this->request)
+        ->getRouteParameters();
+      if (!empty($routeParameters)) {
+        $url->setRouteParameters($routeParameters);
+      }
 
       $new_url = clone $url;
       if ($result_get_params->all() !== [$this->filterKey => []]) {

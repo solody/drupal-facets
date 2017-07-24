@@ -263,6 +263,41 @@ class QueryStringTest extends UnitTestCase {
   }
 
   /**
+   * Tests that contextual filter get's re-added.
+   */
+  public function testContextualFilters() {
+    // Override router.
+    $router = $this->getMockBuilder('Drupal\Tests\Core\Routing\TestRouterInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $router->expects($this->any())
+      ->method('matchRequest')
+      ->willReturn([
+        '_raw_variables' => new ParameterBag(['node' => '1']),
+        '_route' => 'node_view',
+      ]);
+
+    // Get the container from the setUp method and change it with the
+    // implementation created here, that has the route parameters.
+    $container = \Drupal::getContainer();
+    $container->set('router.no_access_checks', $router);
+    \Drupal::setContainer($container);
+
+    // Create facet.
+    $facet = new Facet([], 'facets_facet');
+    $facet->setFieldIdentifier('test');
+    $facet->setUrlAlias('test');
+    $facet->setFacetSourceId('facet_source__dummy');
+
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], new Request());
+    $results = $this->processor->buildUrls($facet, $this->originalResults);
+
+    foreach ($results as $result) {
+      $this->assertEquals(['node' => 1], $result->getUrl()->getRouteParameters());
+    }
+  }
+
+  /**
    * Sets up a container.
    */
   protected function setContainer() {
