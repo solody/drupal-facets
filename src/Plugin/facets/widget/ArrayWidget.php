@@ -49,13 +49,7 @@ class ArrayWidget extends WidgetPluginBase {
   }
 
   /**
-   * Builds an array with the results.
-   *
-   * @param \Drupal\facets\Result\ResultInterface $result
-   *   A result item.
-   *
-   * @return array
-   *   An array of the result.
+   * {@inheritdoc}
    */
   protected function buildListItems(ResultInterface $result) {
     if ($children = $result->getChildren()) {
