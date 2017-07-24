@@ -44,13 +44,12 @@ class BooleanItemProcessor extends ProcessorPluginBase implements BuildProcessor
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
-    $processors = $facet->getProcessors();
-    $config = isset($processors[$this->getPluginId()]) ? $processors[$this->getPluginId()] : NULL;
+    $config = $this->getConfiguration();
 
     $build['on_value'] = [
       '#title' => $this->t('On value'),
       '#type' => 'textfield',
-      '#default_value' => !is_null($config) ? $config->getConfiguration()['on_value'] : $this->defaultConfiguration()['on_value'],
+      '#default_value' => $config['on_value'],
       '#description' => $this->t('Use this label instead of <em>0</em> for the <em>On</em> or <em>True</em> value.'),
       '#states' => [
         'required' => ['input[name="facet_settings[boolean_item][status]"' => ['checked' => TRUE]],
@@ -60,7 +59,7 @@ class BooleanItemProcessor extends ProcessorPluginBase implements BuildProcessor
     $build['off_value'] = [
       '#title' => $this->t('Off value'),
       '#type' => 'textfield',
-      '#default_value' => !is_null($config) ? $config->getConfiguration()['off_value'] : $this->defaultConfiguration()['off_value'],
+      '#default_value' => $config['off_value'],
       '#description' => $this->t('Use this label instead of <em>1</em> for the <em>Off</em> or <em>False</em> value.'),
       '#states' => [
         'required' => ['input[name="facet_settings[boolean_item][status]"' => ['checked' => TRUE]],
