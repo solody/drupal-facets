@@ -151,6 +151,57 @@ class LanguageIntegrationTest extends FacetsTestBase {
     $this->clickLink('item');
     $this->assertTrue(strpos($this->getUrl(), 'xx-lolspeak/'), 'Found the language code in the url');
     $this->assertTrue(strpos($this->getUrl(), 'tyto_alba'), 'Found the facet in the url');
+   }
+
+  /**
+   * Tests facets where the count is different per language.
+   *
+   * @see https://www.drupal.org/node/2827808
+   */
+  public function testLanguageDifferences() {
+    $entity_test_storage = \Drupal::entityTypeManager()
+      ->getStorage('entity_test_mulrev_changed');
+    $entity_test_storage->create([
+      'name' => 'foo bar baz',
+      'body' => 'test test',
+      'type' => 'item',
+      'keywords' => ['orange', 'lol'],
+      'category' => 'item_category',
+      'langcode' => 'xx-lolspeak',
+    ])->save();
+    $entity_test_storage->create([
+      'name' => 'foo bar baz',
+      'body' => 'test test',
+      'type' => 'item',
+      'keywords' => ['orange', 'rofl'],
+      'category' => 'item_category',
+      'langcode' => 'xx-lolspeak',
+    ])->save();
+
+    $id = 'water_bear';
+    $this->createFacet('Water bear', $id, 'keywords');
+
+    $this->drupalGet('admin/config/search/search-api/index/' . $this->indexId . '/edit');
+
+    $this->assertEquals(2, $this->indexItems($this->indexId), '2 items were indexed.');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertFacetBlocksAppear();
+    $this->assertSession()->pageTextContains('orange');
+    $this->assertSession()->pageTextContains('grape');
+    $this->assertSession()->pageTextContains('rofl');
+
+    $this->drupalPostForm(NULL, ['language' => 'xx-lolspeak'], 'Search');
+    $this->assertFacetBlocksAppear();
+    $this->assertSession()->pageTextContains('orange');
+    $this->assertSession()->pageTextContains('rofl');
+    $this->assertSession()->pageTextNotContains('grape');
+
+    $this->drupalPostForm(NULL, ['language' => 'en'], 'Search');
+    $this->assertFacetBlocksAppear();
+    $this->assertSession()->pageTextContains('orange');
+    $this->assertSession()->pageTextContains('grape');
+    $this->assertSession()->pageTextNotContains('rofl');
   }
 
 }
