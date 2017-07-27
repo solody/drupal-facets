@@ -3,7 +3,7 @@ type: module
 description: 'Faceted search interfaces that can be used on Search API searchers.'
 core: 8.x
 package: Search
-configure: facets.overview
+configure: entity.facets_facet.collection
 test_dependencies:
   - search_api:search_api
   - drupal:views

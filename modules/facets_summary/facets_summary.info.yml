@@ -3,7 +3,7 @@ type: module
 description: 'Exposes a Facets block summary showing the current search.'
 core: 8.x
 package: Search
-configure: facets.overview
+configure: entity.facets_facet.collection
 dependencies:
   - facets:facets
 test_dependencies:

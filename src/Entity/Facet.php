@@ -22,7 +22,7 @@ use Drupal\facets\FacetInterface;
  *       "edit" = "Drupal\facets\Form\FacetForm",
  *       "settings" = "Drupal\facets\Form\FacetSettingsForm",
  *       "clone" = "Drupal\facets\Form\FacetCloneForm",
- *       "delete" = "Drupal\facets\Form\FacetDeleteConfirmForm",
+ *       "delete" = "Drupal\Core\Entity\EntityDeleteForm",
  *     },
  *   },
  *   admin_permission = "administer facets",
@@ -55,6 +55,7 @@ use Drupal\facets\FacetInterface;
  *     "empty_behavior"
  *   },
  *   links = {
+ *     "collection" = "/admin/config/search/facets",
  *     "add-form" = "/admin/config/search/facets/add-facet",
  *     "edit-form" = "/admin/config/search/facets/{facets_facet}/edit",
  *     "settings-form" = "/admin/config/search/facets/{facets_facet}/settings",

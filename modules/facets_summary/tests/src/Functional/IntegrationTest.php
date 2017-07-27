@@ -401,4 +401,42 @@ class IntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextNotContains(t('Reset facets'));
   }
 
+  /**
+   * Tests for deleting a block.
+   */
+  public function testBlockDelete() {
+    $name = 'Owl';
+    $id = 'owl';
+
+    $values = [
+      'name' => $name,
+      'id' => $id,
+      'facet_source_id' => 'search_api:views_page__search_api_test_view__page_1',
+    ];
+    $this->drupalPostForm('admin/config/search/facets/add-facet-summary', $values, 'Save');
+    $this->drupalPostForm(NULL, [], 'Save');
+
+    $block_settings = [
+      'region' => 'footer',
+      'id' => $id,
+    ];
+    $block = $this->drupalPlaceBlock('facets_summary_block:' . $id, $block_settings);
+
+    $this->drupalGet('admin/structure/block');
+    $this->assertSession()->pageTextContains($block->label());
+
+    $this->drupalGet('admin/structure/block/library/classy');
+    $this->assertSession()->pageTextContains($name);
+
+    // Check for the warning message that additional config entities will be
+    // deleted if the facet summary is removed.
+    $this->drupalGet('admin/config/search/facets/facet-summary/' . $id . '/delete');
+    $this->assertSession()->pageTextContains('The listed configuration will be deleted.');
+    $this->assertSession()->pageTextContains($block->label());
+    $this->drupalPostForm(NULL, [], 'Delete');
+
+    $this->drupalGet('admin/structure/block/library/classy');
+    $this->assertSession()->pageTextNotContains($name);
+  }
+
 }
