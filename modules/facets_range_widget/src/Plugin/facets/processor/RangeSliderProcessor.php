@@ -54,9 +54,11 @@ class RangeSliderProcessor extends SliderProcessor implements PreQueryProcessorI
       $query = $url->getOption('query');
 
       // Remove all the query filters for the field of the facet.
-      foreach ($query[$filter_key] as $id => $filter) {
-        if (strpos($filter . $url_processor->getSeparator(), $facet->getUrlAlias()) === 0) {
-          unset($query[$filter_key][$id]);
+      if ($query !== NULL) {
+        foreach ($query[$filter_key] as $id => $filter) {
+          if (strpos($filter . $url_processor->getSeparator(), $facet->getUrlAlias()) === 0) {
+            unset($query[$filter_key][$id]);
+          }
         }
       }
 

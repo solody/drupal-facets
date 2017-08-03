@@ -47,8 +47,11 @@ class SliderWidget extends WidgetPluginBase {
       $urls['f_' . $result->getRawValue()] = $result->getUrl()->toString();
       $labels[] = $result->getDisplayValue() . ($show_numbers ? ' (' . $result->getCount() . ')' : '');
     }
-    $min = (float) min($results)->getRawValue();
-    $max = (float) max($results)->getRawValue();
+    // The results set on the facet are sorted where the minimum is the first
+    // item and the last one is the one with the highest results, so it's safe
+    // to use min/max.
+    $min = (float) reset($results)->getRawValue();
+    $max = (float) end($results)->getRawValue();
 
     $build['slider'] = [
       '#type' => 'html_tag',
