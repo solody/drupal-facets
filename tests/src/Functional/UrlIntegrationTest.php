@@ -6,6 +6,7 @@ use Drupal\Core\Url;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\FacetSourceInterface;
+use Drupal\views\Views;
 
 /**
  * Tests the overall functionality of the Facets admin UI.
@@ -172,6 +173,35 @@ class UrlIntegrationTest extends FacetsTestBase {
 
     // Check that no errors occurred.
     $this->assertSession()->statusCodeEquals(200);
+  }
+
+  /**
+   * Regression test for #2898189.
+   *
+   * @link https://www.drupal.org/node/2898189
+   */
+  public function testResetPager() {
+    $id = 'owl';
+    $name = 'Owl';
+    $this->createFacet($name, $id);
+
+    // Set view pager option to 2 items, so we can check the pager rest on the
+    // facet links.
+    $view = Views::getView('search_api_test_view');
+    $view->setDisplay('page_1');
+    $pagerOptions = $view->display_handler->getOption('pager');
+    $pagerOptions['options']['items_per_page'] = 2;
+    $view->display_handler->setOption('pager', $pagerOptions);
+    $view->save();
+
+    $content_types = ['item', 'article'];
+    foreach ($content_types as $content_type) {
+      $this->drupalGet('search-api-test-fulltext');
+      $this->clickLink('2');
+      $this->assertTrue(strpos($this->getUrl(), 'page=1'));
+      $this->clickLink($content_type);
+      $this->assertFalse(strpos($this->getUrl(), 'page=1'));
+    }
   }
 
 }
