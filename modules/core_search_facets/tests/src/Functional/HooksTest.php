@@ -10,7 +10,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  *
  * @group facets
  */
-class TestCoreSearchBase extends CoreSearchFacetsTestBase {
+class HooksTest extends CoreSearchFacetsTestBase {
 
   /**
    * {@inheritdoc}

@@ -10,7 +10,7 @@ use Drupal\node\Entity\Node;
  *
  * @group facets
  */
-class IntegrationTestCoreSearchBase extends CoreSearchFacetsTestBase {
+class IntegrationTest extends CoreSearchFacetsTestBase {
 
   use BlockTestTrait;
 
@@ -107,6 +107,9 @@ class IntegrationTestCoreSearchBase extends CoreSearchFacetsTestBase {
     $this->blocks[$facet_id] = $this->createBlock($facet_id);
     $this->setShowAmountOfResults($facet_id, TRUE);
 
+    $this->drupalGet("admin/config/search/facets/$facet_id/edit");
+    $this->drupalPostForm(NULL, ['widget' => 'datebasic'], 'Save');
+
     // Assert date facets.
     $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
     $this->assertFacetLabel('February 2016 (9)');
@@ -142,6 +145,9 @@ class IntegrationTestCoreSearchBase extends CoreSearchFacetsTestBase {
     $this->addFacet($facet_id, $facet_name, 'changed');
     $this->blocks[$facet_id] = $this->createBlock($facet_id);
     $this->setShowAmountOfResults($facet_id, TRUE);
+
+    $this->drupalGet("admin/config/search/facets/$facet_id/edit");
+    $this->drupalPostForm(NULL, ['widget' => 'datebasic'], 'Save');
 
     // Update the changed date. The nodes were created on February/March 2016
     // and the changed date is June 3, 2016.

@@ -193,7 +193,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
 
       case 'created':
       case 'changed':
-        $query_types['string'] = 'core_node_search_date';
+        $query_types['date'] = 'core_node_search_date';
         break;
 
     }
