@@ -3,6 +3,7 @@
 namespace Drupal\facets\Plugin\facets\facet_source;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\Exception\InvalidQueryTypeException;
 use Drupal\facets\FacetInterface;
@@ -57,6 +58,13 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
   protected $request;
 
   /**
+   * The Drupal module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandler
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a SearchApiBaseFacetSource object.
    *
    * @param array $configuration
@@ -73,12 +81,15 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
    *   The display plugin manager.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A request object for the current request.
+   * @param \Drupal\Core\Extension\ModuleHandler $moduleHandler
+   *   Core's module handler class.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, QueryTypePluginManager $query_type_plugin_manager, QueryHelper $search_results_cache, DisplayPluginManager $display_plugin_manager, Request $request) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, QueryTypePluginManager $query_type_plugin_manager, QueryHelper $search_results_cache, DisplayPluginManager $display_plugin_manager, Request $request, ModuleHandler $moduleHandler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $query_type_plugin_manager);
 
     $this->searchApiQueryHelper = $search_results_cache;
     $this->displayPluginManager = $display_plugin_manager;
+    $this->moduleHandler = $moduleHandler;
     $this->request = clone $request;
   }
 
@@ -100,7 +111,8 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
       $container->get('plugin.manager.facets.query_type'),
       $container->get('search_api.query_helper'),
       $container->get('plugin.manager.search_api.display'),
-      $container->get('request_stack')->getMasterRequest()
+      $container->get('request_stack')->getMasterRequest(),
+      $container->get('module_handler')
     );
   }
 
@@ -324,6 +336,27 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
   public function getDisplay() {
     return $this->displayPluginManager
       ->createInstance($this->pluginDefinition['display_id']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getViewsDisplay() {
+    if (!$this->moduleHandler->moduleExists('views')) {
+      return NULL;
+    }
+
+    $search_api_display_definition = $this->getDisplay()->getPluginDefinition();
+    if (empty($search_api_display_definition['view_id'])) {
+      return NULL;
+    }
+
+    $view_id = $search_api_display_definition['view_id'];
+    $view_display = $search_api_display_definition['view_display'];
+
+    $view = Views::getView($view_id);
+    $view->setDisplay($view_display);
+    return $view;
   }
 
 }
