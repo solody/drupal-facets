@@ -80,7 +80,7 @@ class SliderWidgetTest extends WidgetTestBase {
 
     $originalResults = [];
     foreach (range(3, 20000, 2) as $rv) {
-      $res = new Result($rv, 'Value: ' . $rv, ceil($rv/2));
+      $res = new Result($rv, 'Value: ' . $rv, ceil($rv / 2));
       $res->setUrl(new Url('test'));
       $originalResults[] = $res;
     }

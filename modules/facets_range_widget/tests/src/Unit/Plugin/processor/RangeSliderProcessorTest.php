@@ -22,6 +22,8 @@ use Drupal\Tests\UnitTestCase;
 class RangeSliderProcessorTest extends UnitTestCase {
 
   /**
+   * The processor we're testing.
+   *
    * @var \Drupal\facets_range_widget\Plugin\facets\processor\RangeSliderProcessor
    */
   protected $processor;

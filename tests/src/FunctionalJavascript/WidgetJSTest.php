@@ -184,7 +184,7 @@ class WidgetJSTest extends JavascriptTestBase {
   /**
    * Setup and insert test content.
    */
-  private function insertExampleContent() {
+  protected function insertExampleContent() {
     entity_test_create_bundle('item', NULL, 'entity_test_mulrev_changed');
     entity_test_create_bundle('article', NULL, 'entity_test_mulrev_changed');
 

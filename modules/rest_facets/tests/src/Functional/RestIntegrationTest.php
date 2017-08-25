@@ -33,7 +33,7 @@ class RestIntegrationTest extends FacetsTestBase {
     $this->drupalLogin($this->adminUser);
     $this->setUpExampleStructure();
     $this->insertExampleContent();
-    $this->assertEqual($this->indexItems($this->indexId), 5, '5 items were indexed.');
+    $this->assertEquals(5, $this->indexItems($this->indexId), '5 items were indexed.');
   }
 
   /**
@@ -70,9 +70,9 @@ class RestIntegrationTest extends FacetsTestBase {
     // Use the array widget.
     $facet_edit_page = '/admin/config/search/facets/' . $id . '/edit';
     $this->drupalGet($facet_edit_page);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, ['widget' => 'array'], $this->t('Configure widget'));
+    $this->drupalPostForm(NULL, ['widget' => 'array'], 'Configure widget');
     $values['widget'] = 'array';
     $values['widget_config[show_numbers]'] = TRUE;
     $values['facet_sorting[count_widget_order][status]'] = TRUE;
@@ -82,7 +82,7 @@ class RestIntegrationTest extends FacetsTestBase {
     $values['facet_settings[query_operator]'] = 'or';
     $values['facet_settings[only_visible_when_facet_source_is_visible]'] = TRUE;
 
-    $this->drupalPostForm(NULL, $values, $this->t('Save'));
+    $this->drupalPostForm(NULL, $values, 'Save');
 
     drupal_flush_all_caches();
 
@@ -94,9 +94,9 @@ class RestIntegrationTest extends FacetsTestBase {
     // Use the array widget.
     $facet_edit_page = '/admin/config/search/facets/' . $id . '/edit';
     $this->drupalGet($facet_edit_page);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, ['widget' => 'array'], $this->t('Configure widget'));
+    $this->drupalPostForm(NULL, ['widget' => 'array'], 'Configure widget');
     $values['widget'] = 'array';
     $values['widget_config[show_numbers]'] = TRUE;
     $values['facet_sorting[count_widget_order][status]'] = TRUE;
@@ -106,13 +106,13 @@ class RestIntegrationTest extends FacetsTestBase {
     $values['facet_settings[query_operator]'] = 'or';
     $values['facet_settings[only_visible_when_facet_source_is_visible]'] = TRUE;
 
-    $this->drupalPostForm(NULL, $values, $this->t('Save'));
+    $this->drupalPostForm(NULL, $values, 'Save');
 
     // Get the output from the rest view and decode it into an array.
     $json = $this->drupalGet('facets-rest');
     $json_decoded = json_decode($json);
 
-    $this->assertEqual(count($json_decoded->search_results), 5);
+    $this->assertEquals(5, count($json_decoded->search_results));
 
     // Verify the facet "Type".
     $results = [
@@ -128,8 +128,8 @@ class RestIntegrationTest extends FacetsTestBase {
 
     foreach ($json_decoded->facets[1][0]->type as $result) {
       $value = $result->values->value;
-      $this->assertEqual($result->url, $results[$value]['url']);
-      $this->assertEqual($result->values->count, $results[$value]['count']);
+      $this->assertEquals($result->url, $results[$value]['url']);
+      $this->assertEquals($result->values->count, $results[$value]['count']);
     }
 
     // Verify the facet "Keywords".
@@ -158,15 +158,15 @@ class RestIntegrationTest extends FacetsTestBase {
 
     foreach ($json_decoded->facets[0][0]->keywords as $result) {
       $value = $result->values->value;
-      $this->assertEqual($result->url, $results[$value]['url']);
-      $this->assertEqual($result->values->count, $results[$value]['count']);
+      $this->assertEquals($result->url, $results[$value]['url']);
+      $this->assertEquals($result->values->count, $results[$value]['count']);
     }
 
     // Filter and verify that the results are correct.
     $json = $this->drupalGet($base_url . '/facets-rest?f%5B0%5D=type%3Aitem');
     $json_decoded = json_decode($json);
 
-    $this->assertEqual(count($json_decoded->search_results), 3);
+    $this->assertEquals(3, count($json_decoded->search_results));
 
     $results = [
       'article' => [
@@ -201,14 +201,14 @@ class RestIntegrationTest extends FacetsTestBase {
 
     foreach ($json_decoded->facets[1][0]->type as $result) {
       $value = $result->values->value;
-      $this->assertEqual($result->url, $results[$value]['url']);
-      $this->assertEqual($result->values->count, $results[$value]['count']);
+      $this->assertEquals($result->url, $results[$value]['url']);
+      $this->assertEquals($result->values->count, $results[$value]['count']);
     }
 
     foreach ($json_decoded->facets[0][0]->keywords as $result) {
       $value = $result->values->value;
-      $this->assertEqual($result->url, $results[$value]['url']);
-      $this->assertEqual($result->values->count, $results[$value]['count']);
+      $this->assertEquals($result->url, $results[$value]['url']);
+      $this->assertEquals($result->values->count, $results[$value]['count']);
     }
 
   }
@@ -217,22 +217,21 @@ class RestIntegrationTest extends FacetsTestBase {
    * Tests that the system raises an error when selecting the wrong widget.
    */
   public function testWidgetSelection() {
-    $name = 'Type';
     $id = 'type';
 
     // Add a new facet to filter by content type.
-    $this->createFacet($name, $id, 'type', 'rest_export_1', 'views_rest__search_api_rest_test_view');
+    $this->createFacet('Type', $id, 'type', 'rest_export_1', 'views_rest__search_api_rest_test_view');
 
     // Use the array widget.
     $facet_edit_page = '/admin/config/search/facets/' . $id . '/edit';
     $this->drupalGet($facet_edit_page);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, ['widget' => 'checkbox'], $this->t('Configure widget'));
-    $this->assertText('The Facet source is a Rest export. Please select a raw widget.');
+    $this->drupalPostForm(NULL, ['widget' => 'checkbox'], 'Configure widget');
+    $this->assertSession()->pageTextContains('The Facet source is a Rest export. Please select a raw widget.');
 
-    $this->drupalPostForm(NULL, ['widget' => 'array'], $this->t('Configure widget'));
-    $this->assertNoText('The Facet source is a Rest export. Please select a raw widget.');
+    $this->drupalPostForm(NULL, ['widget' => 'array'], 'Configure widget');
+    $this->assertSession()->pageTextNotContains('The Facet source is a Rest export. Please select a raw widget.');
   }
 
 }

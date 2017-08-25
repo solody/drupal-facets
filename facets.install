@@ -22,7 +22,6 @@ function facets_update_8001() {
   // This only works for the 3 default plugins that we previously shipped. So
   // only views that have a page, block, or rest display. The id will get
   // replaced from views_page:foo to search_api:views_page__foo.
-
   $old_ids = ['views_page', 'views_block', 'views_rest'];
 
   /** @var \Drupal\facets\FacetInterface[] $entities */
@@ -79,9 +78,9 @@ function facets_update_8002() {
     }
 
     $database->update('config')
-      ->fields(array(
+      ->fields([
         'data' => serialize($data),
-      ))
+      ])
       ->condition('name', $result->name)
       ->execute();
   }

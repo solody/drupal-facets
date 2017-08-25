@@ -7,12 +7,10 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\facets\FacetManager\DefaultFacetManager;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\facets\FacetSource\FacetSourcePluginInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginManager;
 use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
 use Drupal\facets_summary\Processor\ProcessorPluginManager;
 use Drupal\Core\Routing\UrlGeneratorInterface;
-use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

@@ -31,13 +31,6 @@ class FacetForm extends EntityForm {
   protected $facet;
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The processor manager.
    *
    * @var \Drupal\facets\Processor\ProcessorPluginManager

@@ -17,7 +17,6 @@ No other modules required, we're supporting drupal core's search as a source for
 creating facets. Though we recommend using Search API, as that integration is
 better tested.
 
-
 INSTALLATION
 ------------
  * Install as you would normally install a contributed drupal module. See:

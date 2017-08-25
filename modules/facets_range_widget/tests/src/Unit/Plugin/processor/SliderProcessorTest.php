@@ -19,6 +19,8 @@ use Drupal\Tests\UnitTestCase;
 class SliderProcessorTest extends UnitTestCase {
 
   /**
+   * The processor we're testing.
+   *
    * @var \Drupal\facets\Processor\ProcessorInterface
    */
   protected $processor;
@@ -46,7 +48,7 @@ class SliderProcessorTest extends UnitTestCase {
     $result_higher = new Result(150, '150', 1);
     $facet->setResults([$result_lower, $result_higher]);
 
-    // Process the data
+    // Process the data.
     $startTime = microtime();
     $this->processor->postQuery($facet);
     $new_results = $facet->getResults();
@@ -81,7 +83,7 @@ class SliderProcessorTest extends UnitTestCase {
     $original_results[] = new Result(150000, 'Big', 5);
     $facet->setResults($original_results);
 
-    // Process the data
+    // Process the data.
     $startTime = microtime();
     $this->processor->postQuery($facet);
     $new_results = $facet->getResults();
@@ -110,7 +112,7 @@ class SliderProcessorTest extends UnitTestCase {
     }
     $facet->setResults($original_results);
 
-    // Process the data
+    // Process the data.
     $this->processor->postQuery($facet);
     $new_results = $facet->getResults();
 
@@ -139,7 +141,7 @@ class SliderProcessorTest extends UnitTestCase {
     $result_higher = new Result(150, '150', 1);
     $facet->setResults([$result_lower, $result_higher]);
 
-    // Process the data
+    // Process the data.
     $this->processor->postQuery($facet);
     $new_results = $facet->getResults();
 
@@ -161,7 +163,7 @@ class SliderProcessorTest extends UnitTestCase {
     $result_higher = new Result(15, '15', 4);
     $facet->setResults([$result_lower, $result_higher]);
 
-    // Process the data
+    // Process the data.
     $this->processor->postQuery($facet);
     $new_results = $facet->getResults();
 
@@ -178,7 +180,7 @@ class SliderProcessorTest extends UnitTestCase {
    * Configures the container.
    *
    * @param array $config
-   *  The config for the widget.
+   *   The config for the widget.
    */
   protected function configureContainer(array $config = []) {
     $widget = $this->prophesize(ArrayWidget::class);

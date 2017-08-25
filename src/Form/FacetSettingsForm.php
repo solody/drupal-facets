@@ -40,20 +40,6 @@ class FacetSettingsForm extends EntityForm {
   protected $processorPluginManager;
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The url generator.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
-
-  /**
    * Constructs a FacetForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -331,13 +317,6 @@ class FacetSettingsForm extends EntityForm {
     }
 
     return $facet;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function delete(array $form, FormStateInterface $form_state) {
-    $form_state->setRedirect('entity.facets_facet.delete_form', ['facets_facet' => $this->getEntity()->id()]);
   }
 
 }

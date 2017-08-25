@@ -17,9 +17,7 @@ abstract class CoreSearchFacetsTestBase extends BrowserTestBase {
   use TestHelperTrait;
 
   /**
-   * Modules to enable for this test.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
   public static $modules = [
     'field',

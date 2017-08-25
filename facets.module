@@ -68,9 +68,6 @@ function facets_theme($existing, $type, $theme, $path) {
 
 /**
  * Implements hook_search_api_query_alter().
- *
- * @param \Drupal\search_api\Query\QueryInterface $query
- *   Generates query for facet search.
  */
 function facets_search_api_query_alter(QueryInterface &$query) {
   if ($query->getIndex()->getServerInstance()->supportsFeature('search_api_facets')) {
@@ -214,7 +211,7 @@ function facets_entity_predelete(EntityInterface $entity) {
  *
  * @see https://www.drupal.org/node/1842756
  */
-function facets_preprocess_facets_item_list(&$variables) {
+function facets_preprocess_facets_item_list(array &$variables) {
   template_preprocess_item_list($variables);
 }
 
@@ -322,7 +319,7 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
 
       // Because we can't get the desired url trough a url processor method
       // we iterate each result url and remove the facet params that haven't
-      // been used on previous crumbs
+      // been used on previous crumbs.
       foreach ($facet_results as $res) {
         $facet_url = $res->getUrl();
         /** @var \Drupal\Core\Url $facet_url */

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\core_search_facets\Functional;
 
+use Drupal\facets\Entity\Facet;
 use Drupal\Tests\facets\Functional\BlockTestTrait;
 use Drupal\node\Entity\Node;
 
@@ -85,8 +86,8 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
     // Verify that the "empty_text" appears as expected.
     $this->setEmptyBehaviorFacetText($facet_name);
     $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
-    $this->assertRaw('block-test-facet-name');
-    $this->assertRaw('No results found for this block!');
+    $this->assertSession()->responseContains('block-test-facet-name');
+    $this->assertSession()->responseContains('No results found for this block!');
 
     // Delete the block.
     $this->deleteBlock($facet_id);
@@ -100,10 +101,9 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
    * Tests the "Post date" facets.
    */
   public function testPostDate() {
-    $facet_name = 'Tardigrade';
     $facet_id = 'tardigrade';
 
-    $this->addFacet($facet_id, $facet_name, 'created');
+    $this->addFacet($facet_id, 'Tardigrade', 'created');
     $this->blocks[$facet_id] = $this->createBlock($facet_id);
     $this->setShowAmountOfResults($facet_id, TRUE);
 
@@ -115,22 +115,22 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
     $this->assertFacetLabel('February 2016 (9)');
     $this->assertFacetLabel('March 2016 (10)');
     $this->assertFacetLabel('April 2016 (10)');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->clickPartialLink('March 2016');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertFacetLabel('March 8, 2016 (1)');
     $this->assertFacetLabel('March 9, 2016 (2)');
 
     $this->clickPartialLink('March 9');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertFacetLabel('10 AM (1)');
     $this->assertFacetLabel('12 PM (1)');
 
     $this->drupalGet('search/node', ['query' => ['keys' => 'test']]);
     $this->assertFacetLabel('April 2016 (10)');
     $this->clickPartialLink('April 2016');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertFacetLabel('April 1, 2016 (1)');
     $this->assertFacetLabel('April 2, 2016 (1)');
   }
@@ -139,10 +139,9 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
    * Tests the "Updated date" facets.
    */
   public function testUpdatedDate() {
-    $facet_name = 'Tardigrade';
     $facet_id = 'tardigrade';
 
-    $this->addFacet($facet_id, $facet_name, 'changed');
+    $this->addFacet($facet_id, 'Tardigrade', 'changed');
     $this->blocks[$facet_id] = $this->createBlock($facet_id);
     $this->setShowAmountOfResults($facet_id, TRUE);
 
@@ -200,15 +199,24 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
    *   The field type.
    */
   protected function addFacet($id, $name, $type = 'type') {
-    $this->drupalGet('admin/config/search/facets/add-facet');
-    $form_values = [
+    /** @var \Drupal\facets\FacetInterface $facet */
+    $facet = Facet::create([
       'id' => $id,
       'name' => $name,
-      'facet_source_id' => 'core_node_search:node_search',
-      'facet_source_configs[core_node_search:node_search][field_identifier]' => $type,
-    ];
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'core_node_search:node_search'], $this->t('Configure facet source'));
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
+      'weight' => 0,
+    ]);
+    $facet->setFacetSourceId('core_node_search:node_search');
+    $facet->setFieldIdentifier($type);
+    $facet->setUrlAlias($id);
+    $facet->setWidget('links', ['show_numbers' => TRUE]);
+    $facet->addProcessor([
+      'processor_id' => 'url_processor_handler',
+      'weights' => ['pre_query' => -10, 'build' => -10],
+      'settings' => [],
+    ]);
+    $facet->setEmptyBehavior(['behavior' => 'none']);
+    $facet->setOnlyVisibleWhenFacetSourceIsVisible(TRUE);
+    $facet->save();
   }
 
   /**
@@ -223,12 +231,12 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
     $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/edit';
 
     $this->drupalGet($facet_edit_page);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $edit = [
       'widget_config[show_numbers]' => $show,
     ];
-    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
   }
 
   /**
@@ -244,14 +252,14 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
 
     // Go to the facet edit page and make sure "edit facet %facet" is present.
     $this->drupalGet($facet_edit_page);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Configure the text for empty results behavior.
     $edit = [
       'facet_settings[empty_behavior]' => 'text',
       'facet_settings[empty_behavior_container][empty_behavior_text][value]' => 'No results found for this block!',
     ];
-    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
   }
 
   /**
@@ -265,14 +273,14 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
 
     $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/edit';
     $this->drupalGet($facet_edit_page);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $edit = [
       'facet_settings[only_visible_when_facet_source_is_visible]' => TRUE,
       'widget' => 'links',
       'widget_config[show_numbers]' => '0',
     ];
-    $this->drupalPostForm(NULL, $edit, $this->t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
   }
 
   /**
@@ -281,11 +289,11 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
   protected function checkEmptyOverview() {
     $facet_overview = '/admin/config/search/facets';
     $this->drupalGet($facet_overview);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // The list overview has Field: field_name as description. This tests on the
     // absence of that.
-    $this->assertNoText('Field:');
+    $this->assertSession()->pageTextNotContains('Field:');
   }
 
   /**
@@ -302,7 +310,7 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
     // Go to the Add facet page and make sure that returns a 200.
     $facet_add_page = '/admin/config/search/facets/add-facet';
     $this->drupalGet($facet_add_page);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $form_values = [
       'name' => '',
@@ -311,34 +319,34 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
 
     // Try filling out the form, but without having filled in a name for the
     // facet to test for form errors.
-    $this->drupalPostForm($facet_add_page, $form_values, $this->t('Save'));
-    $this->assertText($this->t('Name field is required.'));
-    $this->assertText($this->t('Facet source field is required.'));
+    $this->drupalPostForm($facet_add_page, $form_values, 'Save');
+    $this->assertSession()->pageTextContains('Name field is required.');
+    $this->assertSession()->pageTextContains('Facet source field is required.');
 
     // Make sure that when filling out the name, the form error disappears.
     $form_values['name'] = $facet_name;
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertNoText($this->t('Facet name field is required.'));
+    $this->drupalPostForm(NULL, $form_values, 'Save');
+    $this->assertSession()->pageTextNotContains('Facet name field is required.');
 
     // Configure the facet source by selecting one of the Search API views.
     $this->drupalGet($facet_add_page);
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'core_node_search:node_search'], $this->t('Configure facet source'));
+    $this->drupalPostForm(NULL, ['facet_source_id' => 'core_node_search:node_search'], 'Configure facet source');
 
     // The facet field is still required.
-    $this->drupalPostForm(NULL, $form_values, $this->t('Save'));
-    $this->assertText($this->t('Field field is required.'));
+    $this->drupalPostForm(NULL, $form_values, 'Save');
+    $this->assertSession()->pageTextContains('Field field is required.');
 
     // Fill in all fields and make sure the 'field is required' message is no
     // longer shown.
     $facet_source_form = [
       'facet_source_configs[core_node_search:node_search][field_identifier]' => $type,
     ];
-    $this->drupalPostForm(NULL, $form_values + $facet_source_form, $this->t('Save'));
-    $this->assertNoText('field is required.');
+    $this->drupalPostForm(NULL, $form_values + $facet_source_form, 'Save');
+    $this->assertSession()->pageTextNotContains('field is required.');
 
     // Make sure that the redirection to the display page is correct.
-    $this->assertRaw(t('Facet %name has been created.', ['%name' => $facet_name]));
-    $this->assertUrl('admin/config/search/facets/' . $facet_id . '/edit');
+    $this->assertSession()->responseContains(t('Facet %name has been created.', ['%name' => $facet_name]));
+    $this->assertSession()->addressEquals('admin/config/search/facets/' . $facet_id . '/edit');
 
     $this->drupalGet('admin/config/search/facets');
   }
@@ -356,28 +364,28 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
 
     // Go to the facet edit page and make sure "edit facet %facet" is present.
     $this->drupalGet($facet_edit_page);
-    $this->assertResponse(200);
-    $this->assertRaw($this->t('Facet settings for @facet facet', ['@facet' => $facet_name]));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->responseContains($this->t('Facet settings for @facet facet', ['@facet' => $facet_name]));
 
     // Change the facet name to add in "-2" to test editing of a facet works.
     $form_values = ['name' => $facet_name . ' - 2'];
-    $this->drupalPostForm($facet_edit_page, $form_values, $this->t('Save'));
+    $this->drupalPostForm($facet_edit_page, $form_values, 'Save');
 
     // Make sure that the redirection back to the overview was successful and
     // the edited facet is shown on the overview page.
-    $this->assertRaw(t('Facet %name has been updated.', ['%name' => $facet_name . ' - 2']));
+    $this->assertSession()->responseContains(t('Facet %name has been updated.', ['%name' => $facet_name . ' - 2']));
 
     // Make sure the "-2" suffix is still on the facet when editing a facet.
     $this->drupalGet($facet_edit_page);
-    $this->assertRaw($this->t('Facet settings for @facet facet', ['@facet' => $facet_name . ' - 2']));
+    $this->assertSession()->responseContains($this->t('Facet settings for @facet facet', ['@facet' => $facet_name . ' - 2']));
 
     // Edit the form and change the facet's name back to the initial name.
     $form_values = ['name' => $facet_name];
-    $this->drupalPostForm($facet_edit_page, $form_values, $this->t('Save'));
+    $this->drupalPostForm($facet_edit_page, $form_values, 'Save');
 
     // Make sure that the redirection back to the overview was successful and
     // the edited facet is shown on the overview page.
-    $this->assertRaw(t('Facet %name has been updated.', ['%name' => $facet_name]));
+    $this->assertSession()->responseContains(t('Facet %name has been updated.', ['%name' => $facet_name]));
   }
 
   /**
@@ -393,11 +401,11 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
 
     // Go to the facet delete page and make the warning is shown.
     $this->drupalGet($facet_delete_page);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Check that the facet by testing for the message and the absence of the
     // facet name on the overview.
-    $this->assertRaw($this->t("The facet is currently used in a block and thus can't be removed. Remove the block first."));
+    $this->assertSession()->responseContains("The facet is currently used in a block and thus can't be removed. Remove the block first.");
   }
 
   /**
@@ -413,34 +421,21 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
 
     // Go to the facet delete page and make the warning is shown.
     $this->drupalGet($facet_delete_page);
-    $this->assertResponse(200);
-    $this->assertText($this->t('This action cannot be undone'));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('This action cannot be undone');
     // Actually submit the confirmation form.
     $this->drupalPostForm(NULL, [], $this->t('Delete'));
 
     // Check that the facet by testing for the message and the absence of the
     // facet name on the overview.
-    $this->assertRaw($this->t('The facet %facet has been deleted.', ['%facet' => $facet_name]));
+    $this->assertSession()->responseContains($this->t('The facet %facet has been deleted.', ['%facet' => $facet_name]));
 
     // Refresh the page because on the previous page the $facet_name is still
     // visible (in the message).
     $facet_overview = '/admin/config/search/facets';
     $this->drupalGet($facet_overview);
-    $this->assertResponse(200);
-    $this->assertNoText($facet_name);
-  }
-
-  /**
-   * Convert facet name to machine name.
-   *
-   * @param string $facet_name
-   *   The name of the facet.
-   *
-   * @return string
-   *   The facet name changed to a machine name.
-   */
-  protected function convertNameToMachineName($facet_name) {
-    return preg_replace('@[^a-zA-Z0-9_]+@', '_', strtolower($facet_name));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains($facet_name);
   }
 
   /**
@@ -456,7 +451,7 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
 
     // Go to the facet delete page and make the warning is shown.
     $this->drupalGet($facet_delete_page);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

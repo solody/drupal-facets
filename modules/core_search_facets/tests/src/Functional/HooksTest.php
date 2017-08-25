@@ -51,7 +51,7 @@ class HooksTest extends CoreSearchFacetsTestBase {
     // Verify that hook_facets_core_allowed_field_types was triggered.
     $facet_add_page = 'admin/config/search/facets/add-facet';
     $this->drupalGet($facet_add_page);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Select the node_search facet source.
     $this->drupalGet($facet_add_page);
@@ -62,7 +62,7 @@ class HooksTest extends CoreSearchFacetsTestBase {
     );
 
     // The field appears as expected.
-    $this->assertText('Float Field Label');
+    $this->assertSession()->pageTextContains('Float Field Label');
   }
 
 }

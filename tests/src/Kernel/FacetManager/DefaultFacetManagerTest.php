@@ -111,7 +111,7 @@ class DefaultFacetManagerTest extends KernelTestBase {
    * @return \Drupal\facets\FacetInterface
    *   The newly created facet.
    */
-  private function createAndSaveFacet($id) {
+  protected function createAndSaveFacet($id) {
     // Create a facet.
     $entity = Facet::create([
       'id' => $id,
