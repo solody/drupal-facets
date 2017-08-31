@@ -68,11 +68,18 @@ class QueryString extends UrlProcessorPluginBase {
       $request = Request::create($facet->getFacetSource()->getPath());
     }
 
+    // Grab any route params from the original request.
+    $routeParameters = Url::createFromRequest($this->request)
+      ->getRouteParameters();
+
+    // Get request Url.
+    $requestUrl = Url::createFromRequest($request);
+    $requestUrl->setOption('attributes', ['rel' => 'nofollow']);
+
     /** @var \Drupal\facets\Result\ResultInterface[] $results */
     foreach ($results as &$result) {
       // Reset the URL for each result.
-      $url = Url::createFromRequest($request);
-      $url->setOption('attributes', ['rel' => 'nofollow']);
+      $url = clone $requestUrl;
 
       // Sets the url for children.
       if ($children = $result->getChildren()) {
@@ -129,14 +136,10 @@ class QueryString extends UrlProcessorPluginBase {
       }
 
       $result_get_params->set($this->filterKey, array_values($filter_params));
-      // Grab any route params from the original request.
-      $routeParameters = Url::createFromRequest($this->request)
-        ->getRouteParameters();
       if (!empty($routeParameters)) {
         $url->setRouteParameters($routeParameters);
       }
 
-      $new_url = clone $url;
       if ($result_get_params->all() !== [$this->filterKey => []]) {
         $new_url_params = $result_get_params->all();
 
@@ -145,10 +148,10 @@ class QueryString extends UrlProcessorPluginBase {
         unset($new_url_params['page']);
 
         // Set the new url parameters.
-        $new_url->setOption('query', $new_url_params);
+        $url->setOption('query', $new_url_params);
       }
 
-      $result->setUrl($new_url);
+      $result->setUrl($url);
     }
 
     // Restore page parameter again. See https://www.drupal.org/node/2726455.
