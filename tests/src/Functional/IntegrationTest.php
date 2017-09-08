@@ -3,6 +3,7 @@
 namespace Drupal\Tests\facets\Functional;
 
 use Drupal\Core\Url;
+use Drupal\facets\Plugin\facets\query_type\SearchApiDate;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
@@ -442,6 +443,70 @@ class IntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextContains('foo test');
     $this->assertSession()->pageTextContains('bar');
     $this->assertSession()->pageTextNotContains('foo baz');
+  }
+
+  /**
+   * Tests the facet's exclude functionality for a date field.
+   */
+  public function testExcludeFacetDate() {
+    $field_name = 'created';
+    $entity_test_storage = \Drupal::entityTypeManager()
+      ->getStorage('entity_test_mulrev_changed');
+    $entity_test_storage->create([
+      'name' => 'foo new',
+      'body' => 'test test',
+      'type' => 'item',
+      'keywords' => ['orange'],
+      'category' => 'item_category',
+      $field_name => 1490000000,
+    ])->save();
+
+    $entity_test_storage->create([
+      'name' => 'foo old',
+      'body' => 'test test',
+      'type' => 'item',
+      'keywords' => ['orange'],
+      'category' => 'item_category',
+      $field_name => 1460000000,
+    ])->save();
+
+    $this->indexItems($this->indexId);
+
+    $facet_name = "Created";
+    $facet_id = "created";
+
+    // Create facet.
+    $facet_edit_page = 'admin/config/search/facets/' . $facet_id . '/edit';
+    $this->createFacet($facet_name, $facet_id, $field_name);
+
+    $form = [
+      'widget' => 'datebasic',
+      'widget_config[granularity]' => SearchApiDate::FACETAPI_DATE_MONTH,
+      'widget_config[display_relative]' => 0,
+    ];
+    $this->drupalGet($facet_edit_page);
+    $this->drupalPostForm(NULL, ['widget' => 'datebasic'], 'Configure widget');
+    $this->drupalPostForm(NULL, $form, 'Save');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('foo old');
+    $this->assertText('foo new');
+    $this->clickLink('March 2017');
+    $this->checkFacetIsActive('March 2017');
+    $this->assertText('foo new');
+    $this->assertNoText('foo old');
+
+    $this->drupalGet($facet_edit_page);
+    $this->assertNoFieldChecked('edit-facet-settings-exclude');
+    $form['facet_settings[exclude]'] = TRUE;
+    $this->drupalPostForm(NULL, $form, 'Save');
+    $this->assertFieldChecked('edit-facet-settings-exclude');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->clickLink('March 2017');
+    $this->checkFacetIsActive('March 2017');
+    $this->assertText('foo old');
+    $this->assertNoText('foo new');
   }
 
   /**

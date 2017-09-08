@@ -38,3 +38,19 @@ facet.widget.config.links:
 # "soft limit" and "show counts".
 facet.widget.config.checkbox:
   type: facet.widget.config.links
+
+# Config schema for datebasic, you can find the implementation in
+# Drupal\facets\Plugin\facets\widget\DateBasicWidget.
+facet.widget.config.datebasic:
+  type: facet.widget.default_config
+  label: 'List of dates configuration'
+  mapping:
+    display_relative:
+      type: boolean
+      label: 'Display relative'
+    granularity:
+      type: integer
+      label: 'Granularity'
+    date_display:
+      type: string
+      label: 'Date display'
