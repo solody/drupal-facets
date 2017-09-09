@@ -11,6 +11,7 @@ use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginManager;
 use Drupal\facets\FacetSource\SearchApiFacetSourceInterface;
 use Drupal\facets\Processor\ProcessorPluginManager;
+use Drupal\views\Plugin\views\display\Block;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -291,10 +292,6 @@ class FacetSettingsForm extends EntityForm {
         drupal_set_message($message);
         $form_state->setRedirect('entity.facets_facet.edit_form', ['facets_facet' => $facet->id()]);
       }
-
-      if (isset($view_id, $display_plugin) && $display_plugin === 'block') {
-        $facet->setOnlyVisibleWhenFacetSourceIsVisible(FALSE);
-      }
     }
     else {
       drupal_set_message($this->t('Facet %name has been updated.', ['%name' => $facet->getName()]));
@@ -310,6 +307,9 @@ class FacetSettingsForm extends EntityForm {
     if (isset($facet_source) && $facet_source instanceof SearchApiFacetSourceInterface) {
       $view = $facet_source->getViewsDisplay();
       if ($view !== NULL) {
+        if ($view->display_handler instanceof Block) {
+          $facet->setOnlyVisibleWhenFacetSourceIsVisible(FALSE);
+        }
         $view->display_handler->overrideOption('cache', ['type' => 'none']);
         $view->save();
         drupal_set_message($this->t('Caching of view %view has been disabled.', ['%view' => $view->storage->label()]));

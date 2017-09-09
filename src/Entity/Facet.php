@@ -381,7 +381,6 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     // TODO: do not hardcode on taxonomy, make this configurable (or better,
     // autoselected depending field type).
     return ['type' => 'taxonomy', 'config' => []];
-    return $this->hierarchy;
   }
 
   /**

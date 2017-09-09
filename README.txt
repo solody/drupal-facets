@@ -23,7 +23,6 @@ INSTALLATION
    https://drupal.org/documentation/install/modules-themes/modules-7
    for further information.
 
-
 CONFIGURATION
 -------------
 Before adding a facet, there should be a facet source. Facet sources can be:
@@ -138,7 +137,7 @@ FAQ
 Q: Why do the facets disappear after a refresh.
 A: We don't support cached views, change the view to disable caching.
 
-Q: Why doesn't chosen (or similiar javascript dropdown replacement) not work
+Q: Why doesn't chosen (or similar javascript dropdown replacement) not work
 with the dropdown widget.
 A: Because the dropdown we create for the widget is created trough javascript,
 the chosen module (and others, probably) doesn't find the select element.

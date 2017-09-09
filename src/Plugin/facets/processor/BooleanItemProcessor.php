@@ -28,7 +28,7 @@ class BooleanItemProcessor extends ProcessorPluginBase implements BuildProcessor
     $config = $this->getConfiguration();
 
     /** @var \Drupal\facets\Result\Result $result */
-    foreach ($results as $id => $result) {
+    foreach ($results as $result) {
       if ($result->getRawValue() == 0) {
         $result->setDisplayValue($config['off_value']);
       }

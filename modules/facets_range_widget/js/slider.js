@@ -11,7 +11,7 @@
 
   Drupal.behaviors.facet_slider = {
     attach: function (context, settings) {
-      if (settings.facets !== undefined && settings.facets.sliders !== undefined) {
+      if (settings.facets !== 'undefined' && settings.facets.sliders !== 'undefined') {
         $.each(settings.facets.sliders, function (facet, settings) {
           Drupal.facets.addSlider(facet, settings);
         });

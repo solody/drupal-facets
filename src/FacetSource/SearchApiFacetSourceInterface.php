@@ -31,7 +31,7 @@ interface SearchApiFacetSourceInterface extends FacetSourcePluginInterface {
    *
    * @return \Drupal\views\ViewExecutable|null
    *   NULL when the view can't be found or loaded, the view with preset display
-   * otherwise.
+   *   otherwise.
    */
   public function getViewsDisplay();
 

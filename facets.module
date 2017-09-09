@@ -33,7 +33,7 @@ function facets_help($route_name, RouteMatchInterface $route_match) {
     case 'entity.facets_facet.collection':
       $output = '';
       $output .= '<p>' . t('Below is a list of facets grouped by facetsources they are associated with. A facetsource is the instance where the facet does the actual filtering, for example a View on a Search API index.') . '</p>';
-      $output .= '<p>' . t('The facets weight can be changed with drag and drop withing the same facet source. Although you can drag and drop a facet under any facet source, this change will not be performed on save.') . '</p>';
+      $output .= '<p>' . t('The facets weight can be changed with drag and drop within the same facet source. Although you can drag and drop a facet under any facet source, this change will not be performed on save.') . '</p>';
       return $output;
   }
 }
@@ -281,7 +281,7 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
     $active_results = [];
     $active_facets = [];
     foreach ($facets as $facet) {
-      if ($active_items = $facet->getActiveItems()) {
+      if (count($facet->getActiveItems()) > 0) {
         // Add the facet as a cacheable dependency.
         $breadcrumb->addCacheableDependency($facet);
         /** @var \Drupal\facets\UrlProcessor\UrlProcessorInterface $url_processor */

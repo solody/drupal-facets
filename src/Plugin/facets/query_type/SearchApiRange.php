@@ -67,7 +67,7 @@ class SearchApiRange extends QueryTypePluginBase {
 
     if (!empty($this->results)) {
       $facet_results = [];
-      foreach ($this->results as $key => $result) {
+      foreach ($this->results as $result) {
         if ($result['count'] || $query_operator == 'or') {
           $count = $result['count'];
           $result_filter = trim($result['filter'], '"');

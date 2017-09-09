@@ -134,11 +134,13 @@ class IntegrationTest extends FacetsTestBase {
    * Tests that a block view also works.
    */
   public function testBlockView() {
-    $facet_id = 'bvf';
+    $facet_id = 'block_view_facet';
 
-    $this->createFacet('Block view facet', $facet_id, 'type', 'block_1', 'views_block__search_api_test_view');
+    $webAssert = $this->assertSession();
+    $this->addFacet('Block view facet', 'type', 'search_api:views_block__search_api_test_view__block_1');
+    $this->createBlock($facet_id);
     $this->drupalGet('admin/config/search/facets/' . $facet_id . '/edit');
-    $this->drupalPostForm(NULL, ['facet_settings[only_visible_when_facet_source_is_visible]' => FALSE], 'Save');
+    $webAssert->checkboxNotChecked('facet_settings[only_visible_when_facet_source_is_visible]');
 
     // Place the views block in the footer of all pages.
     $block_settings = [
@@ -149,14 +151,14 @@ class IntegrationTest extends FacetsTestBase {
 
     // By default, the view should show all entities.
     $this->drupalGet('<front>');
-    $this->assertSession()->pageTextContains('Fulltext test index');
-    $this->assertSession()->pageTextContains('Displaying 5 search results');
-    $this->assertSession()->pageTextContains('item');
-    $this->assertSession()->pageTextContains('article');
+    $webAssert->pageTextContains('Fulltext test index');
+    $webAssert->pageTextContains('Displaying 5 search results');
+    $webAssert->pageTextContains('item');
+    $webAssert->pageTextContains('article');
 
     // Click the item link, and test that filtering of results actually works.
     $this->clickLink('item');
-    $this->assertSession()->pageTextContains('Displaying 3 search results');
+    $webAssert->pageTextContains('Displaying 3 search results');
   }
 
   /**
@@ -925,8 +927,10 @@ class IntegrationTest extends FacetsTestBase {
    *   The name of the facet.
    * @param string $facet_type
    *   The field of the facet.
+   * @param string $source_id
+   *   The facet source id.
    */
-  protected function addFacet($facet_name, $facet_type = 'type') {
+  protected function addFacet($facet_name, $facet_type = 'type', $source_id = 'search_api:views_page__search_api_test_view__page_1') {
     $facet_id = $this->convertNameToMachineName($facet_name);
 
     // Go to the Add facet page and make sure that returns a 200.
@@ -952,7 +956,7 @@ class IntegrationTest extends FacetsTestBase {
 
     // Configure the facet source by selecting one of the Search API views.
     $this->drupalGet($facet_add_page);
-    $this->drupalPostForm(NULL, ['facet_source_id' => 'search_api:views_page__search_api_test_view__page_1'], 'Configure facet source');
+    $this->drupalPostForm(NULL, ['facet_source_id' => '' . $source_id . ''], 'Configure facet source');
 
     // The field is still required.
     $this->drupalPostForm(NULL, $form_values, 'Save');
@@ -961,8 +965,8 @@ class IntegrationTest extends FacetsTestBase {
     // Fill in all fields and make sure the 'field is required' message is no
     // longer shown.
     $facet_source_form = [
-      'facet_source_id' => 'search_api:views_page__search_api_test_view__page_1',
-      'facet_source_configs[search_api:views_page__search_api_test_view__page_1][field_identifier]' => $facet_type,
+      'facet_source_id' => $source_id,
+      'facet_source_configs[' . $source_id . '][field_identifier]' => $facet_type,
     ];
     $this->drupalPostForm(NULL, $form_values + $facet_source_form, 'Save');
     $this->assertSession()->pageTextNotContains('field is required.');

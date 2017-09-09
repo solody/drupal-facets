@@ -240,7 +240,7 @@ class CoreNodeSearchFacetSource extends FacetSourcePluginBase implements CoreSea
     $facet_fields = $this->getDefaultFields();
 
     // Get the allowed field types.
-    $allowed_field_types = $this->moduleHandler->invokeAll('facets_core_allowed_field_types', [$field_types = []]);
+    $allowed_field_types = $this->moduleHandler->invokeAll('facets_core_allowed_field_types', [[]]);
 
     // Get the current field instances and detect if the field type is allowed.
     $fields = FieldConfig::loadMultiple();

@@ -255,7 +255,7 @@ class FacetListBuilder extends DraggableListBuilder {
         'subgroup' => $subgroup_class,
       ];
       $form['facets'][$facet_source_group['facet_source']['id']] = $this->buildFacetSourceRow($facet_source_group['facet_source']);
-      foreach ($facet_source_group['facets'] as $i => $facet) {
+      foreach ($facet_source_group['facets'] as $facet) {
         if ($facet instanceof FacetInterface) {
           $form['facets'][$facet->id()] = $this->buildRow($facet);
           $form['facets'][$facet->id()]['weight']['#attributes']['class'][] = $subgroup_class;

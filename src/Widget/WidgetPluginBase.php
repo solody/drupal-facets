@@ -83,7 +83,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
    * This allows the following template suggestions:
    *  - facets-item-list--WIDGET_TYPE--FACET_ID
    *  - facets-item-list--WIDGET_TYPE
-   *  - facets-item-list
+   *  - facets-item-list.
    *
    * @param \Drupal\facets\FacetInterface $facet
    *   The facet whose output is being generated.
@@ -156,7 +156,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
    * @return array
    *   A renderable array of the result.
    */
-  protected function buildListItems($facet, ResultInterface $result) {
+  protected function buildListItems(FacetInterface $facet, ResultInterface $result) {
     $classes = ['facet-item'];
     $items = $this->prepareLink($result);
 

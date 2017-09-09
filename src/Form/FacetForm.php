@@ -79,16 +79,6 @@ class FacetForm extends EntityForm {
   }
 
   /**
-   * Returns the widget plugin manager.
-   *
-   * @return \Drupal\facets\Widget\WidgetPluginManager
-   *   The widget plugin manager.
-   */
-  protected function getWidgetPluginManager() {
-    return $this->widgetPluginManager ?: \Drupal::service('plugin.manager.facets.widget');
-  }
-
-  /**
    * Builds the configuration forms for all selected widgets.
    *
    * @param array $form
@@ -110,7 +100,7 @@ class FacetForm extends EntityForm {
     $widget = $facet->getWidgetInstance();
 
     $arguments = ['%widget' => $widget->getPluginDefinition()['label']];
-    if (!$config_form = $widget->buildConfigurationForm([], $form_state, $this->getEntity())) {
+    if (!$config_form = $widget->buildConfigurationForm([], $form_state, $facet)) {
       $type = 'details';
       $config_form = ['#markup' => $this->t('%widget widget needs no configuration.', $arguments)];
     }
@@ -136,7 +126,7 @@ class FacetForm extends EntityForm {
     $widget = $facet->getWidgetInstance();
 
     $widget_options = [];
-    foreach ($this->getWidgetPluginManager()->getDefinitions() as $widget_id => $definition) {
+    foreach ($this->widgetPluginManager->getDefinitions() as $widget_id => $definition) {
       $widget_options[$widget_id] = !empty($definition['label']) ? $definition['label'] : $widget_id;
     }
     $form['widget'] = [

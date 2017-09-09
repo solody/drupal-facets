@@ -9,7 +9,7 @@
 
   Drupal.behaviors.facetSoftLimit = {
     attach: function (context, settings) {
-      if (settings.facets.softLimit !== undefined) {
+      if (settings.facets.softLimit !== 'undefined') {
         $.each(settings.facets.softLimit, function (facet, limit) {
           Drupal.facets.applySoftLimit(facet, limit);
         });

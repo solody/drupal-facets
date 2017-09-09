@@ -13,7 +13,7 @@ use Drupal\facets\Result\Result;
  * @FacetsProcessor(
  *   id = "slider",
  *   label = @Translation("Slider"),
- *   description = @Translation("Add results for all the steps beteen min and max range."),
+ *   description = @Translation("Add results for all the steps between min and max range."),
  *   stages = {
  *     "post_query" = 5
  *   }

@@ -12,7 +12,7 @@ use Drupal\facets\Processor\PreQueryProcessorInterface;
  * @FacetsProcessor(
  *   id = "range_slider",
  *   label = @Translation("Range slider"),
- *   description = @Translation("Add range results for all the steps beteen min and max range."),
+ *   description = @Translation("Add range results for all the steps between min and max range."),
  *   stages = {
  *     "pre_query" = 5,
  *     "post_query" = 5,

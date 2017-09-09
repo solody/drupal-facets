@@ -4,6 +4,7 @@ namespace Drupal\facets\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\Entity\FacetSource;
 use Drupal\facets\UrlProcessor\UrlProcessorPluginManager;
@@ -30,7 +31,8 @@ class FacetSourceEditForm extends EntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.facets.url_processor')
+      $container->get('plugin.manager.facets.url_processor'),
+      $container->get('module_handler')
     );
   }
 
@@ -42,7 +44,7 @@ class FacetSourceEditForm extends EntityForm {
    * @param \Drupal\facets\UrlProcessor\UrlProcessorPluginManager $url_processor_plugin_manager
    *   The url processor plugin manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, UrlProcessorPluginManager $url_processor_plugin_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, UrlProcessorPluginManager $url_processor_plugin_manager, ModuleHandlerInterface $moduleHandler) {
     $facet_source_storage = $entity_type_manager->getStorage('facets_facet_source');
 
     $this->urlProcessorPluginManager = $url_processor_plugin_manager;
@@ -71,7 +73,7 @@ class FacetSourceEditForm extends EntityForm {
       $this->setEntity($facet_source);
     }
 
-    $this->setModuleHandler(\Drupal::moduleHandler());
+    $this->setModuleHandler($moduleHandler);
   }
 
   /**
