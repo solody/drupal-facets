@@ -189,6 +189,39 @@ class IntegrationTest extends CoreSearchFacetsTestBase {
   }
 
   /**
+   * Tests non-letter searches.
+   */
+  public function testNonLetterSearches() {
+    $node = Node::load(1);
+    $node->setTitle('Foo!');
+    $node->save();
+
+    // Index the content.
+    \Drupal::service('plugin.manager.search')
+      ->createInstance('node_search')
+      ->updateIndex();
+    search_update_totals();
+
+    $facet_id = 'cassiopeia';
+
+    $this->addFacet($facet_id, 'Cassiopeia');
+    $this->blocks[$facet_id] = $this->createBlock($facet_id);
+    $this->setShowAmountOfResults($facet_id, TRUE);
+
+    $this->drupalGet('search/node', ['query' => ['keys' => 'Foo']]);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Foo!');
+
+    $this->drupalGet('search/node', ['query' => ['keys' => '!']]);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Your search yielded no results.');
+
+    $this->drupalGet('search/node', ['query' => ['keys' => '! Foo']]);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Foo!');
+  }
+
+  /**
    * Creates a new facet.
    *
    * @param string $id

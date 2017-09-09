@@ -76,15 +76,11 @@ class FacetsQuery extends SearchQuery {
       ->groupBy('i.sid')
       ->having('COUNT(*) >= :matches', [':matches' => $this->matches]);
 
-    // For complex search queries, add the LIKE conditions.
-    /*if (!$this->simple) {
-    $this->join('search_dataset', 'd', 'i.sid = d.sid AND i.type = d.type');
-    $this->condition($this->conditions);
-    }*/
-
     // Add conditions to query.
     $this->join('search_dataset', 'd', 'i.sid = d.sid AND i.type = d.type AND i.langcode = d.langcode');
-    $this->condition($this->conditions);
+    if (count($this->conditions)) {
+      $this->condition($this->conditions);
+    }
 
     // Add tag and useful metadata.
     $this
