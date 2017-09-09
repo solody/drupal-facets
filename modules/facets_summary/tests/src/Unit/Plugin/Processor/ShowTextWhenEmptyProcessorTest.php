@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\facets_summary\Unit\Plugin\Processors;
+namespace Drupal\Tests\facets_summary\Unit\Plugin\Processor;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslationInterface;
