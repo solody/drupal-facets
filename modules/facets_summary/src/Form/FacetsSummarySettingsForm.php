@@ -26,13 +26,6 @@ class FacetsSummarySettingsForm extends EntityForm {
   protected $facetSummaryStorage;
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The plugin manager for facet sources.
    *
    * @var \Drupal\facets\FacetSource\FacetSourcePluginManager
@@ -59,13 +52,6 @@ class FacetsSummarySettingsForm extends EntityForm {
    * @var \Drupal\Core\Block\BlockManagerInterface
    */
   protected $blockManager;
-
-  /**
-   * The url generator.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
 
   /**
    * Constructs an FacetDisplayForm object.
@@ -260,13 +246,6 @@ class FacetsSummarySettingsForm extends EntityForm {
     }
 
     return $facets_summary;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function delete(array $form, FormStateInterface $form_state) {
-    $form_state->setRedirect('entity.facets_summary.delete_form', ['facets_summary' => $this->getEntity()->id()]);
   }
 
 }

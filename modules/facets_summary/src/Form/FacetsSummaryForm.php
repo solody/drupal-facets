@@ -32,13 +32,6 @@ class FacetsSummaryForm extends EntityForm {
   protected $facetSummaryStorage;
 
   /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The plugin manager for facet sources.
    *
    * @var \Drupal\facets\FacetSource\FacetSourcePluginManager

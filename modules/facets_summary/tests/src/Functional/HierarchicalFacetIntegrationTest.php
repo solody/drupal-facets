@@ -64,11 +64,6 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $strictConfigSchema = FALSE;
-
-  /**
-   * {@inheritdoc}
-   */
   public function setUp() {
     parent::setUp();
 

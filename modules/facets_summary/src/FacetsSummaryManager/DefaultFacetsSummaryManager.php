@@ -13,11 +13,12 @@ use Drupal\facets_summary\Processor\ProcessorPluginManager;
 use Drupal\facets_summary\FacetsSummaryInterface;
 
 /**
- * The facet manager.
+ * The facet summary manager.
  *
- * The manager is responsible for interactions with the Search backend, such as
- * altering the query, it is also responsible for executing and building the
- * facet. It is also responsible for running the processors.
+ * The manager wires everything together, it's responsible for gather the
+ * results and creating the summary.
+ * It also runs the processors and returns a renderable array from the build
+ * method.
  */
 class DefaultFacetsSummaryManager {
 

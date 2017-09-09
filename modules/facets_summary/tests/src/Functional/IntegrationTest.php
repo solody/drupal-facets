@@ -374,7 +374,12 @@ class IntegrationTest extends FacetsTestBase {
     $this->resetAll();
 
     // Place a block and test show_count processor.
-    $this->drupalPlaceBlock('facets_summary_block:show_count', ['region' => 'footer', 'id' => 'show-count']);
+    $blockConfig = [
+      'region' => 'footer',
+      'id' => 'show-count',
+      'label' => 'show-count-block',
+    ];
+    $this->drupalPlaceBlock('facets_summary_block:show_count', $blockConfig);
     $this->drupalGet('search-api-test-fulltext');
 
     $this->assertSession()->pageTextContains('5 results found');
@@ -424,19 +429,24 @@ class IntegrationTest extends FacetsTestBase {
     $this->resetAll();
 
     // Place a block and test reset facets processor.
-    $this->drupalPlaceBlock('facets_summary_block:reset_facets', ['region' => 'footer', 'id' => 'reset-facets']);
+    $blockConfig = [
+      'label' => 'Reset block',
+      'region' => 'footer',
+      'id' => 'reset-facets',
+    ];
+    $this->drupalPlaceBlock('facets_summary_block:reset_facets', $blockConfig);
     $this->drupalGet('search-api-test-fulltext');
 
-    $this->assertSession()->pageTextContains(t('Displaying 5 search results'));
-    $this->assertSession()->pageTextNotContains(t('Reset facets'));
+    $this->assertSession()->pageTextContains('Displaying 5 search results');
+    $this->assertSession()->pageTextNotContains('Reset facets');
 
     $this->clickLink('apple');
-    $this->assertSession()->pageTextContains(t('Displaying 2 search results'));
-    $this->assertSession()->pageTextContains(t('Reset facets'));
+    $this->assertSession()->pageTextContains('Displaying 2 search results');
+    $this->assertSession()->pageTextContains('Reset facets');
 
-    $this->clickLink(t('Reset facets'));
-    $this->assertSession()->pageTextContains(t('Displaying 5 search results'));
-    $this->assertSession()->pageTextNotContains(t('Reset facets'));
+    $this->clickLink('Reset facets');
+    $this->assertSession()->pageTextContains('Displaying 5 search results');
+    $this->assertSession()->pageTextNotContains('Reset facets');
   }
 
 }

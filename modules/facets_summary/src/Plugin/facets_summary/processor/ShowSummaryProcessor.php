@@ -43,18 +43,4 @@ class ShowSummaryProcessor extends ProcessorPluginBase implements BuildProcessor
     return $build;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function isHidden() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isLocked() {
-    return FALSE;
-  }
-
 }
