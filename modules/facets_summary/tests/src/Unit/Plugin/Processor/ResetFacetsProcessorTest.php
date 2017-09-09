@@ -63,6 +63,12 @@ class ResetFacetsProcessorTest extends UnitTestCase {
   public function testBuildWithEmptyItems() {
     $summary = new FacetsSummary([], 'facets_summary');
     $summary->setFacetSourceId('foo');
+    $config = [
+      'processor_id' => 'reset_facets',
+      'weights' => [],
+      'settings' => ['link_text' => 'Text'],
+    ];
+    $summary->addProcessor($config);
 
     $result = $this->processor->build($summary, ['foo'], []);
     $this->assertInternalType('array', $result);
