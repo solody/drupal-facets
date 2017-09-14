@@ -43,6 +43,8 @@ class FacetSourceEditForm extends EntityForm {
    *   The entity type manager.
    * @param \Drupal\facets\UrlProcessor\UrlProcessorPluginManager $url_processor_plugin_manager
    *   The url processor plugin manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   Drupal's module handler.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, UrlProcessorPluginManager $url_processor_plugin_manager, ModuleHandlerInterface $moduleHandler) {
     $facet_source_storage = $entity_type_manager->getStorage('facets_facet_source');

@@ -309,7 +309,6 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
     // without all the other request parameters; with this we could implement:
     // @see https://www.drupal.org/node/2861586
     // TODO handle not grouped facets.
-
     /** @var \Drupal\facets\Result\ResultInterface[] $facet_results */
     foreach ($active_results as $facet_alias => $facet_results) {
       $facet_used_result[] = $facet_alias;
