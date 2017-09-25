@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
+use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\processor\UidToUserNameCallbackProcessor;
 use Drupal\facets\Result\Result;
@@ -36,7 +37,11 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
    */
   public function testResultsChanged() {
     $user_storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
-    $entity_manager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
+    $entity_manager = $this->getMock('\Drupal\Core\Entity\EntityTypeManagerInterface');
+    $entity_repository = $this->getMock(EntityTypeRepositoryInterface::class);
+    $entity_repository->expects($this->any())
+      ->method('getEntityTypeFromClass')
+      ->willReturn('user');
     $entity_manager->expects($this->any())
       ->method('getStorage')
       ->willReturn($user_storage);
@@ -50,6 +55,8 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
     $container->set('entity.manager', $entity_manager);
+    $container->set('entity_type.repository', $entity_repository);
+    $container->set('entity_type.manager', $entity_manager);
     \Drupal::setContainer($container);
 
     $original_results = [
@@ -81,7 +88,11 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
    */
   public function testDeletedEntityResults() {
     $user_storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
-    $entity_manager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
+    $entity_manager = $this->getMock('\Drupal\Core\Entity\EntityTypeManagerInterface');
+    $entity_repository = $this->getMock(EntityTypeRepositoryInterface::class);
+    $entity_repository->expects($this->any())
+      ->method('getEntityTypeFromClass')
+      ->willReturn('user');
     $entity_manager->expects($this->any())
       ->method('getStorage')
       ->willReturn($user_storage);
@@ -91,6 +102,8 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
     $container->set('entity.manager', $entity_manager);
+    $container->set('entity_type.repository', $entity_repository);
+    $container->set('entity_type.manager', $entity_manager);
     \Drupal::setContainer($container);
 
     $original_results = [
