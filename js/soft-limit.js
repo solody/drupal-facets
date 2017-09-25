@@ -11,8 +11,8 @@
     attach: function (context, settings) {
       if (settings.facets.softLimit !== 'undefined') {
         $.each(settings.facets.softLimit, function (facet, limit) {
-          Drupal.facets.applySoftLimit(facet, limit);
-        });
+          Drupal.facets.applySoftLimit(facet, limit, settings);
+        })
       }
     }
   };
@@ -26,9 +26,11 @@
    *   The facet id.
    * @param {string} limit
    *   The maximum amount of items to show.
+   * @param {object} settings
+   *   Settings.
    */
-  Drupal.facets.applySoftLimit = function (facet, limit) {
-    var zero_based_limit = limit - 1;
+  Drupal.facets.applySoftLimit = function (facet, limit, settings) {
+    var zero_based_limit = (limit - 1);
     var facetsList = $('ul[data-drupal-facet-id="' + facet + '"]');
 
     // Hide facets over the limit.
@@ -39,16 +41,21 @@
       return $(this).find('li').length > limit;
     }).each(function () {
       var facet = $(this);
-      $('<a href="#" class="facets-soft-limit-link"></a>').text(Drupal.t('Show more')).click(function () {
-        if (facet.find('li:hidden').length > 0) {
-          facet.find('li:gt(' + zero_based_limit + ')').slideDown();
-          $(this).addClass('open').text(Drupal.t('Show less'));
-        }
-        else {
-          facet.find('li:gt(' + zero_based_limit + ')').slideUp();
-          $(this).removeClass('open').text(Drupal.t('Show more'));
-        }
-        return false;
+      var id = facet.data('drupal-facet-id');
+      var showLessLabel = settings.facets.softLimitSettings[id].showLessLabel;
+      var showMoreLabel = settings.facets.softLimitSettings[id].showMoreLabel;
+      $('<a href="#" class="facets-soft-limit-link"></a>')
+        .text(showMoreLabel)
+        .on('click', function () {
+          if (facet.find('li:hidden').length > 0) {
+            facet.find('li:gt(' + zero_based_limit + ')').slideDown();
+            $(this).addClass('open').text(showLessLabel);
+          }
+          else {
+            facet.find('li:gt(' + zero_based_limit + ')').slideUp();
+            $(this).removeClass('open').text(showMoreLabel);
+          }
+          return false;
       }).insertAfter($(this));
     });
   };

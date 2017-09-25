@@ -182,4 +182,20 @@ class LinksWidgetTest extends WidgetTestBase {
 
   }
 
+  /**
+   * Tests default configuration.
+   */
+  public function testDefaultConfiguration() {
+    $default_config = $this->widget->defaultConfiguration();
+    $expected = [
+      'show_numbers' => FALSE,
+      'soft_limit' => 0,
+      'soft_limit_settings' => [
+        'show_less_label' => 'Show less',
+        'show_more_label' => 'Show more',
+      ],
+    ];
+    $this->assertEquals($expected, $default_config);
+  }
+
 }

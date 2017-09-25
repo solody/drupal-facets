@@ -66,7 +66,14 @@ class FacetTest extends KernelTestBase {
     $manager = $entity->getWidgetManager();
     $this->assertInstanceOf(WidgetPluginManager::class, $manager);
 
-    $config = ['soft_limit' => 0, 'show_numbers' => FALSE];
+    $config = [
+      'soft_limit' => 0,
+      'show_numbers' => FALSE,
+      'soft_limit_settings' => [
+        'show_less_label' => 'Show less',
+        'show_more_label' => 'Show more',
+      ],
+    ];
     $this->assertEquals(['type' => 'links', 'config' => $config], $entity->getWidget());
     $this->assertInstanceOf('\Drupal\facets\Plugin\facets\widget\LinksWidget', $entity->getWidgetInstance());
     $this->assertFalse($entity->getWidgetInstance()->getConfiguration()['show_numbers']);
