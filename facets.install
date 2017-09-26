@@ -85,3 +85,14 @@ function facets_update_8002() {
       ->execute();
   }
 }
+
+/**
+ * WARNING: Facets core search support has been moved into a separate project.
+ * If you are using this feature, you need do download the "facets_core_search" module on drupal.org."
+ */
+function facets_update_8003() {
+  \Drupal::database()->delete('key_value')
+    ->condition('collection', 'system.schema')
+    ->condition('name', 'core_search_facets')
+    ->execute();
+}
