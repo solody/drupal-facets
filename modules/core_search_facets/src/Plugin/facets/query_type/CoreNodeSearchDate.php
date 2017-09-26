@@ -110,7 +110,7 @@ class CoreNodeSearchDate extends QueryTypePluginBase {
           $date_gap = $date_handler->getDateGap($active_item['start']['iso'], $active_item['end']['iso']);
           $gap = $date_handler->getNextDateGap($date_gap, $date_handler::FACETS_DATE_MINUTE);
           $last_parent = '[' . $active_item['start']['iso'] . ' TO ' . $active_item['end']['iso'] . ']';
-          $result = new Result($last_parent, $date_handler->formatTimestamp($active_item['start']['timestamp'], $date_gap), NULL);
+          $result = new Result($this->facet, $last_parent, $date_handler->formatTimestamp($active_item['start']['timestamp'], $date_gap), NULL);
           $result->setActiveState(TRUE);
           // Sets the children for the current parent..
           if ($parent) {
@@ -166,14 +166,14 @@ class CoreNodeSearchDate extends QueryTypePluginBase {
         $last_value = end($facet_results);
         if ($last_value) {
           if ($new_value != $last_value->getRawValue()) {
-            $facet_results[] = new Result($new_value, $date_handler->formatTimestamp($value, $gap), $count);
+            $facet_results[] = new Result($this->facet, $new_value, $date_handler->formatTimestamp($value, $gap), $count);
           }
           else {
             $last_value->setCount($last_value->getCount() + 1);
           }
         }
         else {
-          $facet_results[] = new Result($new_value, $date_handler->formatTimestamp($value, $gap), $count);
+          $facet_results[] = new Result($this->facet, $new_value, $date_handler->formatTimestamp($value, $gap), $count);
         }
       }
 

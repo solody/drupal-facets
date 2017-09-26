@@ -39,10 +39,11 @@ class ListItemProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
+    $facet = new Facet([], 'facets_facet');
     $this->results = [
-      new Result(1, 1, 10),
-      new Result(2, 2, 5),
-      new Result(3, 3, 15),
+      new Result($facet, 1, 1, 10),
+      new Result($facet, 2, 2, 5),
+      new Result($facet, 3, 3, 15),
     ];
 
     $config_manager = $this->getMockBuilder(ConfigManager::class)

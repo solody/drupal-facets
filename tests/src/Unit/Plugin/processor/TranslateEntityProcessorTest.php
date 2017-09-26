@@ -109,7 +109,7 @@ class TranslateEntityProcessorTest extends UnitTestCase {
       ->method('getFieldIdentifier')
       ->willReturn('testfield');
 
-    $this->originalResults = [new Result(2, 2, 5)];
+    $this->originalResults = [new Result($this->facet, 2, 2, 5)];
     $this->facet->setResults($this->originalResults);
 
     // Mock language manager.

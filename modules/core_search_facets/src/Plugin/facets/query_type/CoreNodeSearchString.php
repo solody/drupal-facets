@@ -82,7 +82,7 @@ class CoreNodeSearchString extends QueryTypePluginBase {
       if (!empty($results)) {
         $facet_results = [];
         foreach ($results as $result) {
-          $facet_results[] = new Result($result->value, $result->value, $result->count);
+          $facet_results[] = new Result($this->facet, $result->value, $result->value, $result->count);
         }
         $this->facet->setResults($facet_results);
       }

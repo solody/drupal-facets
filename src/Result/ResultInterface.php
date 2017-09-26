@@ -10,6 +10,14 @@ use Drupal\Core\Url;
 interface ResultInterface {
 
   /**
+   * Returns the facet related to the result.
+   *
+   * @return \Drupal\facets\FacetInterface
+   *   The facet related to the result.
+   */
+  public function getFacet();
+
+  /**
    * Returns the raw value as present in the index.
    *
    * @return string

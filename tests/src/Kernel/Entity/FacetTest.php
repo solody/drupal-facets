@@ -248,14 +248,14 @@ class FacetTest extends KernelTestBase {
    * @covers ::isActiveValue
    */
   public function testResults() {
+    $entity = new Facet([], 'facets_facet');
     /** @var \Drupal\facets\Result\ResultInterface[] $results */
     $results = [
-      new Result('llama', 'llama', 10),
-      new Result('badger', 'badger', 15),
-      new Result('owl', 'owl', 5),
+      new Result($entity, 'llama', 'llama', 10),
+      new Result($entity, 'badger', 'badger', 15),
+      new Result($entity, 'owl', 'owl', 5),
     ];
 
-    $entity = new Facet([], 'facets_facet');
     $this->assertEmpty($entity->getResults());
 
     $entity->setResults($results);

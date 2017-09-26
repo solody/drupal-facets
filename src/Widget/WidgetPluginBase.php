@@ -62,6 +62,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
 
     return [
       '#theme' => $this->getFacetItemListThemeHook($facet),
+      '#facet' => $facet,
       '#items' => $items,
       '#attributes' => [
         'data-drupal-facet-id' => $facet->id(),
@@ -232,6 +233,8 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
       '#value' => $result->getDisplayValue(),
       '#show_count' => $this->getConfiguration()['show_numbers'] && ($count !== NULL),
       '#count' => $count,
+      '#facet' => $result->getFacet(),
+      '#raw_value' => $result->getRawValue(),
     ];
   }
 

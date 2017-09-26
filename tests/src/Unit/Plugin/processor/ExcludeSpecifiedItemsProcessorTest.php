@@ -35,17 +35,18 @@ class ExcludeSpecifiedItemsProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
+    $facet = new Facet([], 'facets_facet');
     $this->originalResults = [
-      new Result('llama', 'llama', 10),
-      new Result('badger', 'badger', 5),
-      new Result('duck', 'duck', 15),
-      new Result('snbke', 'snbke', 10),
-      new Result('snake', 'snake', 10),
-      new Result('snaake', 'snaake', 10),
-      new Result('snaaake', 'snaaake', 10),
-      new Result('snaaaake', 'snaaaake', 10),
-      new Result('snaaaaake', 'snaaaaake', 10),
-      new Result('snaaaaaake', 'snaaaaaake', 10),
+      new Result($facet, 'llama', 'llama', 10),
+      new Result($facet, 'badger', 'badger', 5),
+      new Result($facet, 'duck', 'duck', 15),
+      new Result($facet, 'snbke', 'snbke', 10),
+      new Result($facet, 'snake', 'snake', 10),
+      new Result($facet, 'snaake', 'snaake', 10),
+      new Result($facet, 'snaaake', 'snaaake', 10),
+      new Result($facet, 'snaaaake', 'snaaaake', 10),
+      new Result($facet, 'snaaaaake', 'snaaaaake', 10),
+      new Result($facet, 'snaaaaaake', 'snaaaaaake', 10),
     ];
 
     $processor_id = 'exclude_specified_items';

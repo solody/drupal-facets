@@ -75,8 +75,8 @@ class RangeSliderProcessorTest extends UnitTestCase {
 
     /** @var \Drupal\facets\Result\ResultInterface[] $results */
     $results = [
-      new Result(1, 1, 1),
-      new Result(5, 5, 5),
+      new Result($facet->reveal(), 1, 1, 1),
+      new Result($facet->reveal(), 5, 5, 5),
     ];
     $results[0]->setUrl(new Url('test'));
     $results[1]->setUrl(new Url('test'));

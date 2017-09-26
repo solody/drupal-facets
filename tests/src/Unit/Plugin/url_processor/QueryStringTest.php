@@ -39,12 +39,13 @@ class QueryStringTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
+    $facet = new Facet([], 'facets_facet');
     $this->originalResults = [
-      new Result('llama', 'Llama', 15),
-      new Result('badger', 'Badger', 5),
-      new Result('mushroom', 'Mushroom', 5),
-      new Result('duck', 'Duck', 15),
-      new Result('alpaca', 'Alpaca', 25),
+      new Result($facet, 'llama', 'Llama', 15),
+      new Result($facet, 'badger', 'Badger', 5),
+      new Result($facet, 'mushroom', 'Mushroom', 5),
+      new Result($facet, 'duck', 'Duck', 15),
+      new Result($facet, 'alpaca', 'Alpaca', 25),
     ];
 
     $this->setContainer();

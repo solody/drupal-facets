@@ -59,7 +59,7 @@ class SliderProcessor extends ProcessorPluginBase implements PostQueryProcessorI
     $new_results = [];
     for ($i = $min; $i <= $max; $i += $step) {
       $count = isset($simple_results['f_' . $i]) ? $simple_results['f_' . $i]['count'] : 0;
-      $new_results[] = new Result((float) $i, (float) $i, $count);
+      $new_results[] = new Result($facet, (float) $i, (float) $i, $count);
     }
 
     // Overwrite the current facet values with the generated results.

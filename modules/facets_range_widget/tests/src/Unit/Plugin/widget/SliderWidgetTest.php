@@ -78,16 +78,16 @@ class SliderWidgetTest extends WidgetTestBase {
     $container->set('url_generator', $url_generator->reveal());
     \Drupal::setContainer($container);
 
+    $facet = new Facet(['id' => 'barn_owl'], 'facets_facet');
     $originalResults = [];
     foreach (range(3, 20000, 2) as $rv) {
-      $res = new Result($rv, 'Value: ' . $rv, ceil($rv / 2));
+      $res = new Result($facet, $rv, 'Value: ' . $rv, ceil($rv / 2));
       $res->setUrl(new Url('test'));
       $originalResults[] = $res;
     }
 
     $this->originalResults = $originalResults;
 
-    $facet = new Facet(['id' => 'barn_owl'], 'facets_facet');
     $facet->setResults($this->originalResults);
     $facet->setFieldIdentifier('owl');
     $facet->setWidget('slider', []);

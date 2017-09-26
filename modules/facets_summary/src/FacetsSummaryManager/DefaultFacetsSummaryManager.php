@@ -156,6 +156,8 @@ class DefaultFacetsSummaryManager {
           '#show_count' => $show_count,
           '#count' => $result->getCount(),
           '#is_active' => TRUE,
+          '#facet' => $result->getFacet(),
+          '#raw_value' => $result->getRawValue(),
         ];
         $item = (new Link($item, $result->getUrl()))->toRenderable();
         $items[] = $item;

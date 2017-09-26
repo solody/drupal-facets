@@ -82,7 +82,7 @@ abstract class QueryTypeRangeBase extends QueryTypePluginBase {
             );
           }
           else {
-            $facet_results[$result_filter['raw']] = new Result($result_filter['raw'], $result_filter['display'], $count);
+            $facet_results[$result_filter['raw']] = new Result($this->facet, $result_filter['raw'], $result_filter['display'], $count);
           }
         }
       }

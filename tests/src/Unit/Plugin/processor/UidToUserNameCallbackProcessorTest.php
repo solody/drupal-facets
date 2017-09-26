@@ -59,11 +59,11 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
     $container->set('entity_type.manager', $entity_manager);
     \Drupal::setContainer($container);
 
+    $facet = new Facet([], 'facets_facet');
     $original_results = [
-      new Result(1, 1, 5),
+      new Result($facet, 1, 1, 5),
     ];
 
-    $facet = new Facet([], 'facets_facet');
     $facet->setResults($original_results);
 
     $expected_results = [
@@ -106,11 +106,11 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
     $container->set('entity_type.manager', $entity_manager);
     \Drupal::setContainer($container);
 
+    $facet = new Facet([], 'facets_facet');
     $original_results = [
-      new Result(1, 1, 5),
+      new Result($facet, 1, 1, 5),
     ];
 
-    $facet = new Facet([], 'facets_facet');
     $facet->setResults($original_results);
 
     $filtered_results = $this->processor->build($facet, $original_results);

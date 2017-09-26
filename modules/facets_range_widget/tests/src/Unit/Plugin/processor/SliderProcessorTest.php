@@ -44,8 +44,8 @@ class SliderProcessorTest extends UnitTestCase {
     $facet->setWidget('raw', $widgetconfig);
     $this->configureContainer($widgetconfig);
 
-    $result_lower = new Result(5, '5', 1);
-    $result_higher = new Result(150, '150', 1);
+    $result_lower = new Result($facet, 5, '5', 1);
+    $result_higher = new Result($facet, 150, '150', 1);
     $facet->setResults([$result_lower, $result_higher]);
 
     // Process the data.
@@ -76,11 +76,11 @@ class SliderProcessorTest extends UnitTestCase {
     $facet->setWidget('raw', $widgetconfig);
     $this->configureContainer($widgetconfig);
 
-    $original_results[] = new Result(1, 'Small', 5);
+    $original_results[] = new Result($facet, 1, 'Small', 5);
     foreach (range(100, 100000, 10) as $k) {
-      $original_results[] = new Result($k, 'result ' . $k, 1);
+      $original_results[] = new Result($facet, $k, 'result ' . $k, 1);
     }
-    $original_results[] = new Result(150000, 'Big', 5);
+    $original_results[] = new Result($facet, 150000, 'Big', 5);
     $facet->setResults($original_results);
 
     // Process the data.
@@ -108,7 +108,7 @@ class SliderProcessorTest extends UnitTestCase {
 
     $original_results = [];
     foreach ([10, 100, 200, 5] as $k) {
-      $original_results[] = new Result($k, 'result ' . $k, 1);
+      $original_results[] = new Result($facet, $k, 'result ' . $k, 1);
     }
     $facet->setResults($original_results);
 
@@ -137,8 +137,8 @@ class SliderProcessorTest extends UnitTestCase {
     $facet->setWidget('raw', $widgetconfig);
     $this->configureContainer($widgetconfig);
 
-    $result_lower = new Result(5, '5', 1);
-    $result_higher = new Result(150, '150', 1);
+    $result_lower = new Result($facet, 5, '5', 1);
+    $result_higher = new Result($facet, 150, '150', 1);
     $facet->setResults([$result_lower, $result_higher]);
 
     // Process the data.
@@ -159,8 +159,8 @@ class SliderProcessorTest extends UnitTestCase {
     $facet->setWidget('raw', $widgetconfig);
     $this->configureContainer($widgetconfig);
 
-    $result_lower = new Result(5, '5', 4);
-    $result_higher = new Result(15, '15', 4);
+    $result_lower = new Result($facet, 5, '5', 4);
+    $result_higher = new Result($facet, 15, '15', 4);
     $facet->setResults([$result_lower, $result_higher]);
 
     // Process the data.

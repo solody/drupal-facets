@@ -35,10 +35,11 @@ class CountLimitProcessorTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
+    $facet = new Facet([], 'facets_facet');
     $this->originalResults = [
-      new Result('llama', 'llama', 10),
-      new Result('badger', 'badger', 5),
-      new Result('duck', 'duck', 15),
+      new Result($facet, 'llama', 'llama', 10),
+      new Result($facet, 'badger', 'badger', 5),
+      new Result($facet, 'duck', 'duck', 15),
     ];
 
     $processor_id = 'count_limit';
