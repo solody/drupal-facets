@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\rest_facets\Functional;
+namespace Drupal\Tests\facets_rest\Functional;
 
 use Drupal\Tests\facets\Functional\FacetsTestBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,7 +17,7 @@ class RestIntegrationTest extends FacetsTestBase {
    */
   public static $modules = [
     'rest_view',
-    'rest_facets',
+    'facets_rest',
     'rest',
     'hal',
     'serialization',

@@ -330,5 +330,5 @@ dependencies:
     - search_api
     - rest_view
     - facets
-    - rest_facets
+    - facets_rest
     - rest
