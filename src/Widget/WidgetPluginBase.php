@@ -245,4 +245,11 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function supportsFacet(FacetInterface $facet) {
+    return TRUE;
+  }
+
 }

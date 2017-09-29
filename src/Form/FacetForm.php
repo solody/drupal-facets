@@ -129,6 +129,14 @@ class FacetForm extends EntityForm {
     foreach ($this->widgetPluginManager->getDefinitions() as $widget_id => $definition) {
       $widget_options[$widget_id] = !empty($definition['label']) ? $definition['label'] : $widget_id;
     }
+
+    // Filters all the available widgets to make sure that only those that
+    // this facet applies for are enabled.
+    $widget_options = array_filter($widget_options, function ($widget_id) use ($facet) {
+      $widget = $this->widgetPluginManager->createInstance($widget_id);
+      return $widget->supportsFacet($facet);
+    }, ARRAY_FILTER_USE_KEY);
+
     $form['widget'] = [
       '#type' => 'radios',
       '#title' => $this->t('Widget'),
@@ -178,10 +186,20 @@ class FacetForm extends EntityForm {
     }
     $enabled_processors = $facet->getProcessors(TRUE);
 
+    // Filters all the available processors to make sure that only those that
+    // this facet applies for are enabled.
+    $all_processors = array_filter($all_processors, function ($id) use ($facet) {
+      $processor = $this->processorPluginManager->createInstance($id, ['facet' => $facet]);
+      return $processor->supportsFacet($facet);
+    }, ARRAY_FILTER_USE_KEY);
+
     $stages = $this->processorPluginManager->getProcessingStages();
     $processors_by_stage = [];
     foreach ($stages as $stage => $definition) {
-      $processors_by_stage[$stage] = $facet->getProcessorsByStage($stage, FALSE);
+      $processors_by_stage[$stage] = array_filter($facet->getProcessorsByStage($stage, FALSE), function ($id) use ($facet) {
+        $processor = $this->processorPluginManager->createInstance($id, ['facet' => $facet]);
+        return $processor->supportsFacet($facet);
+      }, ARRAY_FILTER_USE_KEY);
     }
 
     $form['#tree'] = TRUE;

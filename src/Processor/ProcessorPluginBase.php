@@ -107,4 +107,11 @@ class ProcessorPluginBase extends PluginBase implements ProcessorInterface {
     return $this->dependencies;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function supportsFacet(FacetInterface $facet) {
+    return TRUE;
+  }
+
 }

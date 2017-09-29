@@ -646,4 +646,25 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextContains('Llama');
   }
 
+  /**
+   * Tests the facet support for a widget.
+   */
+  public function testSupportsFacet() {
+    $id = 'masked_owl';
+    $this->createFacet('Australian masked owl', $id);
+
+    // Go the the facet edit page and check to see if the custom processor shows
+    // up.
+    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
+    $this->assertSession()->pageTextContains('test pre query');
+
+    // Make the ::supportsFacet method on the custom processor return false.
+    \Drupal::state()->set('facets_test_supports_facet', FALSE);
+
+    // Go to the facet edit page and check to see if the custom processor is
+    // now hidden.
+    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
+    $this->assertSession()->pageTextNotContains('test pre query');
+  }
+
 }

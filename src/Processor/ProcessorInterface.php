@@ -111,4 +111,19 @@ interface ProcessorInterface extends ConfigurablePluginInterface, PluginInspecti
    */
   public function getDescription();
 
+  /**
+   * Checks if the facet is supported by this widget.
+   *
+   * Reasons why this would be unsupported can be chosen by the widget.
+   *
+   * @param \Drupal\facets\FacetInterface $facet
+   *   The facet to check for.
+   *
+   * @return bool
+   *   Returns true when allowed, false otherwise.
+   *
+   * @see \Drupal\facets\Widget\WidgetPluginInterface::supportsFacet
+   */
+  public function supportsFacet(FacetInterface $facet);
+
 }

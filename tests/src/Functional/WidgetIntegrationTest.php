@@ -152,4 +152,25 @@ class WidgetIntegrationTest extends FacetsTestBase {
     $this->assertSession()->checkboxChecked('edit-facet-settings-show-only-one-result');
   }
 
+  /**
+   * Tests the facet support for a widget.
+   */
+  public function testSupportsFacet() {
+    $id = 'masked_owl';
+    $this->createFacet('Australian masked owl', $id);
+
+    // Go the the facet edit page and check to see if the custom widget shows
+    // up.
+    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
+    $this->assertSession()->pageTextContains('Custom widget');
+
+    // Make the ::supportsFacet method on the custom widget return false.
+    \Drupal::state()->set('facets_test_supports_facet', FALSE);
+
+    // Go to the facet edit page and check to see if the custom widget is now
+    // hidden.
+    $this->drupalGet('admin/config/search/facets/' . $id . '/edit');
+    $this->assertSession()->pageTextNotContains('Custom widget');
+  }
+
 }
