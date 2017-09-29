@@ -170,6 +170,58 @@ class IntegrationTest extends FacetsTestBase {
   }
 
   /**
+   * Tests "Show a summary of all selected facets".
+   *
+   * Regression test for https://www.drupal.org/node/2878851.
+   */
+  public function testShowSummary() {
+    // Create facets.
+    $this->createFacet('Giraffe', 'giraffe', 'keywords');
+    // Clear all the caches between building the 2 facets - because things fail
+    // otherwise.
+    $this->resetAll();
+    $this->createFacet('Llama', 'llama');
+
+    // Add a summary.
+    $values = [
+      'name' => 'Owlß',
+      'id' => 'owl',
+      'facet_source_id' => 'search_api:views_page__search_api_test_view__page_1',
+    ];
+    $this->drupalPostForm('admin/config/search/facets/add-facet-summary', $values, 'Save');
+
+    // Edit the summary and enable the facets.
+    $summaries = [
+      'facets[giraffe][checked]' => TRUE,
+      'facets[giraffe][label]' => 'Summary giraffe',
+      'facets[llama][checked]' => TRUE,
+      'facets[llama][label]' => 'Summary llama',
+      'facets_summary_settings[show_summary][status]' => TRUE
+    ];
+    $this->drupalPostForm(NULL, $summaries, 'Save');
+
+    $block = [
+      'region' => 'footer',
+      'id' => str_replace('_', '-', 'owl'),
+      'weight' => 50,
+    ];
+    $block = $this->drupalPlaceBlock('facets_summary_block:owl', $block);
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertText('Displaying 5 search results');
+    $this->clickLink('item');
+
+    /** @var \Behat\Mink\Element\NodeElement[] $list_items */
+    $list_items = $this->getSession()
+      ->getPage()
+      ->findById('block-' . $block->id())
+      ->findAll('css', 'li');
+    $this->assertCount(2, $list_items);
+    $this->assertEquals('Summary llama: item', $list_items[0]->getText());
+    $this->assertEquals('(-) item', $list_items[1]->getText());
+  }
+
+  /**
    * Check that the disabling of the cache works.
    */
   public function testViewsCacheDisable() {
