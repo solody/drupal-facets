@@ -94,7 +94,6 @@ interface FacetInterface extends ConfigEntityInterface {
   /**
    * Returns the field name of the facet as used in the index.
    *
-   * @TODO: Check if fieldIdentifier can be used as well!
    *
    * @return string
    *   The name of the facet.
