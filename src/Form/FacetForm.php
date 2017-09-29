@@ -123,7 +123,6 @@ class FacetForm extends EntityForm {
 
     /** @var \Drupal\facets\FacetInterface $facet */
     $facet = $this->entity;
-    $widget = $facet->getWidgetInstance();
 
     $widget_options = [];
     foreach ($this->widgetPluginManager->getDefinitions() as $widget_id => $definition) {
@@ -132,11 +131,15 @@ class FacetForm extends EntityForm {
 
     // Filters all the available widgets to make sure that only those that
     // this facet applies for are enabled.
-    $widget_options = array_filter($widget_options, function ($widget_id) use ($facet) {
+    foreach ($widget_options as $widget_id => $label) {
       $widget = $this->widgetPluginManager->createInstance($widget_id);
-      return $widget->supportsFacet($facet);
-    }, ARRAY_FILTER_USE_KEY);
+      if (!$widget->supportsFacet($facet)) {
+        unset($widget_options[$widget_id]);
+      }
+    }
+    unset($widget_id, $label, $widget);
 
+    $widget = $facet->getWidgetInstance();
     $form['widget'] = [
       '#type' => 'radios',
       '#title' => $this->t('Widget'),
@@ -188,18 +191,22 @@ class FacetForm extends EntityForm {
 
     // Filters all the available processors to make sure that only those that
     // this facet applies for are enabled.
-    $all_processors = array_filter($all_processors, function ($id) use ($facet) {
-      $processor = $this->processorPluginManager->createInstance($id, ['facet' => $facet]);
-      return $processor->supportsFacet($facet);
-    }, ARRAY_FILTER_USE_KEY);
+    foreach ($all_processors as $processor_id => $processor) {
+      if (!$processor->supportsFacet($facet)) {
+        unset($all_processors[$processor_id]);
+      }
+    }
+    unset($processor_id, $processor);
 
     $stages = $this->processorPluginManager->getProcessingStages();
     $processors_by_stage = [];
     foreach ($stages as $stage => $definition) {
-      $processors_by_stage[$stage] = array_filter($facet->getProcessorsByStage($stage, FALSE), function ($id) use ($facet) {
-        $processor = $this->processorPluginManager->createInstance($id, ['facet' => $facet]);
-        return $processor->supportsFacet($facet);
-      }, ARRAY_FILTER_USE_KEY);
+      foreach ($facet->getProcessorsByStage($stage, FALSE) as $processor_id => $processor) {
+        if ($processor->supportsFacet($facet)) {
+          $processors_by_stage[$stage][$processor_id] = $processor;
+        }
+      }
+      unset($processor_id, $processor);
     }
 
     $form['#tree'] = TRUE;
