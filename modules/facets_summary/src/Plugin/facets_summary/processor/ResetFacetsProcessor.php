@@ -4,6 +4,7 @@ namespace Drupal\facets_summary\Plugin\facets_summary\processor;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\facets_summary\FacetsSummaryInterface;
 use Drupal\facets_summary\Processor\BuildProcessorInterface;
 use Drupal\facets_summary\Processor\ProcessorPluginBase;
@@ -54,15 +55,10 @@ class ResetFacetsProcessor extends ProcessorPluginBase implements BuildProcessor
       }
     }
 
-    // Lets use any first facet to get correct url.
-    $results = reset($facets)->getResults();
+    $url = Url::fromUserInput($request->getRequestUri());
+    $url->setOptions(['query' => $query_params]);
 
-    /** @var \Drupal\Core\Url $first_item_url */
-    $first_item_url = reset($results)->getUrl();
-    $first_item_url = clone ($first_item_url);
-    $first_item_url->setOptions(['query' => $query_params]);
-
-    $item = (new Link($configuration['settings']['link_text'], $first_item_url))->toRenderable();
+    $item = (new Link($configuration['settings']['link_text'], $url))->toRenderable();
     array_unshift($build['#items'], $item);
     return $build;
   }

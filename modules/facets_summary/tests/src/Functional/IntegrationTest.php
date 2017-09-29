@@ -449,4 +449,68 @@ class IntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextNotContains('Reset facets');
   }
 
+  /**
+   * Tests  first facet doesn't have any item in for a particular filter.
+   */
+  public function testEmptyFacetLinks() {
+    // Create facets.
+    $this->createFacet('Kepler-442b', 'category', 'category');
+    // Clear all the caches between building the 2 facets - because things fail
+    // otherwise.
+    $this->createFacet('Kepler-438b', 'keywords', 'keywords');
+    $this->resetAll();
+
+    // Create a new item, make sure it doesn't have a "keywords" property at
+    // all.
+    $entity_test_storage = \Drupal::entityTypeManager()
+      ->getStorage('entity_test_mulrev_changed');
+    $this->entities[] = $entity_test_storage->create([
+      'name' => 'Test with no category',
+      'body' => 'test test',
+      'type' => 'item',
+      'keywords' => ['rotten orange'],
+    ])->save();
+
+    $this->indexItems($this->indexId);
+
+    // Add a facets summary entity.
+    $values = [
+      'name' => 'Kepler planets',
+      'id' => 'kepler',
+      'facet_source_id' => 'search_api:views_page__search_api_test_view__page_1',
+    ];
+    $this->drupalPostForm('admin/config/search/facets/add-facet-summary', $values, 'Save');
+
+    // Place the block.
+    $block = [
+      'region' => 'footer',
+      'id' => 'kplanets',
+      'weight' => -10,
+    ];
+    $summary_block = $this->drupalPlaceBlock('facets_summary_block:kepler', $block);
+
+    // Enable the facets for the summary.
+    $summaries = [
+      'facets[category][checked]' => TRUE,
+      'facets[category][weight]' => 0,
+      'facets[keywords][checked]' => TRUE,
+      'facets[keywords][weight]' => 1,
+      'facets_summary_settings[reset_facets][status]' => 1,
+      'facets_summary_settings[reset_facets][settings][link_text]' => 'Reset',
+    ];
+    $this->drupalPostForm('admin/config/search/facets/facet-summary/kepler/edit', $summaries, 'Save');
+
+    // Go to the search view, and check that the summary, as well as the facets
+    // are shown on the page.
+    $this->drupalGet('search-api-test-fulltext');
+    $web_assert = $this->assertSession();
+    $web_assert->pageTextContains('Displaying 6 search results');
+    $this->assertFacetBlocksAppear();
+    $web_assert->pageTextContains($summary_block->label());
+
+    // Filter on the item type.
+    $this->clickLink('rotten orange');
+    $web_assert->pageTextContains('Test with no category');
+  }
+
 }
