@@ -667,4 +667,40 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextNotContains('test pre query');
   }
 
+  /**
+   * Test HideOnlyOneItemProcessor.
+   *
+   * Test if after clicking an item that has only one item, the facet block no
+   * longer shows.
+   */
+  public function testHideOnlyOneItemProcessor() {
+    $entity_test_storage = \Drupal::entityTypeManager()
+      ->getStorage('entity_test_mulrev_changed');
+    $entity_test_storage->create([
+      'name' => 'baz baz',
+      'body' => 'foo test',
+      'type' => 'article',
+      'keywords' => ['kiwi'],
+      'category' => 'article_category',
+    ])->save();
+
+    $this->indexItems($this->indexId);
+
+    $facet_name = 'Drupalcon Vienna';
+    $facet_id = 'drupalcon_vienna';
+    $this->editForm = 'admin/config/search/facets/' . $facet_id . '/edit';
+    $this->createFacet($facet_name, $facet_id, 'keywords');
+
+    $form = [
+      'facet_settings[hide_1_result_facet][status]' => TRUE,
+      'facet_settings[query_operator]' => 'and',
+    ];
+    $this->drupalPostForm($this->editForm, $form, 'Save');
+    $this->drupalGet('search-api-test-fulltext');
+
+    $this->assertFacetBlocksAppear();
+    $this->clickLink('kiwi');
+    $this->assertNoFacetBlocksAppear();
+  }
+
 }
