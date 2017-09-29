@@ -4,7 +4,10 @@ namespace Drupal\Tests\facets\Unit\Plugin\query_type;
 
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\query_type\SearchApiGranular;
+use Drupal\search_api\Backend\BackendInterface;
+use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
+use Drupal\search_api\ServerInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -18,7 +21,15 @@ class SearchApiGranularTest extends UnitTestCase {
    * Tests string query type without executing the query with an "AND" operator.
    */
   public function testQueryTypeAnd() {
-    $query = new SearchApiQuery([], 'search_api_query', []);
+    $backend = $this->prophesize(BackendInterface::class);
+    $backend->getSupportedFeatures()->willReturn([]);
+    $server = $this->prophesize(ServerInterface::class);
+    $server->getBackend()->willReturn($backend);
+    $index = $this->prophesize(IndexInterface::class);
+    $index->getServerInstance()->willReturn($server);
+    $query = $this->prophesize(SearchApiQuery::class);
+    $query->getIndex()->willReturn($index);
+
     $facetReflection = new \ReflectionClass('Drupal\facets\Entity\Facet');
     $facet = new Facet(
       ['query_operator' => 'AND', 'widget' => 'links'],
@@ -49,7 +60,7 @@ class SearchApiGranularTest extends UnitTestCase {
     $query_type = new SearchApiGranular(
       [
         'facet' => $facet,
-        'query' => $query,
+        'query' => $query->reveal(),
         'results' => $original_results,
       ],
       'search_api_string',

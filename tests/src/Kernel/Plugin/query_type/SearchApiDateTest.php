@@ -5,7 +5,10 @@ namespace Drupal\Tests\facets\Kernel\Plugin\query_type;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\query_type\SearchApiDate;
+use Drupal\search_api\Backend\BackendInterface;
+use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Plugin\views\query\SearchApiQuery;
+use Drupal\search_api\ServerInterface;
 
 /**
  * Kernel test for date query type.
@@ -32,7 +35,15 @@ class SearchApiDateTest extends KernelTestBase {
    * @dataProvider resultsProvider
    */
   public function testQueryTypeAnd($granularity, $original_results, $grouped_results) {
-    $query = new SearchApiQuery([], 'search_api_query', []);
+    $backend = $this->prophesize(BackendInterface::class);
+    $backend->getSupportedFeatures()->willReturn([]);
+    $server = $this->prophesize(ServerInterface::class);
+    $server->getBackend()->willReturn($backend);
+    $index = $this->prophesize(IndexInterface::class);
+    $index->getServerInstance()->willReturn($server);
+    $query = $this->prophesize(SearchApiQuery::class);
+    $query->getIndex()->willReturn($index);
+
     $facetReflection = new \ReflectionClass('Drupal\facets\Entity\Facet');
     $facet = new Facet(
       ['query_operator' => 'AND', 'widget' => 'links'],
@@ -54,7 +65,7 @@ class SearchApiDateTest extends KernelTestBase {
     $query_type = new SearchApiDate(
       [
         'facet' => $facet,
-        'query' => $query,
+        'query' => $query->reveal(),
         'results' => $original_results,
       ],
       'search_api_string',

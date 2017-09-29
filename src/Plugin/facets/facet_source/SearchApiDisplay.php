@@ -183,7 +183,7 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
     // query type.
     foreach ($facets as $facet) {
       $configuration = [
-        'query' => NULL,
+        'query' => $results->getQuery(),
         'facet' => $facet,
         'results' => isset($facet_results[$facet->getFieldIdentifier()]) ? $facet_results[$facet->getFieldIdentifier()] : [],
       ];
