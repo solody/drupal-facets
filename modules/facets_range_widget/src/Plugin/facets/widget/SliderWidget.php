@@ -158,13 +158,6 @@ class SliderWidget extends WidgetPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getQueryType(array $query_types) {
-    return $query_types['string'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isPropertyRequired($name, $type) {
     if ($name === 'slider' && $type === 'processors') {
       return TRUE;

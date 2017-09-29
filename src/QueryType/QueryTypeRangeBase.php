@@ -37,7 +37,8 @@ abstract class QueryTypeRangeBase extends QueryTypePluginBase {
         foreach ($active_items as $value) {
           $range = $this->calculateRange($value);
 
-          $item_filter = $query->createConditionGroup($exclude ? 'OR' : 'AND', ['facet:' . $field_identifier]);
+          $conjunction = $exclude ? 'OR' : 'AND';
+          $item_filter = $query->createConditionGroup($conjunction, ['facet:' . $field_identifier]);
           $item_filter->addCondition($this->facet->getFieldIdentifier(), $range['start'], $exclude ? '<' : '>=');
           $item_filter->addCondition($this->facet->getFieldIdentifier(), $range['stop'], $exclude ? '>' : '<=');
 

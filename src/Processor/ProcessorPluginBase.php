@@ -114,4 +114,11 @@ class ProcessorPluginBase extends PluginBase implements ProcessorInterface {
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getQueryType() {
+    return NULL;
+  }
+
 }

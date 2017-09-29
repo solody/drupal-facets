@@ -92,11 +92,4 @@ class LinksWidget extends WidgetPluginBase {
     return $form;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getQueryType(array $query_types) {
-    return $query_types['string'];
-  }
-
 }

@@ -96,3 +96,31 @@ function facets_update_8003() {
     ->condition('name', 'core_search_facets')
     ->execute();
 }
+
+/**
+ * Migrate facets with date widget to use date processor and links widget.
+ */
+function facets_update_8004() {
+  foreach (Facet::loadMultiple() as $facet) {
+    $widget = $facet->getWidget();
+    if ($widget['type'] === 'datebasic') {
+      // Set widget to use links instead.
+      $facet->setWidget('links', ['show_numbers' => $widget['config']['show_numbers']]);
+      // Migrate widget to processor settings and enable date_item processor.
+      $settings = [
+        'date_format' => $widget['config']['date_display'],
+        'granularity' => $widget['config']['granularity'],
+        'date_display' => 'actual_date'
+      ];
+      if ($widget['config']['display_relative']) {
+        $settings['date_display'] = 'relative_date';
+      }
+      $facet->addProcessor([
+        'processor_id' => 'date_item',
+        'weights' => ['build' => 35],
+        'settings' => $settings,
+      ]);
+      $facet->save();
+    }
+  }
+}

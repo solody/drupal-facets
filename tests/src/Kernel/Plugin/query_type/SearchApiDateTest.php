@@ -20,6 +20,16 @@ class SearchApiDateTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
+  public static $modules = [
+    'facets',
+    'search_api',
+    'system',
+    'user',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp();
 
@@ -27,6 +37,8 @@ class SearchApiDateTest extends KernelTestBase {
     // here as well. The raw value is the UTC, the displayed value is calculated
     // by the PHP timezone - presently.
     date_default_timezone_set('Australia/Sydney');
+
+    $this->installEntitySchema('facets_facet');
   }
 
   /**
@@ -44,23 +56,15 @@ class SearchApiDateTest extends KernelTestBase {
     $query = $this->prophesize(SearchApiQuery::class);
     $query->getIndex()->willReturn($index);
 
-    $facetReflection = new \ReflectionClass('Drupal\facets\Entity\Facet');
     $facet = new Facet(
       ['query_operator' => 'AND', 'widget' => 'links'],
       'facets_facet'
     );
-    $widget = $this->getMockBuilder('Drupal\facets\Widget\WidgetPluginInterface')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $widget->method('getConfiguration')
-      ->will($this->returnValue([
-        'granularity' => $granularity,
-        'date_display' => '',
-        'display_relative' => FALSE,
-      ]));
-    $widget_instance = $facetReflection->getProperty('widgetInstance');
-    $widget_instance->setAccessible(TRUE);
-    $widget_instance->setValue($facet, $widget);
+    $facet->addProcessor([
+      'processor_id' => 'date_item',
+      'weights' => [],
+      'settings' => ['granularity' => $granularity, 'date_format' => '', 'date_display' => 'actual_date'],
+    ]);
 
     $query_type = new SearchApiDate(
       [
@@ -68,7 +72,7 @@ class SearchApiDateTest extends KernelTestBase {
         'query' => $query->reveal(),
         'results' => $original_results,
       ],
-      'search_api_string',
+      'search_api_date',
       []
     );
 
@@ -271,6 +275,12 @@ class SearchApiDateTest extends KernelTestBase {
   public function testEmptyResults() {
     $query = new SearchApiQuery([], 'search_api_query', []);
     $facet = new Facet([], 'facets_facet');
+
+    $facet->addProcessor([
+      'processor_id' => 'date_item',
+      'weights' => [],
+      'settings' => ['granularity' => SearchApiDate::FACETAPI_DATE_YEAR, 'date_format' => '', 'date_display' => 'actual_date'],
+    ]);
 
     $query_type = new SearchApiDate(
       [

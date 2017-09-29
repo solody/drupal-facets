@@ -18,13 +18,6 @@ use Drupal\facets\Result\Result;
 class SearchApiRange extends QueryTypePluginBase {
 
   /**
-   * The backend's native query object.
-   *
-   * @var \Drupal\search_api\Query\QueryInterface
-   */
-  protected $query;
-
-  /**
    * {@inheritdoc}
    */
   public function execute() {

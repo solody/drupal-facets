@@ -98,3 +98,17 @@ plugin.plugin_configuration.facets_processor.hide_active_items_processor:
 
 plugin.plugin_configuration.facets_processor.list_item:
   type: config_object
+
+plugin.plugin_configuration.facets_processor.date_item:
+  type: mapping
+  label: 'Date item processor'
+  mapping:
+    date_display:
+      type: string
+      label: 'Date display'
+    granularity:
+      type: integer
+      label: 'Granularity'
+    date_format:
+      type: string
+      label: 'Date format'

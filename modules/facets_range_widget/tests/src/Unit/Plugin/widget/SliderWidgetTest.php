@@ -31,7 +31,7 @@ class SliderWidgetTest extends WidgetTestBase {
    */
   public function testGetQueryType() {
     $result = $this->widget->getQueryType($this->queryTypes);
-    $this->assertEquals('string', $result);
+    $this->assertEquals(NULL, $result);
   }
 
   /**

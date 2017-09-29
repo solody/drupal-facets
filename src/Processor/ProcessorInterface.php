@@ -126,4 +126,13 @@ interface ProcessorInterface extends ConfigurablePluginInterface, PluginInspecti
    */
   public function supportsFacet(FacetInterface $facet);
 
+  /**
+   * Picks the preferred query type for this widget.
+   *
+   * @return string|null
+   *   The query type machine name to load or NULL to load the default query
+   *   type.
+   */
+  public function getQueryType();
+
 }

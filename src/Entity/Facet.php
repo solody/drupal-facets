@@ -6,6 +6,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\facets\Exception\Exception;
 use Drupal\facets\Exception\InvalidProcessorException;
+use Drupal\facets\Exception\InvalidQueryTypeException;
 use Drupal\facets\FacetInterface;
 
 /**
@@ -455,9 +456,59 @@ class Facet extends ConfigEntityBase implements FacetInterface {
     $widget = $this->getWidgetInstance();
 
     // Give the widget the chance to select a preferred query type. This is
-    // useful for widget that have different query type. See the date widget,
-    // that needs to select the date query type.
-    return $widget->getQueryType($query_types);
+    // needed for widget that have different query type. For example the need
+    // for a range query.
+    $widgetQueryType = $widget->getQueryType();
+
+    // Allow widgets to also specify a query type.
+    $processorQueryTypes = [];
+    foreach ($this->getProcessors() as $processor) {
+      $pqt = $processor->getQueryType();
+      if ($pqt !== NULL) {
+        $processorQueryTypes[] = $pqt;
+      }
+    }
+    $processorQueryTypes = array_flip($processorQueryTypes);
+
+    // The widget has made no decision and neither have the processors.
+    if ($widgetQueryType === NULL && count($processorQueryTypes) === 0) {
+      return $this->pickQueryType($query_types, 'string');
+    }
+    // The widget has made no decision but the processors have made 1 decision.
+    if ($widgetQueryType === NULL && count($processorQueryTypes) === 1) {
+      return $this->pickQueryType($query_types, key($processorQueryTypes));
+    }
+    // The widget has made a decision and the processors have not.
+    if ($widgetQueryType !== NULL && count($processorQueryTypes) === 0) {
+      return $this->pickQueryType($query_types, $widgetQueryType);
+    }
+    // The widget has made a decision and the processors have 1, being the same.
+    if ($widgetQueryType !== NULL && count($processorQueryTypes) === 1 && key($processorQueryTypes) === $widgetQueryType) {
+      return $this->pickQueryType($query_types, $widgetQueryType);
+    }
+
+    // Invalid choice.
+    throw new InvalidQueryTypeException("Invalid query type combination in widget / processors. Widget: {$widgetQueryType}, Processors: " . implode(', ', array_keys($processorQueryTypes)) . ".");
+  }
+
+  /**
+   * Choose the query type.
+   *
+   * @param array $allTypes
+   *   An array of query type definitions.
+   * @param string $type
+   *   The chose query type.
+   *
+   * @return string
+   *   The class name of the chose query type.
+   *
+   * @throws \Drupal\facets\Exception\InvalidQueryTypeException
+   */
+  protected function pickQueryType(array $allTypes, $type) {
+    if (!isset($allTypes[$type])) {
+      throw new InvalidQueryTypeException("Query type {$type} doesn't exist.");
+    }
+    return $allTypes[$type];
   }
 
   /**

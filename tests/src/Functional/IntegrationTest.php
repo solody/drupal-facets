@@ -474,41 +474,40 @@ class IntegrationTest extends FacetsTestBase {
 
     $this->indexItems($this->indexId);
 
-    $facet_name = "Created";
     $facet_id = "created";
 
     // Create facet.
     $facet_edit_page = 'admin/config/search/facets/' . $facet_id . '/edit';
-    $this->createFacet($facet_name, $facet_id, $field_name);
+    $this->createFacet("Created", $facet_id, $field_name);
 
     $form = [
-      'widget' => 'datebasic',
-      'widget_config[granularity]' => SearchApiDate::FACETAPI_DATE_MONTH,
-      'widget_config[display_relative]' => 0,
+      'widget' => 'links',
+      'facet_settings[exclude]' => 0,
+      'facet_settings[date_item][status]' => 1,
+      'facet_settings[date_item][settings][date_display]' => 'actual_date',
+      'facet_settings[date_item][settings][granularity]' => SearchApiDate::FACETAPI_DATE_MONTH,
     ];
     $this->drupalGet($facet_edit_page);
-    $this->drupalPostForm(NULL, ['widget' => 'datebasic'], 'Configure widget');
     $this->drupalPostForm(NULL, $form, 'Save');
 
     $this->drupalGet('search-api-test-fulltext');
-    $this->assertText('foo old');
-    $this->assertText('foo new');
+    $this->assertSession()->pageTextContains('foo old');
+    $this->assertSession()->pageTextContains('foo new');
     $this->clickLink('March 2017');
     $this->checkFacetIsActive('March 2017');
-    $this->assertText('foo new');
-    $this->assertNoText('foo old');
+    $this->assertSession()->pageTextContains('foo new');
+    $this->assertSession()->pageTextNotContains('foo old');
 
     $this->drupalGet($facet_edit_page);
-    $this->assertNoFieldChecked('edit-facet-settings-exclude');
-    $form['facet_settings[exclude]'] = TRUE;
-    $this->drupalPostForm(NULL, $form, 'Save');
-    $this->assertFieldChecked('edit-facet-settings-exclude');
+    $this->assertSession()->checkboxNotChecked('edit-facet-settings-exclude');
+    $this->drupalPostForm(NULL, ['facet_settings[exclude]' => 1], 'Save');
+    $this->assertSession()->checkboxChecked('edit-facet-settings-exclude');
 
     $this->drupalGet('search-api-test-fulltext');
     $this->clickLink('March 2017');
     $this->checkFacetIsActive('March 2017');
-    $this->assertText('foo old');
-    $this->assertNoText('foo new');
+    $this->assertSession()->pageTextContains('foo old');
+    $this->assertSession()->pageTextNotContains('foo new');
   }
 
   /**
