@@ -592,8 +592,6 @@ class FacetForm extends EntityForm {
     $values = $form_state->getValues();
 
     // Store processor settings.
-    // @todo Go through all available processors, enable/disable with method on
-    //   processor plugin to allow reaction.
     /** @var \Drupal\facets\FacetInterface $facet */
     $facet = $this->entity;
 
