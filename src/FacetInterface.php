@@ -205,6 +205,14 @@ interface FacetInterface extends ConfigEntityInterface {
   public function getHardLimit();
 
   /**
+   * Returns the data definition from the facet field.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface
+   *   A typed data definition.
+   */
+  public function getDataDefinition();
+
+  /**
    * Returns the value of the exclude boolean.
    *
    * This will return true when the current facet's value should be exclusive

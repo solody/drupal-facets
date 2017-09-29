@@ -533,6 +533,13 @@ class Facet extends ConfigEntityBase implements FacetInterface {
   /**
    * {@inheritdoc}
    */
+  public function getDataDefinition() {
+    return $this->getFacetSource()->getDataDefinition($this->field_identifier);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setExclude($exclude) {
     return $this->exclude = $exclude;
   }

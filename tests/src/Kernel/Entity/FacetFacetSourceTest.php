@@ -2,10 +2,12 @@
 
 namespace Drupal\Tests\facets\Kernel\Entity;
 
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\FacetSourceInterface;
 use Drupal\facets\Plugin\facets\facet_source\SearchApiDisplay;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\facets\Exception\Exception;
 
 /**
  * Class FacetFacetSourceTest.
@@ -127,6 +129,26 @@ class FacetFacetSourceTest extends EntityKernelTestBase {
 
     $aa = $entity->getQueryType();
     $this->assertEquals('search_api_string', $aa);
+  }
+
+  /**
+   * Test the data definitions.
+   *
+   * @covers \Drupal\facets\FacetSource\FacetSourcePluginInterface::getDataDefinition
+   */
+  public function testDataDefinitions() {
+    // Create and configure facet.
+    $entity = new Facet([], 'facets_facet');
+    $display_name = 'search_api:views_page__search_api_test_view__page_1';
+    $entity->setFacetSourceId($display_name);
+
+    $this->assertInstanceOf(DataDefinitionInterface::class, $entity->getFacetSource()->getDataDefinition('id'));
+    $this->assertInstanceOf(DataDefinitionInterface::class, $entity->getFacetSource()->getDataDefinition('name'));
+    $this->assertInstanceOf(DataDefinitionInterface::class, $entity->getFacetSource()->getDataDefinition('category'));
+
+    // When trying to get a field that doesn't exist, an error should be thrown.
+    $this->setExpectedException(Exception::class);
+    $entity->getFacetSource()->getDataDefinition('llama');
   }
 
 }

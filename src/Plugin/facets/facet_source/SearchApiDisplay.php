@@ -5,6 +5,7 @@ namespace Drupal\facets\Plugin\facets\facet_source;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\facets\Exception\Exception;
 use Drupal\facets\Exception\InvalidQueryTypeException;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\FacetSource\FacetSourcePluginBase;
@@ -358,6 +359,17 @@ class SearchApiDisplay extends FacetSourcePluginBase implements SearchApiFacetSo
     $view = Views::getView($view_id);
     $view->setDisplay($view_display);
     return $view;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDataDefinition($field_name) {
+    $field = $this->getIndex()->getField($field_name);
+    if ($field) {
+      return $field->getDataDefinition();
+    }
+    throw new Exception("Field with name {$field_name} does not have a definition");
   }
 
 }
