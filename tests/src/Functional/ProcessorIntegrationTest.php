@@ -703,4 +703,15 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->assertNoFacetBlocksAppear();
   }
 
+  /**
+   * Tests that processors are hidden when the correct fields aren't there.
+   */
+  public function testHiddenProcessors() {
+    $facet_id = 'alpaca';
+    $this->editForm = 'admin/config/search/facets/' . $facet_id . '/edit';
+    $this->createFacet('Alpaca', $facet_id);
+    $this->drupalGet($this->editForm);
+    $this->assertSession()->pageTextNotContains('Boolean item label');
+  }
+
 }

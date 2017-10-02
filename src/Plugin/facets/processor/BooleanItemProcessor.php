@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\Processor\BuildProcessorInterface;
@@ -82,6 +83,19 @@ class BooleanItemProcessor extends ProcessorPluginBase implements BuildProcessor
       'on_value' => 'On',
       'off_value' => 'Off',
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function supportsFacet(FacetInterface $facet) {
+    $data_definition = $facet->getDataDefinition();
+    $property_definitions = $data_definition->getPropertyDefinitions();
+    foreach ($property_definitions as $k => $definition) {
+      if ($definition->getDataType() == "boolean") {
+        return TRUE;
+      }};
+    return FALSE;
   }
 
 }
