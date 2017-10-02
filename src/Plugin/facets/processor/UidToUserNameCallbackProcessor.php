@@ -2,6 +2,7 @@
 
 namespace Drupal\facets\Plugin\facets\processor;
 
+use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Processor\BuildProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginBase;
@@ -37,6 +38,23 @@ class UidToUserNameCallbackProcessor extends ProcessorPluginBase implements Buil
     }
 
     return $usernames;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function supportsFacet(FacetInterface $facet) {
+    $data_definition = $facet->getDataDefinition();
+    $property_definitions = $data_definition->getPropertyDefinitions();
+    foreach ($property_definitions as $k => $definition) {
+      if (
+        $definition instanceof DataReferenceDefinitionInterface &&
+        $definition->getDataType() === 'entity_reference' &&
+        $definition->getTargetDefinition()->getConstraint('EntityType') === "user"
+      ) {
+        return TRUE;
+      }};
+    return FALSE;
   }
 
 }

@@ -712,6 +712,7 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->createFacet('Alpaca', $facet_id);
     $this->drupalGet($this->editForm);
     $this->assertSession()->pageTextNotContains('Boolean item label');
+    $this->assertSession()->pageTextNotContains('Transform UID to user name');
   }
 
 }
