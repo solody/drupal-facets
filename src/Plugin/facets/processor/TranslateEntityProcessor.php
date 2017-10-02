@@ -136,4 +136,17 @@ class TranslateEntityProcessor extends ProcessorPluginBase implements BuildProce
     return $results;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function supportsFacet(FacetInterface $facet) {
+    $data_definition = $facet->getDataDefinition();
+    $property_definitions = $data_definition->getPropertyDefinitions();
+    foreach ($property_definitions as $k => $definition) {
+      if ($definition instanceof DataReferenceDefinitionInterface && $definition->getDataType() === 'entity_reference') {
+        return TRUE;
+      }};
+    return FALSE;
+  }
+
 }
