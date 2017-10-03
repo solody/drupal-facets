@@ -713,6 +713,7 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->drupalGet($this->editForm);
     $this->assertSession()->pageTextNotContains('Boolean item label');
     $this->assertSession()->pageTextNotContains('Transform UID to user name');
+    $this->assertSession()->pageTextNotContains('Transform entity ID to label');
   }
 
 }
