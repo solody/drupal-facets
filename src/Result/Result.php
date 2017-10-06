@@ -34,9 +34,9 @@ class Result implements ResultInterface {
   /**
    * The facet count.
    *
-   * @var int|null
+   * @var int
    */
-  protected $count = NULL;
+  protected $count = 0;
 
   /**
    * The Url object.
@@ -68,8 +68,8 @@ class Result implements ResultInterface {
    *   The raw value.
    * @param mixed $display_value
    *   The formatted value.
-   * @param int|null $count
-   *   The amount of items or NULL.
+   * @param int $count
+   *   The amount of items.
    */
   public function __construct(FacetInterface $facet, $raw_value, $display_value, $count) {
     $this->facet = $facet;
@@ -103,7 +103,7 @@ class Result implements ResultInterface {
    * {@inheritdoc}
    */
   public function setCount($count) {
-    $this->count = $count;
+    $this->count = (int) $count;
   }
 
   /**
