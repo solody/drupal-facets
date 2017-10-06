@@ -27,9 +27,9 @@ class FacetSourceEditForm extends EntityForm {
   protected $urlProcessorPluginManager;
 
   /**
-   * The UUID generator interface
+   * The UUID generator interface.
    *
-   * @var \Drupal\facets\Form\UuidInterface
+   * @var \Drupal\Component\Uuid\UuidInterface
    */
   protected $uuid;
 
@@ -82,7 +82,7 @@ class FacetSourceEditForm extends EntityForm {
           'id' => $source_id,
           'name' => $this->getRequest()->get('facets_facet_source'),
           'is_new' => TRUE,
-          'uuid' => $this->uuid->generate()
+          'uuid' => $this->uuid->generate(),
         ],
         'facets_facet_source'
       );

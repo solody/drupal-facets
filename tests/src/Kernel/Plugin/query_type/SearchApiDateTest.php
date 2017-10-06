@@ -63,7 +63,11 @@ class SearchApiDateTest extends KernelTestBase {
     $facet->addProcessor([
       'processor_id' => 'date_item',
       'weights' => [],
-      'settings' => ['granularity' => $granularity, 'date_format' => '', 'date_display' => 'actual_date'],
+      'settings' => [
+        'granularity' => $granularity,
+        'date_format' => '',
+        'date_display' => 'actual_date',
+      ],
     ]);
 
     $query_type = new SearchApiDate(
@@ -279,7 +283,11 @@ class SearchApiDateTest extends KernelTestBase {
     $facet->addProcessor([
       'processor_id' => 'date_item',
       'weights' => [],
-      'settings' => ['granularity' => SearchApiDate::FACETAPI_DATE_YEAR, 'date_format' => '', 'date_display' => 'actual_date'],
+      'settings' => [
+        'granularity' => SearchApiDate::FACETAPI_DATE_YEAR,
+        'date_format' => '',
+        'date_display' => 'actual_date',
+      ],
     ]);
 
     $query_type = new SearchApiDate(

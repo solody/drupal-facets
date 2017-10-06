@@ -56,7 +56,7 @@ class ShowSummaryProcessor extends ProcessorPluginBase implements BuildProcessor
    * @return \Drupal\facets\Result\ResultInterface[]
    *   The active results found.
    */
-  protected function getActiveDisplayValues($results) {
+  protected function getActiveDisplayValues(array $results) {
     $items = [];
     foreach ($results as $result) {
       if ($result->isActive()) {
@@ -68,4 +68,5 @@ class ShowSummaryProcessor extends ProcessorPluginBase implements BuildProcessor
     }
     return $items;
   }
+
 }

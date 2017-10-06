@@ -79,7 +79,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     $facet = $this->facetStorage->load($facet_id);
 
     // No need to build the facet if it does not need to be visible.
-    if($facet->getOnlyVisibleWhenFacetSourceIsVisible() && !$facet->getFacetSource()->isRenderedInCurrentRequest()){
+    if ($facet->getOnlyVisibleWhenFacetSourceIsVisible() && !$facet->getFacetSource()->isRenderedInCurrentRequest()) {
       return;
     }
 

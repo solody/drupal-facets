@@ -160,7 +160,11 @@ class FacetFacetSourceTest extends EntityKernelTestBase {
     $entity->setWidget('links');
     $entity->setFacetSourceId('search_api:views_page__search_api_test_view__page_1');
     $entity->setFieldIdentifier('name');
-    $entity->addProcessor(['processor_id' => 'invalid_qt', 'weights' => [], 'settings' => []]);
+    $entity->addProcessor([
+      'processor_id' => 'invalid_qt',
+      'weights' => [],
+      'settings' => [],
+    ]);
 
     $this->setExpectedException(InvalidQueryTypeException::class);
     $entity->getQueryType();

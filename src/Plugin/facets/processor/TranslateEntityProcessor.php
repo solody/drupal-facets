@@ -145,7 +145,8 @@ class TranslateEntityProcessor extends ProcessorPluginBase implements BuildProce
     foreach ($property_definitions as $k => $definition) {
       if ($definition instanceof DataReferenceDefinitionInterface && $definition->getDataType() === 'entity_reference') {
         return TRUE;
-      }};
+      }
+    }
     return FALSE;
   }
 

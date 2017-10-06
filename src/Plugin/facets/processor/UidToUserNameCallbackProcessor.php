@@ -53,7 +53,8 @@ class UidToUserNameCallbackProcessor extends ProcessorPluginBase implements Buil
         $definition->getTargetDefinition()->getConstraint('EntityType') === "user"
       ) {
         return TRUE;
-      }};
+      }
+    }
     return FALSE;
   }
 

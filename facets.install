@@ -88,7 +88,9 @@ function facets_update_8002() {
 
 /**
  * WARNING: Facets core search support has been moved into a separate project.
- * If you are using this feature, you need do download the "facets_core_search" module on drupal.org."
+ *
+ * If you are using this feature, you need do download the "facets_core_search"
+ * module from drupal.org."
  */
 function facets_update_8003() {
   \Drupal::database()->delete('key_value')
@@ -110,7 +112,7 @@ function facets_update_8004() {
       $settings = [
         'date_format' => $widget['config']['date_display'],
         'granularity' => $widget['config']['granularity'],
-        'date_display' => 'actual_date'
+        'date_display' => 'actual_date',
       ];
       if ($widget['config']['display_relative']) {
         $settings['date_display'] = 'relative_date';

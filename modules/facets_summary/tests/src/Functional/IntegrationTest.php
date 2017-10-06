@@ -196,7 +196,7 @@ class IntegrationTest extends FacetsTestBase {
       'facets[giraffe][label]' => 'Summary giraffe',
       'facets[llama][checked]' => TRUE,
       'facets[llama][label]' => 'Summary llama',
-      'facets_summary_settings[show_summary][status]' => TRUE
+      'facets_summary_settings[show_summary][status]' => TRUE,
     ];
     $this->drupalPostForm(NULL, $summaries, 'Save');
 
