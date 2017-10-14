@@ -4,8 +4,11 @@ namespace Drupal\Tests\facets\Kernel\Entity;
 
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\facets\Entity\Facet;
+use Drupal\facets\Exception\Exception;
 use Drupal\facets\Exception\InvalidProcessorException;
 use Drupal\facets\Hierarchy\HierarchyPluginManager;
+use Drupal\facets\Plugin\facets\hierarchy\Taxonomy;
+use Drupal\facets\Plugin\facets\processor\HideNonNarrowingResultProcessor;
 use Drupal\facets\Plugin\facets\widget\LinksWidget;
 use Drupal\facets\Processor\ProcessorInterface;
 use Drupal\facets\Result\Result;
@@ -75,7 +78,7 @@ class FacetTest extends KernelTestBase {
       ],
     ];
     $this->assertEquals(['type' => 'links', 'config' => $config], $entity->getWidget());
-    $this->assertInstanceOf('\Drupal\facets\Plugin\facets\widget\LinksWidget', $entity->getWidgetInstance());
+    $this->assertInstanceOf(LinksWidget::class, $entity->getWidgetInstance());
     $this->assertFalse($entity->getWidgetInstance()->getConfiguration()['show_numbers']);
 
     $config['show_numbers'] = TRUE;
@@ -132,7 +135,7 @@ class FacetTest extends KernelTestBase {
     $this->assertEmpty($entity->getProcessorsByStage(ProcessorInterface::STAGE_SORT));
     $processors = $entity->getProcessors();
     $this->assertArrayHasKey('hide_non_narrowing_result_processor', $processors);
-    $this->assertInstanceOf('\Drupal\facets\Plugin\facets\processor\HideNonNarrowingResultProcessor', $processors['hide_non_narrowing_result_processor']);
+    $this->assertInstanceOf(HideNonNarrowingResultProcessor::class, $processors['hide_non_narrowing_result_processor']);
 
     $entity->removeProcessor($id);
     $this->assertEmpty($entity->getProcessorsByStage(ProcessorInterface::STAGE_BUILD));
@@ -147,7 +150,7 @@ class FacetTest extends KernelTestBase {
   public function testGetQueryTypeWithNoFacetSource() {
     $entity = new Facet([], 'facets_facet');
 
-    $this->setExpectedException('\Drupal\facets\Exception\Exception', 'No facet source defined for facet.');
+    $this->setExpectedException(Exception::class, 'No facet source defined for facet.');
     $entity->getQueryType();
   }
 
@@ -374,8 +377,7 @@ class FacetTest extends KernelTestBase {
 
     $manager = $entity->getHierarchyManager();
     $this->assertInstanceOf(HierarchyPluginManager::class, $manager);
-
-    $this->assertInstanceOf('\Drupal\facets\Plugin\facets\hierarchy\Taxonomy', $entity->getHierarchyInstance());
+    $this->assertInstanceOf(Taxonomy::class, $entity->getHierarchyInstance());
 
     $this->assertEquals(['type' => 'taxonomy', 'config' => []], $entity->getHierarchy());
   }

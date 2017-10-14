@@ -2,10 +2,18 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\url_processor;
 
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Entity\FacetSource;
+use Drupal\facets\Exception\InvalidProcessorException;
+use Drupal\facets\FacetSource\FacetSourcePluginInterface;
+use Drupal\facets\FacetSource\FacetSourcePluginManager;
 use Drupal\facets\Plugin\facets\url_processor\QueryString;
 use Drupal\facets\Result\Result;
+use Drupal\facets\Result\ResultInterface;
+use Drupal\Tests\Core\Routing\TestRouterInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -55,7 +63,7 @@ class QueryStringTest extends UnitTestCase {
    * Tests that the processor correctly throws an exception.
    */
   public function testEmptyProcessorConfiguration() {
-    $this->setExpectedException('\Drupal\facets\Exception\InvalidProcessorException', "The url processor doesn't have the required 'facet' in the configuration array.");
+    $this->setExpectedException(InvalidProcessorException::class, "The url processor doesn't have the required 'facet' in the configuration array.");
     new QueryString([], 'test', [], new Request());
   }
 
@@ -147,7 +155,7 @@ class QueryStringTest extends UnitTestCase {
 
     /** @var \Drupal\facets\Result\ResultInterface $r */
     foreach ($results as $r) {
-      $this->assertInstanceOf('\Drupal\facets\Result\ResultInterface', $r);
+      $this->assertInstanceOf(ResultInterface::class, $r);
       $this->assertEquals('route:test?f%5B0%5D=test%3A' . $r->getRawValue(), $r->getUrl()->toUriString());
     }
   }
@@ -172,7 +180,7 @@ class QueryStringTest extends UnitTestCase {
 
     /** @var \Drupal\facets\Result\ResultInterface $r */
     foreach ($results as $k => $r) {
-      $this->assertInstanceOf('\Drupal\facets\Result\ResultInterface', $r);
+      $this->assertInstanceOf(ResultInterface::class, $r);
       if ($k === 2) {
         $this->assertEquals('route:test?f%5B0%5D=king%3Akong', $r->getUrl()->toUriString());
       }
@@ -212,11 +220,11 @@ class QueryStringTest extends UnitTestCase {
     $facet_source = new FacetSource(['filter_key' => 'ab'], 'facets_facet_source');
 
     // Override the container with the new facet source.
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
+    $storage = $this->getMock(EntityStorageInterface::class);
     $storage->expects($this->once())
       ->method('load')
       ->willReturn($facet_source);
-    $em = $this->getMockBuilder('\Drupal\Core\Entity\EntityTypeManagerInterface')
+    $em = $this->getMockBuilder(EntityTypeManagerInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
     $em->expects($this->any())
@@ -240,7 +248,7 @@ class QueryStringTest extends UnitTestCase {
 
     /** @var \Drupal\facets\Result\ResultInterface $r */
     foreach ($results as $r) {
-      $this->assertInstanceOf('\Drupal\facets\Result\ResultInterface', $r);
+      $this->assertInstanceOf(ResultInterface::class, $r);
       $this->assertEquals('route:test?ab%5B0%5D=test%3A' . $r->getRawValue(), $r->getUrl()->toUriString());
     }
 
@@ -268,7 +276,7 @@ class QueryStringTest extends UnitTestCase {
    */
   public function testContextualFilters() {
     // Override router.
-    $router = $this->getMockBuilder('Drupal\Tests\Core\Routing\TestRouterInterface')
+    $router = $this->getMockBuilder(TestRouterInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
     $router->expects($this->any())
@@ -302,7 +310,7 @@ class QueryStringTest extends UnitTestCase {
    * Sets up a container.
    */
   protected function setContainer() {
-    $router = $this->getMockBuilder('Drupal\Tests\Core\Routing\TestRouterInterface')
+    $router = $this->getMockBuilder(TestRouterInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
     $router->expects($this->any())
@@ -312,15 +320,15 @@ class QueryStringTest extends UnitTestCase {
         '_route' => 'test',
       ]);
 
-    $validator = $this->getMock('Drupal\Core\Path\PathValidatorInterface');
+    $validator = $this->getMock(PathValidatorInterface::class);
 
-    $fsi = $this->getMockBuilder('\Drupal\facets\FacetSource\FacetSourcePluginInterface')
+    $fsi = $this->getMockBuilder(FacetSourcePluginInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
     $fsi->method('getPath')
       ->willReturn('test');
 
-    $manager = $this->getMockBuilder('\Drupal\facets\FacetSource\FacetSourcePluginManager')
+    $manager = $this->getMockBuilder(FacetSourcePluginManager::class)
       ->disableOriginalConstructor()
       ->getMock();
     $manager->method('createInstance')
@@ -329,8 +337,8 @@ class QueryStringTest extends UnitTestCase {
       ->with('facet_source__dummy')
       ->willReturn(TRUE);
 
-    $storage = $this->getMock('\Drupal\Core\Entity\EntityStorageInterface');
-    $em = $this->getMockBuilder('\Drupal\Core\Entity\EntityTypeManagerInterface')
+    $storage = $this->getMock(EntityStorageInterface::class);
+    $em = $this->getMockBuilder(EntityTypeManagerInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
     $em->expects($this->any())

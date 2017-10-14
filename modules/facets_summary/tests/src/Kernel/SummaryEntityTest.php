@@ -3,6 +3,7 @@
 namespace Drupal\Tests\facets_summary\Kernel;
 
 use Drupal\facets_summary\Entity\FacetsSummary;
+use Drupal\facets_summary\Plugin\facets_summary\processor\HideWhenNotRenderedProcessor;
 use Drupal\facets_summary\Processor\ProcessorInterface;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -106,7 +107,7 @@ class SummaryEntityTest extends KernelTestBase {
     $this->assertNotEmpty($entity->getProcessorsByStage(ProcessorInterface::STAGE_BUILD));
     $processors = $entity->getProcessors();
     $this->assertArrayHasKey($id, $processors);
-    $this->assertInstanceOf('\Drupal\facets_summary\Plugin\facets_summary\processor\HideWhenNotRenderedProcessor', $processors[$id]);
+    $this->assertInstanceOf(HideWhenNotRenderedProcessor::class, $processors[$id]);
 
     $entity->removeProcessor($id);
     $this->assertEmpty($entity->getProcessorsByStage(ProcessorInterface::STAGE_BUILD));

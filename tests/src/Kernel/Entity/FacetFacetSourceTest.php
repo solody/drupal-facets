@@ -113,7 +113,7 @@ class FacetFacetSourceTest extends EntityKernelTestBase {
     $entity->setWidget('links');
     $entity->setFacetSourceId('search_api:views_page__search_api_test_view__page_1');
 
-    $this->setExpectedException('Drupal\facets\Exception\InvalidQueryTypeException');
+    $this->setExpectedException(InvalidQueryTypeException::class);
     $entity->getQueryType();
   }
 
