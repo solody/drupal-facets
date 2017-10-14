@@ -90,7 +90,7 @@ class BooleanItemProcessor extends ProcessorPluginBase implements BuildProcessor
   public function supportsFacet(FacetInterface $facet) {
     $data_definition = $facet->getDataDefinition();
     $property_definitions = $data_definition->getPropertyDefinitions();
-    foreach ($property_definitions as $k => $definition) {
+    foreach ($property_definitions as $definition) {
       if ($definition->getDataType() == "boolean") {
         return TRUE;
       }

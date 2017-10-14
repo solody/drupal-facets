@@ -291,7 +291,8 @@ class FacetListBuilder extends DraggableListBuilder {
           'colspan' => 4,
         ],
       ];
-      foreach ($groups['lone_facets'] as $i => $facet) {
+      /** @var \Drupal\facets\FacetInterface $facet */
+      foreach ($groups['lone_facets'] as $facet) {
         // Facets core search moved into a separate project. Show a clean
         // message to notify users how to resolve their broken facets.
         if (substr($facet->getFacetSourceId(), 0, 16) == 'core_node_search') {

@@ -12,7 +12,7 @@
       if (settings.facets.softLimit !== 'undefined') {
         $.each(settings.facets.softLimit, function (facet, limit) {
           Drupal.facets.applySoftLimit(facet, limit, settings);
-        })
+        });
       }
     }
   };
@@ -56,7 +56,7 @@
             $(this).removeClass('open').text(showMoreLabel);
           }
           return false;
-      }).insertAfter($(this));
+        }).insertAfter($(this));
     });
   };
 

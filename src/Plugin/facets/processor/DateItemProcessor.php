@@ -26,8 +26,6 @@ class DateItemProcessor extends ProcessorPluginBase implements BuildProcessorInt
    * {@inheritdoc}
    */
   public function build(FacetInterface $facet, array $results) {
-    $config = $this->getConfiguration();
-
     return $results;
   }
 
