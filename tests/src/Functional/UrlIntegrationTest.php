@@ -204,4 +204,15 @@ class UrlIntegrationTest extends FacetsTestBase {
     }
   }
 
+  /**
+   * Tests that creating a facet with a duplicate url alias is forbidden.
+   */
+  public function testCreatingDuplicateUrlAlias() {
+    $this->createFacet('Owl', 'owl');
+    $this->createFacet('Another owl', 'another_owl');
+    $this->drupalGet('admin/config/search/facets/another_owl/edit');
+    $this->drupalPostForm(NULL, ['facet_settings[url_alias]' => 'owl'], 'Save');
+    $this->assertSession()->pageTextContains('This alias is already in use for another facet defined on the same source.');
+  }
+
 }

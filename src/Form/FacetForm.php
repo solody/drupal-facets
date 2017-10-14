@@ -606,8 +606,14 @@ class FacetForm extends EntityForm {
     elseif (preg_match('/[^a-zA-Z0-9_~\.\-]/', $url_alias)) {
       $form_state->setErrorByName('url_alias', $this->t('The URL alias contains characters that are not allowed.'));
     }
-    // @todo: validate if url_alias is already used by another facet with the
-    // same facet source.
+
+    $already_enabled_facets_on_same_source = \Drupal::service('facets.manager')->getFacetsByFacetSourceId($facet->getFacetSourceId());
+    /** @var \Drupal\facets\FacetInterface $other */
+    foreach ($already_enabled_facets_on_same_source as $other) {
+      if ($other->getUrlAlias() === $url_alias && $other->id() !== $facet->id()) {
+        $form_state->setErrorByName('url_alias', $this->t('This alias is already in use for another facet defined on the same source.'));
+      }
+    }
   }
 
   /**
