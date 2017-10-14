@@ -233,6 +233,9 @@ class WidgetJSTest extends JavascriptTestBase {
     $dropdown = $block->find('css', 'select');
     $dropdown->isVisible();
 
+    $block->find('css', '.item-list__dropdown');
+    $block->isVisible();
+
     $options = $dropdown->findAll('css', 'option');
     $this->assertCount(3, $options);
 
