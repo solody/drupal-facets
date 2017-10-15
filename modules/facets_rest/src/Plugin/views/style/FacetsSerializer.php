@@ -54,6 +54,17 @@ class FacetsSerializer extends Serializer {
   /**
    * {@inheritdoc}
    */
+  protected function defineOptions() {
+    $options = parent::defineOptions();
+    // Facets are served by json by default.
+    $options['formats'] = ['default' => ['json']];
+
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function render() {
     $rows = [];
     // If the Data Entity row plugin is used, this will be an array of entities
@@ -72,7 +83,7 @@ class FacetsSerializer extends Serializer {
 
     // Get the content type configured in the display or fallback to the
     // default.
-    if (empty($this->view->live_preview)) {
+    if ((empty($this->view->live_preview))) {
       $content_type = $this->displayHandler->getContentType();
     }
     else {
