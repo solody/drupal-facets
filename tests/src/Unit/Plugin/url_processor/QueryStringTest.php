@@ -18,7 +18,6 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Unit test for processor.
@@ -40,6 +39,13 @@ class QueryStringTest extends UnitTestCase {
    * @var \Drupal\facets\Result\Result[]
    */
   protected $originalResults;
+
+  /**
+   * A mock of the entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityManager;
 
   /**
    * Creates a new processor object for use in the tests.
@@ -64,24 +70,7 @@ class QueryStringTest extends UnitTestCase {
    */
   public function testEmptyProcessorConfiguration() {
     $this->setExpectedException(InvalidProcessorException::class, "The url processor doesn't have the required 'facet' in the configuration array.");
-    new QueryString([], 'test', [], new Request());
-  }
-
-  /**
-   * Tests that the processor correctly throws an exception.
-   */
-  public function testCreate() {
-    $facet = new Facet([], 'facets_facet');
-
-    $request_stack = new RequestStack();
-    $request = new Request();
-    $request_stack->push($request);
-
-    $container = new ContainerBuilder();
-    $container->set('request_stack', $request_stack);
-
-    $qs = QueryString::create($container, ['facet' => $facet], 'query_string', []);
-    $this->assertInstanceOf(QueryString::class, $qs);
+    new QueryString([], 'test', [], new Request(), $this->entityManager);
   }
 
   /**
@@ -93,10 +82,29 @@ class QueryStringTest extends UnitTestCase {
     $facet->setUrlAlias('test');
     $facet->setFieldIdentifier('test');
 
+    $discovery_property = new \ReflectionProperty($facet, 'id');
+    $discovery_property->setAccessible(TRUE);
+    $discovery_property->setValue($facet, 'test');
+
+    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage->expects($this->any())
+      ->method('loadByProperties')
+      ->willReturn([$facet]);
+    $entityTypeManager = $this->getMockBuilder(EntityTypeManagerInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $entityTypeManager->expects($this->any())
+      ->method('getStorage')
+      ->willReturn($storage);
+
+    $container = \Drupal::getContainer();
+    $container->set('entity_type.manager', $entityTypeManager);
+    \Drupal::setContainer($container);
+
     $request = new Request();
     $request->query->set('f', ['test:badger']);
 
-    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request, $entityTypeManager);
     $this->processor->setActiveItems($facet);
 
     $this->assertEquals(['badger'], $facet->getActiveItems());
@@ -111,10 +119,29 @@ class QueryStringTest extends UnitTestCase {
     $facet->setUrlAlias('test');
     $facet->setFieldIdentifier('test');
 
+    $discovery_property = new \ReflectionProperty($facet, 'id');
+    $discovery_property->setAccessible(TRUE);
+    $discovery_property->setValue($facet, 'test');
+
+    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage->expects($this->atLeastOnce())
+      ->method('loadByProperties')
+      ->willReturnOnConsecutiveCalls([$facet], [$facet], []);
+    $entityTypeManager = $this->getMockBuilder(EntityTypeManagerInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $entityTypeManager->expects($this->any())
+      ->method('getStorage')
+      ->willReturn($storage);
+
+    $container = \Drupal::getContainer();
+    $container->set('entity_type.manager', $entityTypeManager);
+    \Drupal::setContainer($container);
+
     $request = new Request();
     $request->query->set('f', ['test:badger', 'test:mushroom', 'donkey:kong']);
 
-    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request, $entityTypeManager);
     $this->processor->setActiveItems($facet);
 
     $this->assertEquals(['badger', 'mushroom'], $facet->getActiveItems());
@@ -131,7 +158,7 @@ class QueryStringTest extends UnitTestCase {
     $request = new Request();
     $request->query->set('f', []);
 
-    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request, $this->entityManager);
     $results = $this->processor->buildUrls($facet, []);
     $this->assertEmpty($results);
   }
@@ -148,7 +175,7 @@ class QueryStringTest extends UnitTestCase {
     $request = new Request();
     $request->query->set('f', []);
 
-    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request, $this->entityManager);
     $results = $this->processor->buildUrls($facet, $this->originalResults);
 
     $this->assertEquals('f', $this->processor->getFilterKey());
@@ -168,6 +195,29 @@ class QueryStringTest extends UnitTestCase {
     $facet->setFieldIdentifier('test');
     $facet->setUrlAlias('test');
     $facet->setFacetSourceId('facet_source__dummy');
+    $facet2 = new Facet([], 'facets_facet');
+    $facet2->setFieldIdentifier('king');
+    $facet2->setUrlAlias('king');
+    $facet2->setFacetSourceId('facet_source__dummy');
+
+    $discovery_property = new \ReflectionProperty($facet, 'id');
+    $discovery_property->setAccessible(TRUE);
+    $discovery_property->setValue($facet, 'test');
+
+    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage->expects($this->atLeastOnce())
+      ->method('loadByProperties')
+      ->willReturnOnConsecutiveCalls([$facet2], [$facet2], [$facet2], [$facet2], [$facet2], [$facet2]);
+    $entityTypeManager = $this->getMockBuilder(EntityTypeManagerInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $entityTypeManager->expects($this->any())
+      ->method('getStorage')
+      ->willReturn($storage);
+
+    $container = \Drupal::getContainer();
+    $container->set('entity_type.manager', $entityTypeManager);
+    \Drupal::setContainer($container);
 
     $original_results = $this->originalResults;
     $original_results[2]->setActiveState(TRUE);
@@ -175,7 +225,7 @@ class QueryStringTest extends UnitTestCase {
     $request = new Request();
     $request->query->set('f', ['king:kong']);
 
-    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request, $entityTypeManager);
     $results = $this->processor->buildUrls($facet, $original_results);
 
     /** @var \Drupal\facets\Result\ResultInterface $r */
@@ -203,7 +253,7 @@ class QueryStringTest extends UnitTestCase {
     $this->originalResults[1]->setActiveState(TRUE);
     $this->originalResults[2]->setActiveState(TRUE);
 
-    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], new Request());
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], new Request(), $this->entityManager);
     $results = $this->processor->buildUrls($facet, $this->originalResults);
 
     $this->assertEquals('route:test?f%5B0%5D=test%3A' . $results[0]->getRawValue(), $results[0]->getUrl()->toUriString());
@@ -243,7 +293,7 @@ class QueryStringTest extends UnitTestCase {
     $request = new Request();
     $request->query->set('ab', []);
 
-    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request);
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], $request, $this->entityManager);
     $results = $this->processor->buildUrls($facet, $this->originalResults);
 
     /** @var \Drupal\facets\Result\ResultInterface $r */
@@ -251,7 +301,6 @@ class QueryStringTest extends UnitTestCase {
       $this->assertInstanceOf(ResultInterface::class, $r);
       $this->assertEquals('route:test?ab%5B0%5D=test%3A' . $r->getRawValue(), $r->getUrl()->toUriString());
     }
-
   }
 
   /**
@@ -263,7 +312,7 @@ class QueryStringTest extends UnitTestCase {
     $facet->setUrlAlias('test');
     $facet->setFacetSourceId('facet_source__dummy');
 
-    $this->processor = new QueryString(['facet' => $facet, 'separator' => '__'], 'query_string', [], new Request());
+    $this->processor = new QueryString(['facet' => $facet, 'separator' => '__'], 'query_string', [], new Request(), $this->entityManager);
     $results = $this->processor->buildUrls($facet, $this->originalResults);
 
     foreach ($results as $result) {
@@ -298,7 +347,7 @@ class QueryStringTest extends UnitTestCase {
     $facet->setUrlAlias('test');
     $facet->setFacetSourceId('facet_source__dummy');
 
-    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], new Request());
+    $this->processor = new QueryString(['facet' => $facet], 'query_string', [], new Request(), $this->entityManager);
     $results = $this->processor->buildUrls($facet, $this->originalResults);
 
     foreach ($results as $result) {
@@ -337,13 +386,23 @@ class QueryStringTest extends UnitTestCase {
       ->with('facet_source__dummy')
       ->willReturn(TRUE);
 
+    $facetentity = $this->getMockBuilder(Facet::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $facetentity->method('id')
+      ->willReturn('king');
+
     $storage = $this->getMock(EntityStorageInterface::class);
+    $storage->expects($this->any())
+      ->method('loadByProperties')
+      ->willReturn([$facetentity]);
     $em = $this->getMockBuilder(EntityTypeManagerInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
     $em->expects($this->any())
       ->method('getStorage')
       ->willReturn($storage);
+    $this->entityManager = $em;
 
     $container = new ContainerBuilder();
     $container->set('router.no_access_checks', $router);
@@ -354,4 +413,14 @@ class QueryStringTest extends UnitTestCase {
     \Drupal::setContainer($container);
   }
 
+}
+
+namespace Drupal\facets\Plugin\facets\url_processor;
+
+/**
+ * @see \drupal_static
+ */
+function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
+  $data = [];
+  return $data;
 }
