@@ -43,6 +43,7 @@ class SliderProcessor extends ProcessorPluginBase implements PostQueryProcessorI
       return $a['value'] < $b['value'] ? -1 : 1;
     });
 
+    $step = $config['step'];
     if ($config['min_type'] == 'fixed') {
       $min = $config['min_value'];
       $max = $config['max_value'];
@@ -50,9 +51,12 @@ class SliderProcessor extends ProcessorPluginBase implements PostQueryProcessorI
     else {
       $min = reset($simple_results)['value'];
       $max = end($simple_results)['value'];
+      // If max is not divisible by step, we should add the remainder to max to
+      // make sure that we don't lose any possible values.
+      if ($max % $step !== 0) {
+        $max = $max + ($step - $max % $step);
+      }
     }
-
-    $step = $config['step'];
 
     // Creates an array of all results between min and max by the step from the
     // configuration.

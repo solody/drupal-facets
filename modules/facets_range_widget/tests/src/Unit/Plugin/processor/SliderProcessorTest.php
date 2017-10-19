@@ -122,6 +122,29 @@ class SliderProcessorTest extends UnitTestCase {
   }
 
   /**
+   * Adds a regression test for the out of range values.
+   */
+  public function testOutOfRange() {
+    $widgetconfig = ['min_type' => 'foo', 'step' => 7];
+    $facet = new Facet([], 'facets_facet');
+    $facet->setWidget('raw', $widgetconfig);
+    $this->configureContainer($widgetconfig);
+
+    $result_lower = new Result($facet, 5, '5', 4);
+    $result_higher = new Result($facet, 15, '15', 4);
+    $facet->setResults([$result_lower, $result_higher]);
+
+    // Process the data.
+    $this->processor->postQuery($facet);
+    $new_results = $facet->getResults();
+
+    $this->assertCount(3, $new_results);
+    $this->assertEquals(5, $new_results[0]->getRawValue());
+    $this->assertEquals(12, $new_results[1]->getRawValue());
+    $this->assertEquals(19, $new_results[2]->getRawValue());
+  }
+
+  /**
    * Tests the post query method with fixed min/max.
    *
    * @covers ::postQuery
