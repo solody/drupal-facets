@@ -49,10 +49,10 @@ class SliderProcessorTest extends UnitTestCase {
     $facet->setResults([$result_lower, $result_higher]);
 
     // Process the data.
-    $startTime = microtime();
+    $startTime = microtime(TRUE);
     $this->processor->postQuery($facet);
     $new_results = $facet->getResults();
-    $stopTime = microtime();
+    $stopTime = microtime(TRUE);
 
     if (($stopTime - $startTime) > 1) {
       $this->fail('Test is too slow');
@@ -84,10 +84,10 @@ class SliderProcessorTest extends UnitTestCase {
     $facet->setResults($original_results);
 
     // Process the data.
-    $startTime = microtime();
+    $startTime = microtime(TRUE);
     $this->processor->postQuery($facet);
     $new_results = $facet->getResults();
-    $stopTime = microtime();
+    $stopTime = microtime(TRUE);
 
     if (($stopTime - $startTime) > 1) {
       $this->fail('Test is too slow');

@@ -92,9 +92,9 @@ class SliderWidgetTest extends WidgetTestBase {
     $facet->setFieldIdentifier('owl');
     $facet->setWidget('slider', []);
 
-    $startTime = microtime();
+    $startTime = microtime(TRUE);
     $build = $this->widget->build($facet);
-    $stopTime = microtime();
+    $stopTime = microtime(TRUE);
 
     if (($stopTime - $startTime) > 1) {
       $this->fail('Test is too slow');
