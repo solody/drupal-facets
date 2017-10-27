@@ -320,6 +320,13 @@ display:
         type: facets_serializer
       row:
         type: data_field
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 1
+    display_options:
+      path: facets-page
 label: 'Search API Test Fulltext REST search view'
 module: views
 id: search_api_rest_test_view

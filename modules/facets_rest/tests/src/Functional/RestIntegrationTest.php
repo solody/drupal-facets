@@ -3,6 +3,7 @@
 namespace Drupal\Tests\facets_rest\Functional;
 
 use Drupal\Tests\facets\Functional\FacetsTestBase;
+use Drupal\views\Entity\View;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -239,6 +240,41 @@ class RestIntegrationTest extends FacetsTestBase {
 
     $this->drupalPostForm(NULL, ['widget' => 'array'], 'Configure widget');
     $this->assertSession()->pageTextNotContains('The Facet source is a Rest export. Please select a raw widget.');
+  }
+
+  /**
+   * Tests urls on the same path.
+   */
+  public function testSamePath() {
+    $getOptions = ['query' => ['_format' => 'json']];
+
+    $this->drupalGet('admin/config/search/facets/add-facet');
+
+    $id = 'type';
+    $this->createFacet('Type', $id . '_rest', 'type', 'rest_export_1', 'views_rest__search_api_rest_test_view', FALSE);
+    $this->createFacet('Type', $id, 'type', 'page_1', 'views_page__search_api_rest_test_view');
+    $this->assertSession()->statusCodeEquals(200);
+
+    $this->drupalGet('/admin/config/search/facets/type/edit');
+    $values['widget'] = 'array';
+    $values['widget_config[show_numbers]'] = TRUE;
+    $values['facet_settings[url_alias]'] = 'type';
+    $values['facet_settings[only_visible_when_facet_source_is_visible]'] = TRUE;
+    $this->drupalPostForm('/admin/config/search/facets/type_rest/edit', ['widget' => 'array'], 'Configure widget');
+    $this->drupalPostForm(NULL, $values, 'Save');
+
+    $this->drupalGet('facets-page');
+    $this->clickLink('item');
+    $this->assertSession()->pageTextContains('Displaying 3 search results');
+    $pageUrl = $this->getSession()->getCurrentUrl();
+    $restUrl = str_replace('facets-page', 'facets-rest', $pageUrl);
+
+    $result = $this->drupalGet($restUrl, $getOptions);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->responseHeaderEquals('content-type', 'application/json');
+    $json_decoded = json_decode($result);
+
+    $this->assertEquals(3, count($json_decoded->search_results));
   }
 
 }

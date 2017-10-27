@@ -29,8 +29,10 @@ trait BlockTestTrait {
    *   The display id.
    * @param string $source
    *   Facet source.
+   * @param bool $allowBlockCreation
+   *   Automatically create a block.
    */
-  protected function createFacet($name, $id, $field = 'type', $display_id = 'page_1', $source = 'views_page__search_api_test_view') {
+  protected function createFacet($name, $id, $field = 'type', $display_id = 'page_1', $source = 'views_page__search_api_test_view', $allowBlockCreation = TRUE) {
     $facet_source = "search_api:{$source}__{$display_id}";
 
     /** @var \Drupal\facets\FacetInterface $facet */
@@ -52,7 +54,9 @@ trait BlockTestTrait {
     $facet->setOnlyVisibleWhenFacetSourceIsVisible(TRUE);
     $facet->save();
 
-    $this->blocks[$id] = $this->createBlock($id);
+    if ($allowBlockCreation) {
+      $this->blocks[$id] = $this->createBlock($id);
+    }
   }
 
   /**
