@@ -5,6 +5,7 @@ namespace Drupal\facets\Plugin\facets\processor;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\facets\Exception\InvalidProcessorException;
@@ -141,9 +142,16 @@ class TranslateEntityProcessor extends ProcessorPluginBase implements BuildProce
    */
   public function supportsFacet(FacetInterface $facet) {
     $data_definition = $facet->getDataDefinition();
+    if ($data_definition->getDataType() === 'entity_reference') {
+      return TRUE;
+    }
+    if (!($data_definition instanceof ComplexDataDefinitionInterface)) {
+      return FALSE;
+    }
+
     $property_definitions = $data_definition->getPropertyDefinitions();
     foreach ($property_definitions as $definition) {
-      if ($definition instanceof DataReferenceDefinitionInterface && $definition->getDataType() === 'entity_reference') {
+      if ($definition instanceof DataReferenceDefinitionInterface) {
         return TRUE;
       }
     }
