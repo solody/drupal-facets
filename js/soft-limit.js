@@ -33,8 +33,18 @@
     var zero_based_limit = (limit - 1);
     var facetsList = $('ul[data-drupal-facet-id="' + facet + '"]');
 
+    // In case of multiple instances of a facet, we need to key them.
+    if (facetsList.length > 1) {
+      facetsList.each(function (key, $value) {
+        var $facet_id = $(this).attr('data-drupal-facet-id');
+        $(this).attr('data-drupal-facet-id', $facet_id + '-' + key);
+      });
+    }
+
     // Hide facets over the limit.
-    facetsList.children('li:gt(' + zero_based_limit + ')').once().hide();
+    facetsList.each(function() {
+      $(this).children('li:gt(' + zero_based_limit + ')').once().hide();
+    });
 
     // Add "Show more" / "Show less" links.
     facetsList.once().filter(function () {
