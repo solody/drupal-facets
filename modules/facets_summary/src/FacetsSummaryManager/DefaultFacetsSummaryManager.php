@@ -102,6 +102,10 @@ class DefaultFacetsSummaryManager {
     );
 
     foreach ($facets as $facet) {
+      // Do not build the facet in summary if facet is not rendered.
+      if (!$facet->getActiveItems()) {
+        continue;
+      }
       // For clarity, process facets is called each build.
       // The first facet therefor will trigger the processing. Note that
       // processing is done only once, so repeatedly calling this method will
