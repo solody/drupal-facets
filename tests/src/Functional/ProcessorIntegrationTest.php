@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\facets\Functional;
 
+use Drupal\facets\Entity\Facet;
+use Drupal\facets\Processor\SortProcessorInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\search_api\Item\Field;
@@ -714,6 +716,36 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextNotContains('Boolean item label');
     $this->assertSession()->pageTextNotContains('Transform UID to user name');
     $this->assertSession()->pageTextNotContains('Transform entity ID to label');
+  }
+
+  /**
+   * Tests the configuration of the processors.
+   */
+  public function testProcessorConfig() {
+    $this->createFacet('Llama', 'llama');
+
+    $facet_id = 'alpaca';
+    $this->editForm = 'admin/config/search/facets/' . $facet_id . '/edit';
+    $this->createFacet('Alpaca', $facet_id);
+    $this->drupalGet($this->editForm);
+
+    $facet = Facet::load($facet_id);
+
+    /** @var \Drupal\facets\Processor\ProcessorInterface $processor */
+    foreach ($facet->getProcessors(FALSE) as $processor) {
+      // Sort processors have a different form key, so don't bother for now.
+      if ($processor instanceof SortProcessorInterface) {
+        continue;
+      }
+      // These processors are hidden by default, see also
+      // ::testHiddenProcessors.
+      if (in_array($processor->getPluginId(), ['boolean_item', 'translate_entity', 'uid_to_username_callback'])) {
+        continue;
+      }
+
+      $this->drupalPostForm(NULL, ["facet_settings[{$processor->getPluginId()}][status]" => '1'], 'Save');
+      $this->assertSession()->statusCodeEquals(200);
+    }
   }
 
 }

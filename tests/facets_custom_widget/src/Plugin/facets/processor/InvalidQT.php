@@ -2,6 +2,8 @@
 
 namespace Drupal\facets_custom_widget\Plugin\facets\processor;
 
+use Drupal\facets\FacetInterface;
+use Drupal\facets\Processor\PreQueryProcessorInterface;
 use Drupal\facets\Processor\ProcessorPluginBase;
 
 /**
@@ -16,7 +18,7 @@ use Drupal\facets\Processor\ProcessorPluginBase;
  *   }
  * )
  */
-class InvalidQT extends ProcessorPluginBase {
+class InvalidQT extends ProcessorPluginBase implements PreQueryProcessorInterface {
 
   /**
    * {@inheritdoc}
@@ -25,4 +27,10 @@ class InvalidQT extends ProcessorPluginBase {
     return '51_pegasi_b';
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function preQuery(FacetInterface $facet) {
+    // This can be empty for this test implementation.
+  }
 }
