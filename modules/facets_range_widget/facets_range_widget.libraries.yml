@@ -25,3 +25,4 @@ slider:
     - core/drupalSettings
     - core/jquery.once
     - facets_range_widget/jquery.ui.slider.pips
+    - core/jquery.ui.touch-punch
