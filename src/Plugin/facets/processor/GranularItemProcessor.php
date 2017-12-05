@@ -1,27 +1,39 @@
 <?php
 
-namespace Drupal\facets\Plugin\facets\widget;
+namespace Drupal\facets\Plugin\facets\processor;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\FacetInterface;
+use Drupal\facets\Processor\BuildProcessorInterface;
+use Drupal\facets\Processor\ProcessorPluginBase;
 
 /**
- * Basic granular widget.
+ * Provides a processor for granularity.
  *
- * @FacetsWidget(
- *   id = "numericgranular",
- *   label = @Translation("Granular numeric list"),
+ * @FacetsProcessor(
+ *   id = "granularity_item",
+ *   label = @Translation("Granularity item processor"),
  *   description = @Translation("List of numbers grouped in steps."),
+ *   stages = {
+ *     "build" = 35
+ *   }
  * )
  */
-class NumericGranularWidget extends LinksWidget {
+class GranularItemProcessor extends ProcessorPluginBase implements BuildProcessorInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function build(FacetInterface $facet, array $results) {
+    return $results;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
     return [
-      'granularity' => 0,
+      'granularity' => 1,
     ] + parent::defaultConfiguration();
   }
 
@@ -31,16 +43,15 @@ class NumericGranularWidget extends LinksWidget {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state, FacetInterface $facet) {
     $configuration = $this->getConfiguration();
 
-    $form += parent::buildConfigurationForm($form, $form_state, $facet);
-
-    $form['granularity'] = [
+    $build['granularity'] = [
       '#type' => 'number',
+      '#attributes' => ['min' => 1, 'step' => 1],
       '#title' => $this->t('Granularity'),
       '#default_value' => $configuration['granularity'],
       '#description' => $this->t('The numeric size of the steps to group the result facets in.'),
     ];
 
-    return $form;
+    return $build;
   }
 
   /**

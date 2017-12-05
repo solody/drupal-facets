@@ -204,6 +204,96 @@ class ProcessorIntegrationTest extends FacetsTestBase {
   }
 
   /**
+   * Tests the for configuration of granularity processor.
+   */
+  public function testNumericGranularity() {
+    $field_name = 'field_integer';
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test_mulrev_changed',
+      'type' => 'integer',
+    ]);
+    $field_storage->save();
+    $field = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => 'item',
+    ]);
+    $field->save();
+    $field = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => 'article',
+    ]);
+    $field->save();
+
+    $index = $this->getIndex();
+
+    // Index the taxonomy and entity reference fields.
+    $integerField = new Field($index, $field_name);
+    $integerField->setType('integer');
+    $integerField->setPropertyPath($field_name);
+    $integerField->setDatasourceId('entity:entity_test_mulrev_changed');
+    $integerField->setLabel('IntegerField');
+    $index->addField($integerField);
+
+    $index->save();
+    $this->indexItems($this->indexId);
+
+    $entity_test_storage = \Drupal::entityTypeManager()
+      ->getStorage('entity_test_mulrev_changed');
+
+    foreach ([30, 35, 40, 100] as $val) {
+      $entity_test_storage->create([
+        'name' => 'foo bar baz',
+        'body' => 'test test int',
+        'type' => 'item',
+        'keywords' => ['orange'],
+        'category' => 'item_category',
+        $field_name => $val,
+      ])->save();
+    }
+
+    $this->indexItems($this->indexId);
+
+    $facet_id = "integer";
+
+    // Create facet.
+    $this->editForm = 'admin/config/search/facets/' . $facet_id . '/edit';
+    $this->createFacet("Integer", $facet_id, $field_name);
+
+    // Check values.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertFacetLabel('100');
+    $this->assertFacetLabel('30');
+    $this->assertFacetLabel('35');
+    $this->assertFacetLabel('40');
+
+    $form = [
+      'facet_settings[granularity_item][status]' => TRUE,
+    ];
+    $this->drupalPostForm($this->editForm, $form, 'Save');
+
+    // Check values.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertFacetLabel('30 (1)');
+    $this->assertFacetLabel('35');
+    $this->assertFacetLabel('40');
+    $this->assertFacetLabel('100');
+
+    $form = [
+      'facet_settings[granularity_item][status]' => TRUE,
+      'facet_settings[granularity_item][settings][granularity]' => 10,
+    ];
+    $this->drupalPostForm($this->editForm, $form, 'Save');
+
+    // Check values.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertFacetLabel('30 (2)');
+    $this->assertEmpty($this->findFacetLink('35'));
+    $this->assertFacetLabel('40');
+    $this->assertFacetLabel('100');
+  }
+
+  /**
    * Tests the for sorting processors in the frontend with a 'keywords' facet.
    */
   public function testSortingWidgets() {
