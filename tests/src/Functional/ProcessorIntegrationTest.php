@@ -844,4 +844,42 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     }
   }
 
+  /**
+   * Tests the list item processor with underscores in the bundle.
+   */
+  public function testEntityTranslateWithUnderScores() {
+    entity_test_create_bundle('test_with_underscore', "Test with underscore", 'entity_test_mulrev_changed');
+    $entity_test_storage = \Drupal::entityTypeManager()
+      ->getStorage('entity_test_mulrev_changed');
+
+    // Add an entity with basic page content type.
+    $entity_test_storage->create([
+      'name' => 'llama',
+      'body' => 'llama.',
+      'type' => 'test_with_underscore',
+    ])->save();
+    $this->indexItems($this->indexId);
+
+    $facet_id = 'owl';
+    $editForm = 'admin/config/search/facets/' . $facet_id . '/edit';
+    $this->createFacet('Owl', $facet_id);
+
+    // Go to the overview and check that the machine names are used as facets.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertSession()->pageTextContains('Displaying 11 search results');
+    $this->assertFacetLabel('test_with_underscore');
+
+    // Edit the facet to use the list_item processor.
+    $edit = [
+      'facet_settings[list_item][status]' => TRUE,
+    ];
+    $this->drupalPostForm($editForm, $edit, 'Save');
+
+    // Go back to the overview and check that now the label is being used
+    // instead.
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertSession()->pageTextContains('Displaying 11 search results');
+    $this->assertFacetLabel('Test with underscore');
+  }
+
 }
