@@ -204,6 +204,35 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
   }
 
   /**
+   * Tests sorting by weight of a taxonomy term.
+   */
+  public function testWeightSort() {
+    $edit = [
+      'facet_settings[translate_entity][status]' => '1',
+      'facet_sorting[term_weight_widget_order][status]' => '1',
+    ];
+    $this->drupalPostForm($this->facetEditPage, $edit, 'Save');
+
+    $this->parents['Parent 1']->setWeight(15);
+    $this->parents['Parent 1']->save();
+    $this->parents['Parent 2']->setWeight(25);
+    $this->parents['Parent 2']->save();
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertFacetLabel('Parent 1');
+    $this->assertFacetLabel('Parent 2');
+    $this->assertStringPosition('Parent 1', 'Parent 2');
+
+    $this->parents['Parent 2']->setWeight(5);
+    $this->parents['Parent 2']->save();
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertFacetLabel('Parent 1');
+    $this->assertFacetLabel('Parent 2');
+    $this->assertStringPosition('Parent 2', 'Parent 1');
+  }
+
+  /**
    * Verify the "Enable parent when child gets disabled" option is working.
    */
   protected function verifyEnableParentWhenChildGetsDisabledOption() {

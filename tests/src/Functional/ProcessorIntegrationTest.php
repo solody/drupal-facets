@@ -146,7 +146,7 @@ class ProcessorIntegrationTest extends FacetsTestBase {
 
     $index = $this->getIndex();
 
-    // Index the taxonomy and entity reference fields.
+    // Index a boolean field.
     $boolean_field = new Field($index, $field_name);
     $boolean_field->setType('integer');
     $boolean_field->setPropertyPath($field_name);
@@ -806,6 +806,7 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextNotContains('Boolean item label');
     $this->assertSession()->pageTextNotContains('Transform UID to user name');
     $this->assertSession()->pageTextNotContains('Transform entity ID to label');
+    $this->assertSession()->pageTextNotContains('Sort by taxonomy term weight');
   }
 
   /**
@@ -829,7 +830,12 @@ class ProcessorIntegrationTest extends FacetsTestBase {
       }
       // These processors are hidden by default, see also
       // ::testHiddenProcessors.
-      if (in_array($processor->getPluginId(), ['boolean_item', 'translate_entity', 'uid_to_username_callback'])) {
+      $hiddenProcessors = [
+        'boolean_item',
+        'translate_entity',
+        'uid_to_username_callback',
+      ];
+      if (in_array($processor->getPluginId(), $hiddenProcessors)) {
         continue;
       }
 
