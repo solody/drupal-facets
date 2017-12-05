@@ -204,4 +204,20 @@ class LanguageIntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextNotContains('rofl');
   }
 
+  /**
+   * Tests the admin translation screen.
+   */
+  public function testAdminTranslation() {
+    $id = 'water_bear';
+    $this->createFacet('Water bear', $id);
+    // Translate the facet.
+    $this->drupalGet('admin/config/search/facets/' . $id . '/edit/translate/xx-lolspeak/add');
+    $this->drupalPostForm(NULL, ['translation[config_names][facets.facet.water_bear][name]' => 'Tardigrade'], 'Save translation');
+
+    $this->drupalGet('admin/config/search/facets');
+    $this->assertSession()->pageTextContains('Water bear');
+    $this->drupalGet('xx-lolspeak/admin/config/search/facets');
+    $this->assertSession()->pageTextContains('Tardigrade');
+  }
+
 }
