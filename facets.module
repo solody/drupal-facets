@@ -340,7 +340,12 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
 
       // Set the new query and create the link.
       $facet_url->setOption('query', $query);
-      $crumb_text = $active_facets[$facet_alias]->label() . ': ' . implode(', ', $facet_crumb_items);
+      if (!empty($facet_source->getBreadcrumbSettings()['before'])) {
+        $crumb_text = $active_facets[$facet_alias]->label() . ': ' . implode(', ', $facet_crumb_items);
+      }
+      else {
+        $crumb_text = implode(', ', $facet_crumb_items);
+      };
       $link = Link::fromTextAndUrl($crumb_text, $facet_url);
       $breadcrumb->addLink($link);
     }
