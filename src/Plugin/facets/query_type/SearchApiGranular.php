@@ -39,6 +39,15 @@ class SearchApiGranular extends QueryTypeRangeBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getFacetOptions() {
+    return parent::getFacetOptions() + [
+      'granularity' => $this->getGranularity(),
+    ];
+  }
+
+  /**
    * Looks at the configuration for this facet to determine the granularity.
    *
    * Default behaviour an integer for the steps that the facet works in.
