@@ -244,7 +244,8 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
 
   foreach ($facet_sources_definitions as $definition) {
     /* @var \Drupal\facets\FacetSource\FacetSourcePluginBase $facet_source_plugin */
-    $facet_source_plugin = $facet_source_manager->createInstance($definition['id']);
+    $facetsource_id = $definition['id'];
+    $facet_source_plugin = $facet_source_manager->createInstance($facetsource_id);
 
     // If the current facet source is not being rendered, don't do anything with
     // these facet sources.
@@ -252,7 +253,7 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
       continue;
     }
 
-    $source_id = str_replace(':', '__', $definition['id']);
+    $source_id = str_replace(':', '__', $facetsource_id);
     /** @var \Drupal\facets\FacetSourceInterface $facet_source */
     $facet_source = $facet_source_storage->load($source_id);
 
@@ -267,8 +268,8 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
     $breadcrumb->addCacheableDependency($facet_source);
 
     // Process the facets if they are not already processed.
-    $facet_manager->processFacets();
-    $facets = $facet_manager->getFacetsByFacetSourceId($definition['id']);
+    $facet_manager->processFacets($facetsource_id);
+    $facets = $facet_manager->getFacetsByFacetSourceId($facetsource_id);
 
     // Sort facets by weight.
     uasort($facets, function (FacetInterface $a, FacetInterface $b) {
