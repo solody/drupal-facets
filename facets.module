@@ -295,7 +295,7 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
         $facet_manager->build($facet);
 
         foreach ($facet->getResults() as $result) {
-          if ($result->isActive()) {
+          if ($result->isActive() || $result->hasActiveChildren()) {
             // Clone the result so we can mark it as inactive to be added to the
             // url parameters when calling buildUrls.
             $cloned_result = clone $result;

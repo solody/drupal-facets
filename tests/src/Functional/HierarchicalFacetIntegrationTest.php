@@ -327,6 +327,49 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
   }
 
   /**
+   * Tests hierarchy breadcrumbs.
+   */
+  public function testHierarchyBreadcrumb() {
+    $this->drupalGet('admin/config/search/facets');
+    $this->clickLink('Configure', 1);
+    $default_config = [
+      'filter_key' => 'f',
+      'url_processor' => 'query_string',
+      'breadcrumb[active]' => TRUE,
+      'breadcrumb[group]' => TRUE,
+    ];
+    $this->drupalPostForm(NULL, $default_config, 'Save');
+
+    $block = [
+      'region' => 'footer',
+      'label' => 'Breadcrumbs',
+      'provider' => 'system',
+    ];
+    $this->drupalPlaceBlock('system_breadcrumb_block', $block);
+    $this->resetAll();
+
+    $edit = [
+      'facet_settings[expand_hierarchy]' => '1',
+      'facet_settings[use_hierarchy]' => '1',
+      'facet_settings[translate_entity][status]' => '1',
+      'facet_sorting[display_value_widget_order][status]' => '1',
+      'facet_sorting[display_value_widget_order][settings][sort]' => 'ASC',
+      'facet_sorting[count_widget_order][status]' => '0',
+      'facet_sorting[active_widget_order][status]' => '0',
+    ];
+    $this->drupalPostForm($this->facetEditPage, $edit, 'Save');
+
+    $initial_query = ['search_api_fulltext' => 'foo', 'test_param' => 1];
+    $this->drupalGet('search-api-test-fulltext', ['query' => $initial_query]);
+    $this->clickLink('Child 2');
+    $this->checkFacetIsActive('Child 2');
+
+    $this->assertSession()->pageTextContains('hierarchical facet: Parent 1');
+    $this->clickLink('hierarchical facet: Parent 1');
+    $this->checkFacetIsActive('Parent 1');
+  }
+
+  /**
    * Creates several test entities with the term-reference field.
    */
   protected function insertExampleContent() {
