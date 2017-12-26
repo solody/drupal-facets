@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Breadcrumb\Breadcrumb;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -409,5 +410,19 @@ function facets_language_switch_links_alter(array &$links, $type, \Drupal\Core\U
         );
       }
     }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function facets_form_facets_facet_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $facet_sources = [];
+  foreach (\Drupal::service('plugin.manager.facets.facet_source')->getDefinitions() as $facet_source_id => $definition) {
+    $facet_sources[$definition['id']] = !empty($definition['label']) ? $definition['label'] : $facet_source_id;
+  }
+
+  if (count($facet_sources) == 0) {
+    unset($form['actions']);
   }
 }
