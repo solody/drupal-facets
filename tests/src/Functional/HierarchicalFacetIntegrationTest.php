@@ -268,13 +268,20 @@ class HierarchicalFacetIntegrationTest extends FacetsTestBase {
     $this->drupalPostForm(NULL, $edit, 'Save');
     $this->drupalGet('search-api-test-fulltext');
 
-    // Enable a child under Parent 2.
     $this->clickLink('Child 4');
+    $this->checkFacetIsActive('Child 4');
+    $this->clickLink('Child 3');
+    $this->checkFacetIsActive('Child 3');
     $this->checkFacetIsActive('Child 4');
     $this->checkFacetIsNotActive('Parent 2');
 
-    // Uncheck the facet again and see if Parent 2 is active now.
     $this->clickLink('(-) Child 4');
+    $this->checkFacetIsActive('Child 3');
+    $this->checkFacetIsNotActive('Child 4');
+    $this->checkFacetIsNotActive('Parent 2');
+
+    $this->clickLink('(-) Child 3');
+    $this->checkFacetIsNotActive('Child 3');
     $this->checkFacetIsNotActive('Child 4');
     $this->checkFacetIsActive('Parent 2');
   }
