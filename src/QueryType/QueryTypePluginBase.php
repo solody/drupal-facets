@@ -40,7 +40,7 @@ abstract class QueryTypePluginBase extends PluginBase implements QueryTypeInterf
   /**
    * The results for the facet.
    *
-   * @var \Drupal\facets\Result\ResultInterface[]
+   * @var array[]
    */
   protected $results;
 
