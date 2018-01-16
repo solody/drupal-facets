@@ -213,10 +213,8 @@ class DefaultFacetManager {
     $this->facets = $this->getEnabledFacets();
     foreach ($this->facets as $facet) {
       foreach ($facet->getProcessorsByStage(ProcessorInterface::STAGE_PRE_QUERY) as $processor) {
-        $processor_config = $processor->getConfiguration();
-        $processor_config['facet'] = $facet;
         /** @var \Drupal\facets\Processor\PreQueryProcessorInterface $pre_query_processor */
-        $pre_query_processor = $this->processorPluginManager->createInstance($processor->getPluginDefinition()['id'], $processor_config);
+        $pre_query_processor = $facet->getProcessors()[$processor->getPluginDefinition()['id']];
         if (!$pre_query_processor instanceof PreQueryProcessorInterface) {
           throw new InvalidProcessorException("The processor {$processor->getPluginDefinition()['id']} has a pre_query definition but doesn't implement the required PreQueryProcessorInterface interface");
         }
