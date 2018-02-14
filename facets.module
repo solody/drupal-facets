@@ -370,7 +370,7 @@ function facets_language_switch_links_alter(array &$links, $type, \Drupal\Core\U
   $urlProcessorManager = \Drupal::service('plugin.manager.facets.url_processor');
 
   foreach ($links as &$link) {
-    if ($link['language']->getId() === $language_interface->getId()) {
+    if (empty($link['language']) || $link['language']->getId() === $language_interface->getId()) {
       continue;
     }
 
