@@ -3,7 +3,6 @@
 namespace Drupal\Tests\facets_rest\Functional;
 
 use Drupal\Tests\facets\Functional\FacetsTestBase;
-use Drupal\views\Entity\View;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

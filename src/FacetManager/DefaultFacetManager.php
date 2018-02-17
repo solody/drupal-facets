@@ -326,7 +326,9 @@ class DefaultFacetManager {
               'class' => 'facet-empty',
             ],
             'empty_text' => [
+              // @codingStandardsIgnoreStart
               '#markup' => $this->t($empty_behavior['text']),
+              // @codingStandardsIgnoreEnd
             ],
           ],
         ];
