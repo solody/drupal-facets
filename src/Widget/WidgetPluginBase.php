@@ -36,9 +36,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
    *   (optional) An optional configuration to be passed to the plugin. If
    *   empty, the plugin is initialized with its default plugin configuration.
    */
-  public function __construct(array $configuration = []) {
-    $plugin_id = $this->getPluginId();
-    $plugin_definition = $this->getPluginDefinition();
+  public function __construct(array $configuration = [], $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->setConfiguration($configuration);
   }
