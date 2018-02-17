@@ -80,7 +80,7 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
     // No need to build the facet if it does not need to be visible.
     if ($facet->getOnlyVisibleWhenFacetSourceIsVisible() && !$facet->getFacetSource()->isRenderedInCurrentRequest()) {
-      return;
+      return [];
     }
 
     // Let the facet_manager build the facets.
