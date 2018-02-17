@@ -10,7 +10,7 @@ use Drupal\facets_summary\Processor\BuildProcessorInterface;
 use Drupal\facets_summary\Processor\ProcessorPluginBase;
 
 /**
- * Provides a processor that allows to reset facet filters.
+ * Provides a processor that adds a link to reset facet filters.
  *
  * @SummaryProcessor(
  *   id = "reset_facets",

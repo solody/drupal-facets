@@ -7,7 +7,7 @@ use Drupal\facets_summary\Processor\BuildProcessorInterface;
 use Drupal\facets_summary\Processor\ProcessorPluginBase;
 
 /**
- * Provides a processor that hides the facet when the facets were not rendered.
+ * Provides a processor that shows a summary of how many results were found.
  *
  * @SummaryProcessor(
  *   id = "show_count",

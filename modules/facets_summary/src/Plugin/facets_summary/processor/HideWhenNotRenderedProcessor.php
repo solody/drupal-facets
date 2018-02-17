@@ -7,7 +7,7 @@ use Drupal\facets_summary\Processor\BuildProcessorInterface;
 use Drupal\facets_summary\Processor\ProcessorPluginBase;
 
 /**
- * Provides a processor that hides the facet when the facets were not rendered.
+ * Provides a processor that hides the summary when the source was not rendered.
  *
  * @SummaryProcessor(
  *   id = "hide_when_not_rendered",

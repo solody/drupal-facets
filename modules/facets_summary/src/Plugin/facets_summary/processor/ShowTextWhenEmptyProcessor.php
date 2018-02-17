@@ -8,7 +8,7 @@ use Drupal\facets_summary\Processor\BuildProcessorInterface;
 use Drupal\facets_summary\Processor\ProcessorPluginBase;
 
 /**
- * Provides a processor that hides the facet when the facets were not rendered.
+ * Provides a processor that shows a text when there are no results.
  *
  * @SummaryProcessor(
  *   id = "show_text_when_empty",
@@ -28,17 +28,18 @@ class ShowTextWhenEmptyProcessor extends ProcessorPluginBase implements BuildPro
   public function build(FacetsSummaryInterface $facets_summary, array $build, array $facets) {
     $config = $this->getConfiguration();
 
-    if (!isset($build['#items'])) {
-      return [
-        '#theme' => 'facets_summary_empty',
-        '#message' => [
-          '#type' => 'processed_text',
-          '#text' => $config['text']['value'],
-          '#format' => $config['text']['format'],
-        ],
-      ];
+    if (isset($build['#items'])) {
+      return $build;
     }
-    return $build;
+
+    return [
+      '#theme' => 'facets_summary_empty',
+      '#message' => [
+        '#type' => 'processed_text',
+        '#text' => $config['text']['value'],
+        '#format' => $config['text']['format'],
+      ],
+    ];
   }
 
   /**
