@@ -85,8 +85,8 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->checkboxChecked('edit-facet-settings-count-limit-status');
     $this->assertSession()->checkboxChecked('edit-facet-settings-hide-non-narrowing-result-processor-status');
-    $this->assertOptionSelected('edit-processors-count-limit-weights-build', -10);
-    $this->assertOptionSelected('edit-processors-hide-non-narrowing-result-processor-weights-build', -10);
+    $this->assertOptionSelected('edit-processors-count-limit-weights-build', 50);
+    $this->assertOptionSelected('edit-processors-hide-non-narrowing-result-processor-weights-build', 40);
 
     // Change the weight of one of the processors and test that the weight
     // change persisted.
@@ -98,7 +98,7 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->drupalPostForm(NULL, $form, 'Save');
     $this->assertSession()->checkboxChecked('edit-facet-settings-count-limit-status');
     $this->assertSession()->checkboxChecked('edit-facet-settings-hide-non-narrowing-result-processor-status');
-    $this->assertOptionSelected('edit-processors-count-limit-weights-build', -10);
+    $this->assertOptionSelected('edit-processors-count-limit-weights-build', 50);
     $this->assertOptionSelected('edit-processors-hide-non-narrowing-result-processor-weights-build', 5);
   }
 
