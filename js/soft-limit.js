@@ -31,13 +31,13 @@
    */
   Drupal.facets.applySoftLimit = function (facet, limit, settings) {
     var zero_based_limit = (limit - 1);
-    var facetsList = $('ul[data-drupal-facet-id="' + facet + '"]');
+    var facet_id = facet;
+    var facetsList = $('ul[data-drupal-facet-id="' + facet_id + '"]');
 
     // In case of multiple instances of a facet, we need to key them.
     if (facetsList.length > 1) {
       facetsList.each(function (key, $value) {
-        var $facet_id = $(this).attr('data-drupal-facet-id');
-        $(this).attr('data-drupal-facet-id', $facet_id + '-' + key);
+        $(this).attr('data-drupal-facet-id', facet_id + '-' + key);
       });
     }
 
@@ -51,9 +51,8 @@
       return $(this).find('li').length > limit;
     }).each(function () {
       var facet = $(this);
-      var id = facet.data('drupal-facet-id');
-      var showLessLabel = settings.facets.softLimitSettings[id].showLessLabel;
-      var showMoreLabel = settings.facets.softLimitSettings[id].showMoreLabel;
+      var showLessLabel = settings.facets.softLimitSettings[facet_id].showLessLabel;
+      var showMoreLabel = settings.facets.softLimitSettings[facet_id].showMoreLabel;
       $('<a href="#" class="facets-soft-limit-link"></a>')
         .text(showMoreLabel)
         .on('click', function () {
