@@ -177,31 +177,31 @@ class RestIntegrationTest extends FacetsTestBase {
 
     $results = [
       'article' => [
-        'url' => $base_url . '/facets-rest?f%5B0%5D=type%3Aitem&f%5B1%5D=type%3Aarticle&_format=json',
+        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem&f%5B1%5D=type%3Aarticle',
         'count' => 2,
       ],
       'item' => [
-        'url' => $base_url . '/facets-rest?&_format=json',
+        'url' => $base_url . '/facets-rest?_format=json&',
         'count' => 3,
       ],
       'banana' => [
-        'url' => $base_url . '/facets-rest?f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Abanana&_format=json',
+        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Abanana',
         'count' => 0,
       ],
       'strawberry' => [
-        'url' => $base_url . '/facets-rest?f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Astrawberry&_format=json',
+        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Astrawberry',
         'count' => 0,
       ],
       'apple' => [
-        'url' => $base_url . '/facets-rest?f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Aapple&_format=json',
+        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Aapple',
         'count' => 1,
       ],
       'orange' => [
-        'url' => $base_url . '/facets-rest?f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Aorange&_format=json',
+        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Aorange',
         'count' => 2,
       ],
       'grape' => [
-        'url' => $base_url . '/facets-rest?f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Agrape&_format=json',
+        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Agrape',
         'count' => 1,
       ],
     ];

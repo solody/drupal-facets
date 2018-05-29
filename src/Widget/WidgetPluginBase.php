@@ -30,13 +30,9 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
   protected $facet;
 
   /**
-   * Constructs a plugin object.
-   *
-   * @param array $configuration
-   *   (optional) An optional configuration to be passed to the plugin. If
-   *   empty, the plugin is initialized with its default plugin configuration.
+   * {@inheritdoc}
    */
-  public function __construct(array $configuration = [], $plugin_id, $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->setConfiguration($configuration);
   }
