@@ -122,49 +122,88 @@ class RestIntegrationTest extends FacetsTestBase {
     // Verify the facet "Type".
     $results = [
       'article' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aarticle',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=type%3Aarticle',
+        ],
         'count' => 2,
       ],
       'item' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=type%3Aitem',
+        ],
         'count' => 3,
       ],
     ];
 
     foreach ($json_decoded->facets[1][0]->type as $result) {
       $value = $result->values->value;
-      $this->assertEquals($result->url, $results[$value]['url']);
       $this->assertEquals($result->values->count, $results[$value]['count']);
+      foreach ($results[$value]['url'] as $url_part) {
+        $this->assertNotFalse(strpos($result->url, $url_part));
+      }
     }
 
     // Verify the facet "Keywords".
     $results = [
       'banana' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=keywords%3Abanana',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=keywords%3Abanana',
+        ],
         'count' => 1,
       ],
       'strawberry' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=keywords%3Astrawberry',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=keywords%3Astrawberry',
+        ],
         'count' => 2,
       ],
       'apple' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=keywords%3Aapple',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=keywords%3Aapple',
+        ],
         'count' => 2,
       ],
       'orange' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=keywords%3Aorange',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=keywords%3Aorange',
+        ],
         'count' => 3,
       ],
       'grape' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=keywords%3Agrape',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=keywords%3Agrape',
+        ],
         'count' => 3,
       ],
     ];
 
     foreach ($json_decoded->facets[0][0]->keywords as $result) {
       $value = $result->values->value;
-      $this->assertEquals($result->url, $results[$value]['url']);
       $this->assertEquals($result->values->count, $results[$value]['count']);
+      foreach ($results[$value]['url'] as $url_part) {
+        $this->assertNotFalse(strpos($result->url, $url_part));
+      }
     }
 
     // Filter and verify that the results are correct.
@@ -177,45 +216,79 @@ class RestIntegrationTest extends FacetsTestBase {
 
     $results = [
       'article' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem&f%5B1%5D=type%3Aarticle',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=type%3Aitem&f%5B1%5D=type%3Aarticle',
+        ],
         'count' => 2,
       ],
       'item' => [
-        'url' => $base_url . '/facets-rest?_format=json&',
+        'url' => [$base_url, '/facets-rest', '_format=json'],
         'count' => 3,
       ],
       'banana' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Abanana',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Abanana',
+        ],
         'count' => 0,
       ],
       'strawberry' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Astrawberry',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Astrawberry',
+        ],
         'count' => 0,
       ],
       'apple' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Aapple',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Aapple',
+        ],
         'count' => 1,
       ],
       'orange' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Aorange',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Aorange',
+        ],
         'count' => 2,
       ],
       'grape' => [
-        'url' => $base_url . '/facets-rest?_format=json&f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Agrape',
+        'url' => [
+          $base_url,
+          '/facets-rest',
+          '_format=json',
+          'f%5B0%5D=type%3Aitem&f%5B1%5D=keywords%3Agrape',
+        ],
         'count' => 1,
       ],
     ];
 
     foreach ($json_decoded->facets[1][0]->type as $result) {
       $value = $result->values->value;
-      $this->assertEquals($results[$value]['url'], $result->url);
       $this->assertEquals($results[$value]['count'], $result->values->count);
+      foreach ($results[$value]['url'] as $url_part) {
+        $this->assertNotFalse(strpos($result->url, $url_part));
+      }
     }
 
     foreach ($json_decoded->facets[0][0]->keywords as $result) {
       $value = $result->values->value;
-      $this->assertEquals($results[$value]['url'], $result->url);
       $this->assertEquals($results[$value]['count'], $result->values->count);
+      foreach ($results[$value]['url'] as $url_part) {
+        $this->assertNotFalse(strpos($result->url, $url_part));
+      }
     }
 
   }
