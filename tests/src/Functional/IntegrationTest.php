@@ -1051,6 +1051,11 @@ class IntegrationTest extends FacetsTestBase {
     // Make sure that the redirection back to the overview was successful and
     // the edited facet is shown on the overview page.
     $this->assertSession()->pageTextContains('Facet ' . $facet_name . ' has been updated.');
+
+    $facet_edit_page = '/admin/config/search/facets/' . $facet_id . '/edit';
+    $this->drupalGet($facet_edit_page);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('View Search API Test Fulltext search view, display Page');
   }
 
   /**
