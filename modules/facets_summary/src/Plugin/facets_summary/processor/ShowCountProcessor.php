@@ -12,7 +12,7 @@ use Drupal\facets_summary\Processor\ProcessorPluginBase;
  * @SummaryProcessor(
  *   id = "show_count",
  *   label = @Translation("Show a summary of how many results were found"),
- *   description = @Translation("When checked, this facet will show the amount of results found."),
+ *   description = @Translation("When checked, this will show the amount of results found."),
  *   stages = {
  *     "build" = 50
  *   }
