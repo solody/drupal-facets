@@ -70,13 +70,8 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function build() {
-    // The id saved in the configuration is in the format of
-    // base_plugin:facet_id. We're splitting that to get to the facet id.
-    $facet_mapping = $this->configuration['id'];
-    $facet_id = explode(PluginBase::DERIVATIVE_SEPARATOR, $facet_mapping)[1];
-
     /** @var \Drupal\facets\FacetInterface $facet */
-    $facet = $this->facetStorage->load($facet_id);
+    $facet = $this->facetStorage->load($this->getDerivativeId());
 
     // No need to build the facet if it does not need to be visible.
     if ($facet->getOnlyVisibleWhenFacetSourceIsVisible() && !$facet->getFacetSource()->isRenderedInCurrentRequest()) {
@@ -133,13 +128,8 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    // The ID saved in the configuration is of the format
-    // 'base_plugin:facet_id'. We're splitting that to get to the facet ID.
-    $facet_mapping = $this->getPluginId();
-    $facet_id = explode(PluginBase::DERIVATIVE_SEPARATOR, $facet_mapping)[1];
-
     /** @var \Drupal\facets\FacetInterface $facet */
-    $facet = $this->facetStorage->load($facet_id);
+    $facet = $this->facetStorage->load($this->getDerivativeId());
 
     return ['config' => [$facet->getConfigDependencyName()]];
   }
