@@ -84,10 +84,10 @@ plugin.plugin_configuration.facets_processor.boolean_item:
   label: 'Boolean processor'
   mapping:
     on_value:
-      type: string
+      type: label
       label: 'On value'
     off_value:
-      type: string
+      type: label
       label: 'Off value'
 
 plugin.plugin_configuration.facets_processor.dependent_processor:
