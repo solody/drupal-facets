@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\facets_rest\Functional;
 
+use Drupal\facets\Entity\Facet;
 use Drupal\Tests\facets\Functional\FacetsTestBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -17,10 +18,6 @@ class RestIntegrationTest extends FacetsTestBase {
    */
   public static $modules = [
     'rest_view',
-    'facets_rest',
-    'rest',
-    'hal',
-    'serialization',
     'views_ui',
   ];
 
@@ -30,6 +27,17 @@ class RestIntegrationTest extends FacetsTestBase {
   public function setUp() {
     parent::setUp();
 
+    // Create the users used for the tests.
+    $this->adminUser = $this->drupalCreateUser([
+      'administer search_api',
+      'administer facets',
+      'access administration pages',
+      'administer nodes',
+      'access content overview',
+      'administer content types',
+      'administer blocks',
+      'administer views',
+    ]);
     $this->drupalLogin($this->adminUser);
     $this->setUpExampleStructure();
     $this->insertExampleContent();
@@ -61,9 +69,9 @@ class RestIntegrationTest extends FacetsTestBase {
   public function testRestResults() {
     global $base_url;
 
-    $getOptions = ['query' => ['_format' => 'json']];
+    $get_options = ['query' => ['_format' => 'json']];
 
-    $result = $this->drupalGet('/facets-rest', $getOptions);
+    $result = $this->drupalGet('/facets-rest', $get_options);
     $this->assertSession()->responseHeaderEquals('content-type', 'application/json');
     $this->assertSession()->statusCodeEquals(200);
     $json_decoded = json_decode($result, TRUE);
@@ -112,7 +120,7 @@ class RestIntegrationTest extends FacetsTestBase {
     $this->drupalPostForm(NULL, $values, 'Save');
 
     // Get the output from the rest view and decode it into an array.
-    $result = $this->drupalGet('/facets-rest', $getOptions);
+    $result = $this->drupalGet('/facets-rest', $get_options);
     $this->assertSession()->responseHeaderEquals('content-type', 'application/json');
     $this->assertSession()->statusCodeEquals(200);
     $json_decoded = json_decode($result);
@@ -207,7 +215,7 @@ class RestIntegrationTest extends FacetsTestBase {
     }
 
     // Filter and verify that the results are correct.
-    $json = $this->drupalGet($base_url . '/facets-rest?f%5B0%5D=type%3Aitem', $getOptions);
+    $json = $this->drupalGet($base_url . '/facets-rest?f%5B0%5D=type%3Aitem', $get_options);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('content-type', 'application/json');
     $json_decoded = json_decode($json);
@@ -290,7 +298,6 @@ class RestIntegrationTest extends FacetsTestBase {
         $this->assertNotFalse(strpos($result->url, $url_part));
       }
     }
-
   }
 
   /**
@@ -318,16 +325,12 @@ class RestIntegrationTest extends FacetsTestBase {
    * Tests urls on the same path.
    */
   public function testSamePath() {
-    $getOptions = ['query' => ['_format' => 'json']];
-
-    $this->drupalGet('admin/config/search/facets/add-facet');
+    $get_options = ['query' => ['_format' => 'json']];
 
     $id = 'type';
     $this->createFacet('Type', $id . '_rest', 'type', 'rest_export_1', 'views_rest__search_api_rest_test_view', FALSE);
     $this->createFacet('Type', $id, 'type', 'page_1', 'views_page__search_api_rest_test_view');
-    $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalGet('/admin/config/search/facets/type/edit');
     $values['widget'] = 'array';
     $values['widget_config[show_numbers]'] = TRUE;
     $values['facet_settings[url_alias]'] = 'type';
@@ -341,12 +344,46 @@ class RestIntegrationTest extends FacetsTestBase {
     $pageUrl = $this->getSession()->getCurrentUrl();
     $restUrl = str_replace('facets-page', 'facets-rest', $pageUrl);
 
-    $result = $this->drupalGet($restUrl, $getOptions);
+    $result = $this->drupalGet($restUrl, $get_options);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('content-type', 'application/json');
     $json_decoded = json_decode($result);
 
     $this->assertEquals(3, count($json_decoded->search_results));
+  }
+
+  /**
+   * Tests hiding of facets from rest views.
+   */
+  public function testHideFacets() {
+    $get_options = ['query' => ['_format' => 'json']];
+
+    $id = 'type_rest';
+    $this->createFacet('Type', $id, 'type', 'rest_export_1', 'views_rest__search_api_rest_test_view', FALSE);
+
+    $facet = Facet::load($id);
+    $facet->setWidget('array', ['show_numbers' => TRUE]);
+    $facet->save();
+
+    $result = $this->drupalGet('facets-rest', $get_options);
+    $this->assertSession()->responseHeaderEquals('content-type', 'application/json');
+    $this->assertSession()->statusCodeEquals(200);
+
+    $json_decoded = json_decode($result, TRUE);
+    $this->assertArrayHasKey('facets', $json_decoded);
+    $this->assertArrayHasKey('search_results', $json_decoded);
+
+    $this->drupalGet('admin/structure/views/nojs/display/search_api_rest_test_view/rest_export_1/style_options');
+    $this->drupalPostForm(NULL, ['style_options[show_facets]' => FALSE], 'Apply');
+    $this->drupalPostForm(NULL, [], 'Save');
+
+    $result = $this->drupalGet('facets-rest', $get_options);
+    $this->assertSession()->responseHeaderEquals('content-type', 'application/json');
+    $this->assertSession()->statusCodeEquals(200);
+
+    $json_decoded = json_decode($result, TRUE);
+    $this->assertArrayNotHasKey('facets', $json_decoded);
+    $this->assertArrayNotHasKey('search_results', $json_decoded);
   }
 
 }
