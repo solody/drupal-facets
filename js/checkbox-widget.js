@@ -63,8 +63,8 @@
    */
   Drupal.facets.disableFacet = function ($facet) {
     $facet.addClass('facets-disabled');
-    $('input.facets-checkbox').click(Drupal.facets.preventDefault);
-    $('input.facetapi-checkbox', $facet).attr('disabled', true);
+    $('input.facets-checkbox', $facet).click(Drupal.facets.preventDefault);
+    $('input.facets-checkbox', $facet).attr('disabled', true);
   };
 
   /**
