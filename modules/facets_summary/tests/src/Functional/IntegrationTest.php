@@ -488,6 +488,7 @@ class IntegrationTest extends FacetsTestBase {
     ];
     $this->drupalPlaceBlock('facets_summary_block:reset_facets', $blockConfig);
     $this->drupalGet('search-api-test-fulltext');
+    $this->assertSession()->addressEquals('/search-api-test-fulltext');
 
     $this->assertSession()->pageTextContains('Displaying 5 search results');
     $this->assertSession()->pageTextNotContains('Reset facets');
@@ -497,6 +498,8 @@ class IntegrationTest extends FacetsTestBase {
     $this->assertSession()->pageTextContains('Reset facets');
 
     $this->clickLink('Reset facets');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('/search-api-test-fulltext');
     $this->assertSession()->pageTextContains('Displaying 5 search results');
     $this->assertSession()->pageTextNotContains('Reset facets');
   }

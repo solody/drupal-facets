@@ -55,7 +55,7 @@ class ResetFacetsProcessor extends ProcessorPluginBase implements BuildProcessor
       }
     }
 
-    $url = Url::fromUserInput($request->getRequestUri());
+    $url = Url::createFromRequest($request);
     $url->setOptions(['query' => $query_params]);
 
     $item = (new Link($configuration['settings']['link_text'], $url))->toRenderable();
