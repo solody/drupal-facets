@@ -768,6 +768,12 @@ class ProcessorIntegrationTest extends FacetsTestBase {
   public function testHideOnlyOneItemProcessor() {
     $entity_test_storage = \Drupal::entityTypeManager()
       ->getStorage('entity_test_mulrev_changed');
+
+    // Load all items and delete them.
+    $all = $entity_test_storage->loadMultiple();
+    foreach ($all as $item) {
+      $item->delete();
+    }
     $entity_test_storage->create([
       'name' => 'baz baz',
       'body' => 'foo test',
@@ -775,7 +781,6 @@ class ProcessorIntegrationTest extends FacetsTestBase {
       'keywords' => ['kiwi'],
       'category' => 'article_category',
     ])->save();
-
     $this->indexItems($this->indexId);
 
     $facet_name = 'Drupalcon Vienna';
@@ -790,8 +795,7 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->drupalPostForm($this->editForm, $form, 'Save');
     $this->drupalGet('search-api-test-fulltext');
 
-    $this->assertFacetBlocksAppear();
-    $this->clickLink('kiwi');
+    $this->assertSession()->pageTextContains(' Displaying 1 search results');
     $this->assertNoFacetBlocksAppear();
   }
 
