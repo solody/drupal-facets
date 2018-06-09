@@ -28,18 +28,25 @@ class ShowTextWhenEmptyProcessor extends ProcessorPluginBase implements BuildPro
   public function build(FacetsSummaryInterface $facets_summary, array $build, array $facets) {
     $config = $this->getConfiguration();
 
-    if (isset($build['#items'])) {
-      return $build;
+    $results_count = array_sum(array_map(function ($it) {
+      /** @var \Drupal\facets\FacetInterface $it */
+      return count($it->getResults());
+    }, $facets));
+
+    // No items are found, so we should return the empty summary.
+    if (!isset($build['#items']) || $results_count === 0) {
+      return [
+        '#theme' => 'facets_summary_empty',
+        '#message' => [
+          '#type' => 'processed_text',
+          '#text' => $config['text']['value'],
+          '#format' => $config['text']['format'],
+        ],
+      ];
     }
 
-    return [
-      '#theme' => 'facets_summary_empty',
-      '#message' => [
-        '#type' => 'processed_text',
-        '#text' => $config['text']['value'],
-        '#format' => $config['text']['format'],
-      ],
-    ];
+    // Return the actual items.
+    return $build;
   }
 
   /**
@@ -67,7 +74,7 @@ class ShowTextWhenEmptyProcessor extends ProcessorPluginBase implements BuildPro
     return [
       'text' => [
         'format' => 'plain_text',
-        'value' => $this->t('There is no current search in progress.'),
+        'value' => $this->t('No results found.'),
       ],
     ];
   }
