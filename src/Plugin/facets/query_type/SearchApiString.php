@@ -61,8 +61,14 @@ class SearchApiString extends QueryTypePluginBase {
       $facet_results = [];
       foreach ($this->results as $result) {
         if ($result['count'] || $query_operator == 'or') {
+          $result_filter = $result['filter'];
+          if ($result_filter[0] === '"')  {
+            $result_filter = substr($result_filter, 1);
+          }
+          if ($result_filter[strlen($result_filter) - 1] === '"') {
+            $result_filter = substr($result_filter, 0, -1);
+          }
           $count = $result['count'];
-          $result_filter = trim($result['filter'], '"');
           $result = new Result($this->facet, $result_filter, $result_filter, $count);
           $facet_results[] = $result;
         }
