@@ -28,6 +28,7 @@ class ResetFacetsProcessor extends ProcessorPluginBase implements BuildProcessor
    */
   public function build(FacetsSummaryInterface $facets_summary, array $build, array $facets) {
     $configuration = $facets_summary->getProcessorConfigs()[$this->getPluginId()];
+    $hasReset = FALSE;
 
     // Do nothing if there are no selected facets or reset text is empty.
     if (empty($build['#items']) || empty($configuration['settings']['link_text'])) {
@@ -46,13 +47,19 @@ class ResetFacetsProcessor extends ProcessorPluginBase implements BuildProcessor
         foreach ($query_params[$filter_key] as $delta => $param) {
           if (strpos($param, $url_alias . ':') !== FALSE) {
             unset($query_params[$filter_key][$delta]);
+            $hasReset = TRUE;
           }
         }
 
         if (!$query_params[$filter_key]) {
           unset($query_params[$filter_key]);
+          $hasReset = TRUE;
         }
       }
+    }
+
+    if (!$hasReset) {
+      return $build;
     }
 
     $url = Url::createFromRequest($request);
