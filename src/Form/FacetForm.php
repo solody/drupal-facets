@@ -373,6 +373,12 @@ class FacetForm extends EntityForm {
       '#maxlength' => 50,
       '#required' => TRUE,
     ];
+    $form['facet_settings']['show_title'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show title of facet'),
+      '#description' => $this->t('Show the title of the facet trough a twig template'),
+      '#default_value' => $facet->get('show_title'),
+    ];
 
     $empty_behavior_config = $facet->getEmptyBehavior();
     $form['facet_settings']['empty_behavior'] = [
@@ -708,6 +714,7 @@ class FacetForm extends EntityForm {
     $facet->setUseHierarchy($form_state->getValue(['facet_settings', 'use_hierarchy']));
     $facet->setExpandHierarchy($form_state->getValue(['facet_settings', 'expand_hierarchy']));
     $facet->setEnableParentWhenChildGetsDisabled($form_state->getValue(['facet_settings', 'enable_parent_when_child_gets_disabled']));
+    $facet->set('show_title', $form_state->getValue(['facet_settings', 'show_title'], FALSE));
 
     $facet->save();
     drupal_set_message($this->t('Facet %name has been updated.', ['%name' => $facet->getName()]));

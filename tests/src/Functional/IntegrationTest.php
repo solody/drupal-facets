@@ -858,6 +858,21 @@ class IntegrationTest extends FacetsTestBase {
   }
 
   /**
+   * Tests that the configuration for showing a title works.
+   */
+  public function testShowTitle() {
+    $this->createFacet("Llama", 'llama');
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertSession()->pageTextNotContains('Llama');
+    $this->drupalGet('admin/config/search/facets/llama/edit');
+    $this->drupalPostForm(NULL, ['facet_settings[show_title]' => TRUE], 'Save');
+    $this->assertSession()->checkboxChecked('Show title of facet');
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertSession()->responseContains('<h3>Llama</h3>');
+    $this->assertSession()->pageTextContains('Llama');
+  }
+
+  /**
    * Configures empty behavior option to show a text on empty results.
    *
    * @param string $facet_name

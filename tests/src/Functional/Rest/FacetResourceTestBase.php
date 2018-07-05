@@ -81,6 +81,7 @@ abstract class FacetResourceTestBase extends EntityResourceTestBase {
       ],
       'query_operator' => NULL,
       'show_only_one_result' => FALSE,
+      'show_title' => NULL,
       'status' => TRUE,
       'url_alias' => NULL,
       'use_hierarchy' => FALSE,

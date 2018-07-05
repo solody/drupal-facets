@@ -218,6 +218,9 @@ function facets_entity_predelete(EntityInterface $entity) {
  * @see https://www.drupal.org/node/1842756
  */
 function facets_preprocess_facets_item_list(array &$variables) {
+  if ($variables['facet'] !== NULL && $variables['facet']->get('show_title') === TRUE) {
+    $variables['title'] = $variables['facet']->label();
+  }
   template_preprocess_item_list($variables);
 }
 
