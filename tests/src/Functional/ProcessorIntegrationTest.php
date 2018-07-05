@@ -795,7 +795,7 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     $this->drupalPostForm($this->editForm, $form, 'Save');
     $this->drupalGet('search-api-test-fulltext');
 
-    $this->assertSession()->pageTextContains(' Displaying 1 search results');
+    $this->assertSession()->pageTextContains('Displaying 1 search results');
     $this->assertNoFacetBlocksAppear();
   }
 

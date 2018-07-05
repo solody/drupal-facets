@@ -38,6 +38,7 @@
       $dropdown.removeClass('js-facets-dropdown-links');
 
       $dropdown.addClass('facets-dropdown');
+      $dropdown.addClass('js-facets-dropdown');
 
       var id = $(this).data('drupal-facet-id');
       var default_option_label = settings.facets.dropdown_widget[id]['facet-default-option-label'];
@@ -68,7 +69,8 @@
 
       // Go to the selected option when it's clicked.
       $dropdown.on('change.facets', function () {
-        window.location.href = $(this).val();
+        var a = $($ul).find("[data-drupal-facet-item-id='" + $(this).find(':selected').data('drupalFacetItemId') + "']");
+        $(a)[0].click();
       });
 
       // Append empty text option.
@@ -77,7 +79,7 @@
       }
 
       // Replace links with dropdown.
-      $ul.after($dropdown).remove();
+      $ul.after($dropdown).hide();
       Drupal.attachBehaviors($dropdown.parent()[0], Drupal.settings);
     });
   };

@@ -334,7 +334,19 @@ class DefaultFacetManager {
         ];
       }
       else {
-        return [];
+        // If the facet has no results, but it is being rendered trough ajax we
+        // should render a container (that is empty). This is because the
+        // javascript needs to be able to find a div to replace with the new
+        // content.
+        return [
+          [
+            '#type' => 'container',
+            '#attributes' => [
+              'data-drupal-facet-id' => $facet->id(),
+              'class' => 'facet-empty',
+            ],
+          ],
+        ];
       }
     }
 

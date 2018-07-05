@@ -5,7 +5,7 @@ namespace Drupal\facets\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\facets\FacetManager\DefaultFacetManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -82,11 +82,29 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     // Let the facet_manager build the facets.
     $build = $this->facetManager->build($facet);
 
-    // Add contextual links only when we have results.
     if (!empty($build)) {
+      // Add extra elements from facet source, for example, ajax scripts.
+      // @see Drupal\facets\Plugin\facets\facet_source\SearchApiDisplay
+      /* @var \Drupal\facets\FacetSource\FacetSourcePluginInterface $facet_source */
+      $facet_source = $facet->getFacetSource();
+      $build += $facet_source->buildFacet();
+
+      // Add contextual links only when we have results.
       $build['#contextual_links']['facets_facet'] = [
         'route_parameters' => ['facets_facet' => $facet->id()],
       ];
+
+      // Add classes needed for ajax.
+      if (!empty($build['#use_ajax'])) {
+        $build['#attributes']['class'][] = 'block-facets-ajax';
+        // The configuration block id isn't always set in the configuration.
+        if (isset($this->configuration['block_id'])) {
+          $build['#attributes']['class'][] = 'js-facet-block-id-' . $this->configuration['block_id'];
+        }
+        else {
+          $build['#attributes']['class'][] = 'js-facet-block-id-' . $this->pluginId;
+        }
+      }
     }
 
     return $build;
@@ -133,6 +151,16 @@ class FacetBlock extends BlockBase implements ContainerFactoryPluginInterface {
     $facet = $this->facetStorage->load($this->getDerivativeId());
 
     return ['config' => [$facet->getConfigDependencyName()]];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockSubmit($form, FormStateInterface $form_state) {
+    // Save block id to configuration, we do this for loading the original block
+    // with ajax.
+    $block_id = $form['id']['#value'];
+    $this->configuration['block_id'] = $block_id;
   }
 
 }

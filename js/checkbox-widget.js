@@ -43,7 +43,7 @@
 
     checkbox.on('change.facets', function (e) {
       Drupal.facets.disableFacet($link.parents('.js-facets-checkbox-links'));
-      window.location.href = $(this).data('facetsredir');
+      $(this).siblings('a')[0].click();
     });
 
     if (active) {
@@ -51,7 +51,7 @@
       label.find('.js-facet-deactivate').remove();
     }
 
-    $link.before(checkbox).before(label).remove();
+    $link.before(checkbox).before(label).hide();
 
   };
 
