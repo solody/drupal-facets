@@ -14,9 +14,9 @@ use Drupal\facets\Processor\PreQueryProcessorInterface;
  *   label = @Translation("Range slider"),
  *   description = @Translation("Add range results for all the steps between min and max range."),
  *   stages = {
- *     "pre_query" = 5,
- *     "post_query" = 5,
- *     "build" = 5
+ *     "pre_query" =60,
+ *     "post_query" = 60,
+ *     "build" = 20
  *   }
  * )
  */
