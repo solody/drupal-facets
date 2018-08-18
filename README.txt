@@ -132,6 +132,8 @@ EXTENSION MODULES
  Provides a link the a facet trough an entity reference field.
 - https://www.drupal.org/project/facets_prefix_suffix
  Provides a plugin to configure a prefix/suffix per result.
+- https://www.drupal.org/project/facets_block
+ Provide the facets as drupal block.
 
 FAQ
 ---
