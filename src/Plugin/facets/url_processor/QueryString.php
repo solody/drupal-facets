@@ -149,7 +149,7 @@ class QueryString extends UrlProcessorPluginBase {
           }
         }
       }
-
+      asort($filter_params, \SORT_NATURAL);
       $result_get_params->set($this->filterKey, array_values($filter_params));
       if (!empty($routeParameters)) {
         $url->setRouteParameters($routeParameters);
