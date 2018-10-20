@@ -134,6 +134,8 @@ EXTENSION MODULES
  Provides a plugin to configure a prefix/suffix per result.
 - https://www.drupal.org/project/facets_block
  Provide the facets as drupal block.
+- https://www.drupal.org/project/facets_taxonomy_path_processor
+ Sets taxonomy facet items active if present in route.
 
 FAQ
 ---
