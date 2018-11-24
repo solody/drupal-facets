@@ -167,6 +167,14 @@ class ProcessorIntegrationTest extends FacetsTestBase {
       'category' => 'item_category',
       $field_name => TRUE,
     ])->save();
+    $entity_test_storage->create([
+      'name' => 'quux quuux',
+      'body' => 'test test',
+      'type' => 'item',
+      'keywords' => ['apple'],
+      'category' => 'item_category',
+      $field_name => FALSE,
+    ])->save();
 
     $this->indexItems($this->indexId);
 
@@ -180,6 +188,7 @@ class ProcessorIntegrationTest extends FacetsTestBase {
     // Check values.
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('1');
+    $this->assertFacetLabel('0');
 
     $form = [
       'facet_settings[boolean_item][status]' => TRUE,
@@ -192,6 +201,7 @@ class ProcessorIntegrationTest extends FacetsTestBase {
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('Yes');
+    $this->assertFacetLabel('No');
 
     $form = [
       'facet_settings[boolean_item][status]' => TRUE,
@@ -201,6 +211,19 @@ class ProcessorIntegrationTest extends FacetsTestBase {
 
     $this->drupalGet('search-api-test-fulltext');
     $this->assertFacetLabel('Øn');
+    $this->assertEmpty($this->findFacetLink('1'));
+    $this->assertEmpty($this->findFacetLink('0'));
+
+    $form = [
+      'facet_settings[boolean_item][status]' => TRUE,
+      'facet_settings[boolean_item][settings][off_value]' => 'Øff',
+    ];
+    $this->drupalPostForm($this->editForm, $form, 'Save');
+
+    $this->drupalGet('search-api-test-fulltext');
+    $this->assertFacetLabel('Øff');
+    $this->assertEmpty($this->findFacetLink('1'));
+    $this->assertEmpty($this->findFacetLink('0'));
   }
 
   /**
