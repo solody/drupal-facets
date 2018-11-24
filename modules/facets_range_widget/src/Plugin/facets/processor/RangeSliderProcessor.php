@@ -48,6 +48,10 @@ class RangeSliderProcessor extends SliderProcessor implements PreQueryProcessorI
     $url_processor = $url_processor_handler->getProcessor();
     $active_filters = $url_processor->getActiveFilters();
 
+    if (isset($active_filters[''])) {
+      unset($active_filters['']);
+    }
+
     /** @var \Drupal\facets\Result\ResultInterface[] $results */
     foreach ($results as &$result) {
       $new_active_filters = $active_filters;
