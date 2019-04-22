@@ -66,7 +66,7 @@ class QueryString extends UrlProcessorPluginBase {
 
     // Try to grab any route params from the original request.
     // In case of request path not having a matching route, Url generator will
-    // fail with
+    // fail with.
     try {
       $routeParameters = Url::createFromRequest($this->request)
         ->getRouteParameters();
@@ -86,7 +86,7 @@ class QueryString extends UrlProcessorPluginBase {
       $requestUrl = Url::fromUserInput($facet_path, [
         'query' => [
           '_format' => $this->request->get('_format'),
-        ]
+        ],
       ]);
     }
 

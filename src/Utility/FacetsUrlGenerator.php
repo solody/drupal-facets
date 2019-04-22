@@ -3,7 +3,6 @@
 namespace Drupal\facets\Utility;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\facets\FacetInterface;
 use Drupal\facets\Result\Result;
 use Drupal\facets\UrlProcessor\UrlProcessorPluginManager;
 
