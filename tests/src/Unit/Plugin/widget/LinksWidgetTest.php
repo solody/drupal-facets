@@ -2,27 +2,19 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\widget;
 
-use Drupal\Core\Url;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\facets\Entity\Facet;
 use Drupal\facets\Plugin\facets\widget\LinksWidget;
 use Drupal\facets\Result\Result;
-use Drupal\facets\Utility\FacetsUrlGenerator;
 use Prophecy\Argument;
-
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\facets\Exception\InvalidProcessorException;
 use Drupal\facets\FacetSource\FacetSourcePluginManager;
-use Drupal\facets\FacetSource\FacetSourcePluginInterface;
-use Drupal\facets\Plugin\facets\processor\UrlProcessorHandler;
 use Drupal\facets\UrlProcessor\UrlProcessorInterface;
-use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Drupal\Tests\Core\Routing\TestRouterInterface;
-
 
 /**
  * Unit test for widget.
@@ -288,4 +280,5 @@ class LinksWidgetTest extends WidgetTestBase {
     $container->set('plugin.manager.facets.url_processor', $manager);
     \Drupal::setContainer($container);
   }
+
 }
