@@ -40,6 +40,7 @@ class LinksWidget extends WidgetPluginBase {
    */
   public function build(FacetInterface $facet) {
     $build = parent::build($facet);
+    $this->appendWidgetLibrary($build);
     $soft_limit = (int) $this->getConfiguration()['soft_limit'];
     if ($soft_limit !== 0) {
       $show_less_label = $this->getConfiguration()['soft_limit_settings']['show_less_label'];
@@ -111,6 +112,17 @@ class LinksWidget extends WidgetPluginBase {
     }
 
     return $build;
+  }
+
+  /**
+   * Appends widget library and relevant information for it to build array.
+   *
+   * @param array $build
+   *   Reference to build array.
+   */
+  protected function appendWidgetLibrary(array &$build) {
+    $build['#attached']['library'][] = 'facets/drupal.facets.link-widget';
+    $build['#attributes']['class'][] = 'js-facets-links';
   }
 
   /**
