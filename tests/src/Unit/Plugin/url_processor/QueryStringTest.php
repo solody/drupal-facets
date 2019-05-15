@@ -87,7 +87,7 @@ class QueryStringTest extends UnitTestCase {
     $discovery_property->setAccessible(TRUE);
     $discovery_property->setValue($facet, 'test');
 
-    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage = $this->createMock(EntityStorageInterface::class);
     $storage->expects($this->any())
       ->method('loadByProperties')
       ->willReturn([$facet]);
@@ -124,7 +124,7 @@ class QueryStringTest extends UnitTestCase {
     $discovery_property->setAccessible(TRUE);
     $discovery_property->setValue($facet, 'test');
 
-    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage = $this->createMock(EntityStorageInterface::class);
     $storage->expects($this->atLeastOnce())
       ->method('loadByProperties')
       ->willReturnOnConsecutiveCalls([$facet], [$facet], []);
@@ -205,7 +205,7 @@ class QueryStringTest extends UnitTestCase {
     $discovery_property->setAccessible(TRUE);
     $discovery_property->setValue($facet, 'test');
 
-    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage = $this->createMock(EntityStorageInterface::class);
     $storage->expects($this->atLeastOnce())
       ->method('loadByProperties')
       ->willReturnOnConsecutiveCalls([$facet2], [$facet2], [$facet2], [$facet2], [$facet2], [$facet2]);
@@ -271,7 +271,7 @@ class QueryStringTest extends UnitTestCase {
     $facet_source = new FacetSource(['filter_key' => 'ab'], 'facets_facet_source');
 
     // Override the container with the new facet source.
-    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage = $this->createMock(EntityStorageInterface::class);
     $storage->expects($this->once())
       ->method('load')
       ->willReturn($facet_source);
@@ -403,7 +403,7 @@ class QueryStringTest extends UnitTestCase {
         '_route' => 'test',
       ]);
 
-    $validator = $this->getMock(PathValidatorInterface::class);
+    $validator = $this->createMock(PathValidatorInterface::class);
 
     $fsi = $this->getMockBuilder(FacetSourcePluginInterface::class)
       ->disableOriginalConstructor()
@@ -426,7 +426,7 @@ class QueryStringTest extends UnitTestCase {
     $facetentity->method('id')
       ->willReturn('king');
 
-    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage = $this->createMock(EntityStorageInterface::class);
     $storage->expects($this->any())
       ->method('loadByProperties')
       ->willReturn([$facetentity]);

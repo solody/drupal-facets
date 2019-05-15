@@ -56,7 +56,7 @@ class QueryTypePluginManagerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    $this->discovery = $this->getMock(DiscoveryInterface::class);
+    $this->discovery = $this->createMock(DiscoveryInterface::class);
 
     $this->factory = $this->getMockBuilder(DefaultFactory::class)
       ->disableOriginalConstructor()

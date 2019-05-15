@@ -43,9 +43,9 @@ class FacetsDateHandlerTest extends UnitTestCase {
   public function setUp() {
     parent::setUp();
 
-    $entity_storage = $this->getMock(EntityStorageInterface::class);
+    $entity_storage = $this->createMock(EntityStorageInterface::class);
 
-    $em = $this->getMock(EntityManagerInterface::class);
+    $em = $this->createMock(EntityManagerInterface::class);
     $em->expects($this->any())
       ->method('getStorage')
       ->with('date_format')
@@ -53,11 +53,11 @@ class FacetsDateHandlerTest extends UnitTestCase {
 
     $language = new Language(['id' => 'en']);
 
-    $lm = $this->getMock(LanguageManagerInterface::class);
+    $lm = $this->createMock(LanguageManagerInterface::class);
     $lm->method('getCurrentLanguage')
       ->willReturn($language);
-    $st = $this->getMock(TranslationInterface::class);
-    $rs = $this->getMock(RequestStack::class);
+    $st = $this->createMock(TranslationInterface::class);
+    $rs = $this->createMock(RequestStack::class);
     $cf = $this->getConfigFactoryStub();
 
     $config_factory = $this->getConfigFactoryStub([

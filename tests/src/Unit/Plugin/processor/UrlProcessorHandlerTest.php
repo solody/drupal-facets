@@ -107,7 +107,7 @@ class UrlProcessorHandlerTest extends UnitTestCase {
       ->method('createInstance')
       ->willReturn($url_processor);
 
-    $storage = $this->getMock(EntityStorageInterface::class);
+    $storage = $this->createMock(EntityStorageInterface::class);
     $em = $this->getMockBuilder(EntityTypeManagerInterface::class)
       ->disableOriginalConstructor()
       ->getMock();

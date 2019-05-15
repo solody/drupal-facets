@@ -39,9 +39,9 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
    * Tests that results were correctly changed.
    */
   public function testResultsChanged() {
-    $user_storage = $this->getMock(EntityStorageInterface::class);
-    $entity_manager = $this->getMock(EntityManagerInterface::class);
-    $entity_repository = $this->getMock(EntityTypeRepositoryInterface::class);
+    $user_storage = $this->createMock(EntityStorageInterface::class);
+    $entity_manager = $this->createMock(EntityManagerInterface::class);
+    $entity_repository = $this->createMock(EntityTypeRepositoryInterface::class);
     $entity_repository->expects($this->any())
       ->method('getEntityTypeFromClass')
       ->willReturn('user');
@@ -49,7 +49,7 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
       ->method('getStorage')
       ->willReturn($user_storage);
 
-    $user1 = $this->getMock(AccountInterface::class);
+    $user1 = $this->createMock(AccountInterface::class);
     $user1->method('getDisplayName')
       ->willReturn('Admin');
 
@@ -90,9 +90,9 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
    * Tests that deleted entity results were correctly handled.
    */
   public function testDeletedEntityResults() {
-    $user_storage = $this->getMock(EntityStorageInterface::class);
-    $entity_manager = $this->getMock(EntityManagerInterface::class);
-    $entity_repository = $this->getMock(EntityTypeRepositoryInterface::class);
+    $user_storage = $this->createMock(EntityStorageInterface::class);
+    $entity_manager = $this->createMock(EntityManagerInterface::class);
+    $entity_repository = $this->createMock(EntityTypeRepositoryInterface::class);
     $entity_repository->expects($this->any())
       ->method('getEntityTypeFromClass')
       ->willReturn('user');
