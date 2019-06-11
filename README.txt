@@ -155,6 +155,8 @@ EXTENSION MODULES
   Sets taxonomy facet items active if present in route.
 - https://www.drupal.org/project/facets_view_mode_processor
   Provides a processor to render facet entity reference items as view modes.
+- https://www.drupal.org/project/facets_range_input
+  Provides an input range form (min and max) as a processor and widget.
 
 
 FAQ
