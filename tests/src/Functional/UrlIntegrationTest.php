@@ -205,7 +205,7 @@ class UrlIntegrationTest extends FacetsTestBase {
   }
 
   /**
-   * Tests that creating a facet with a duplicate url alias is forbidden.
+   * Tests that creating a facet with a duplicate url alias emits a warning.
    */
   public function testCreatingDuplicateUrlAlias() {
     $this->createFacet('Owl', 'owl');
