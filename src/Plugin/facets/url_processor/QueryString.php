@@ -82,7 +82,9 @@ class QueryString extends UrlProcessorPluginBase {
 
       $filter_params = [];
       foreach ($this->getActiveFilters() as $facet_id => $values) {
-        $values = array_filter($values);
+        $values = array_filter($values, function ($it) {
+          return $it !== NULL;
+        });
         foreach ($values as $value) {
           $filter_params[] = $this->getUrlAliasByFacetId($facet_id, $facet->getFacetSourceId()) . ":" . $value;
         }
@@ -226,7 +228,8 @@ class QueryString extends UrlProcessorPluginBase {
     // Grab any route params from the original request.
     try {
       $routeParameters = Url::createFromRequest($this->request)->getRouteParameters();
-    } catch (ResourceNotFoundException $e) {
+    }
+    catch (ResourceNotFoundException $e) {
       $routeParameters = [];
     }
     return $routeParameters;
