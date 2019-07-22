@@ -55,6 +55,7 @@ function facets_summary_theme($existing, $type, $theme, $path) {
         'attributes' => [],
         'empty' => NULL,
         'context' => [],
+        'facet_summary_id' => NULL,
       ],
     ],
   ];
@@ -93,6 +94,13 @@ function facets_summary_theme_suggestions_facets_summary_facet(array $variables)
 function facets_summary_theme_suggestions_facets_summary_facet_result(array $variables) {
   // Add suggestions as: facets-summary-facet-result--{facet_id}.
   return [$variables['theme_hook_original'] . '__' . $variables['facet_id']];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function facets_summary_theme_suggestions_facets_summary_item_list(array $variables) {
+  return [$variables['theme_hook_original'] . '__' . $variables['facet_summary_id']];
 }
 
 /**
