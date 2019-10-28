@@ -202,7 +202,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
     }
 
     $items['#wrapper_attributes'] = ['class' => $classes];
-    $items['#attributes']['data-drupal-facet-item-id'] = $this->facet->getUrlAlias() . '-' . str_replace(' ', '-', $result->getRawValue());
+    $items['#attributes']['data-drupal-facet-item-id'] = $this->facet->getUrlAlias() . '-' . strtr($result->getRawValue(), ' \'\"', '---');
     $items['#attributes']['data-drupal-facet-item-value'] = $result->getRawValue();
     return $items;
   }
