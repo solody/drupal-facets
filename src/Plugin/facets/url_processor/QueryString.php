@@ -3,6 +3,7 @@
 namespace Drupal\facets\Plugin\facets\url_processor;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Url;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\UrlProcessor\UrlProcessorPluginBase;
@@ -164,6 +165,9 @@ class QueryString extends UrlProcessorPluginBase {
         // Facet links should be page-less.
         // See https://www.drupal.org/node/2898189.
         unset($new_url_params['page']);
+
+        // Remove core wrapper format (e.g. render-as-ajax-response) paremeters.
+        unset($new_url_params[MainContentViewSubscriber::WRAPPER_FORMAT]);
 
         // Set the new url parameters.
         $url->setOption('query', $new_url_params);
