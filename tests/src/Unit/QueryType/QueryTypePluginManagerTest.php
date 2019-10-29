@@ -62,9 +62,9 @@ class QueryTypePluginManagerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->moduleHandler = $this->createMock(ModuleHandlerInterface::class);
+    $this->moduleHandler = $this->getMock(ModuleHandlerInterface::class);
 
-    $this->cache = $this->createMock(CacheBackendInterface::class);
+    $this->cache = $this->getMock(CacheBackendInterface::class);
 
     $namespaces = new ArrayObject();
 

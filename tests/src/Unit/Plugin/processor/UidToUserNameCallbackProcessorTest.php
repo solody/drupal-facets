@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\facets\Unit\Plugin\processor;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\facets\Entity\Facet;
@@ -40,12 +40,12 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
    */
   public function testResultsChanged() {
     $user_storage = $this->createMock(EntityStorageInterface::class);
-    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+    $entity_manager = $this->createMock(EntityManagerInterface::class);
     $entity_repository = $this->createMock(EntityTypeRepositoryInterface::class);
     $entity_repository->expects($this->any())
       ->method('getEntityTypeFromClass')
       ->willReturn('user');
-    $entity_type_manager->expects($this->any())
+    $entity_manager->expects($this->any())
       ->method('getStorage')
       ->willReturn($user_storage);
 
@@ -57,8 +57,9 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
       ->willReturn($user1);
 
     $container = new ContainerBuilder();
+    $container->set('entity.manager', $entity_manager);
     $container->set('entity_type.repository', $entity_repository);
-    $container->set('entity_type.manager', $entity_type_manager);
+    $container->set('entity_type.manager', $entity_manager);
     \Drupal::setContainer($container);
 
     $facet = new Facet([], 'facets_facet');
@@ -90,12 +91,12 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
    */
   public function testDeletedEntityResults() {
     $user_storage = $this->createMock(EntityStorageInterface::class);
-    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+    $entity_manager = $this->createMock(EntityManagerInterface::class);
     $entity_repository = $this->createMock(EntityTypeRepositoryInterface::class);
     $entity_repository->expects($this->any())
       ->method('getEntityTypeFromClass')
       ->willReturn('user');
-    $entity_type_manager->expects($this->any())
+    $entity_manager->expects($this->any())
       ->method('getStorage')
       ->willReturn($user_storage);
 
@@ -103,8 +104,9 @@ class UidToUserNameCallbackProcessorTest extends UnitTestCase {
       ->willReturn(NULL);
 
     $container = new ContainerBuilder();
+    $container->set('entity.manager', $entity_manager);
     $container->set('entity_type.repository', $entity_repository);
-    $container->set('entity_type.manager', $entity_type_manager);
+    $container->set('entity_type.manager', $entity_manager);
     \Drupal::setContainer($container);
 
     $facet = new Facet([], 'facets_facet');
