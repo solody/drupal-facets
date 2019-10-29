@@ -63,6 +63,16 @@ class QueryString extends UrlProcessorPluginBase {
     $requestUrl = $this->getUrlForRequest($facet_source_path, $request);
     $routeParameters = $this->getUrlRouteParameters();
 
+    $original_filter_params = [];
+    foreach ($this->getActiveFilters() as $facet_id => $values) {
+      $values = array_filter($values, static function ($it) {
+        return $it !== NULL;
+      });
+      foreach ($values as $value) {
+        $original_filter_params[] = $this->getUrlAliasByFacetId($facet_id, $facet->getFacetSourceId()) . ":" . $value;
+      }
+    }
+
     /** @var \Drupal\facets\Result\ResultInterface[] $results */
     foreach ($results as &$result) {
       // Reset the URL for each result.
@@ -81,15 +91,7 @@ class QueryString extends UrlProcessorPluginBase {
       }
       $result_get_params = clone $get_params;
 
-      $filter_params = [];
-      foreach ($this->getActiveFilters() as $facet_id => $values) {
-        $values = array_filter($values, function ($it) {
-          return $it !== NULL;
-        });
-        foreach ($values as $value) {
-          $filter_params[] = $this->getUrlAliasByFacetId($facet_id, $facet->getFacetSourceId()) . ":" . $value;
-        }
-      }
+      $filter_params = $original_filter_params;
 
       // If the value is active, remove the filter string from the parameters.
       if ($result->isActive()) {
