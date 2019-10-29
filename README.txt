@@ -157,7 +157,8 @@ EXTENSION MODULES
   Provides a processor to render facet entity reference items as view modes.
 - https://www.drupal.org/project/facets_range_input
   Provides an input range form (min and max) as a processor and widget.
-
+- https://www.drupal.org/project/facets_range_dropdowns
+  Provides an dropdown widget that works with the range processor.
 
 FAQ
 ---
