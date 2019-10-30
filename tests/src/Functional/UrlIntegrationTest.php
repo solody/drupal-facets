@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\facets\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\Entity\Facet;
@@ -213,6 +214,23 @@ class UrlIntegrationTest extends FacetsTestBase {
     $this->drupalGet('admin/config/search/facets/another_owl/edit');
     $this->drupalPostForm(NULL, ['facet_settings[url_alias]' => 'owl'], 'Save');
     $this->assertSession()->pageTextContains('This alias is already in use for another facet defined on the same source.');
+  }
+
+  /**
+   * Tests that modules can change the facet url.
+   */
+  public function testFacetUrlCanBeChanged() {
+    $modules = ['facets_events_test'];
+    $success = $this->container->get('module_installer')->install($modules, TRUE);
+    $this->assertTrue($success, new FormattableMarkup('Enabled modules: %modules', ['%modules' => implode(', ', $modules)]));
+    $this->rebuildAll();
+
+    $id = 'facet';
+    $name = 'Facet';
+    $this->createFacet($name, $id);
+
+    $url = Url::fromUserInput('/search-api-test-fulltext', ['query' => ['f[0]' => 'facet:item', 'test' => 'fun']]);
+    $this->checkClickedFacetUrl($url);
   }
 
 }

@@ -1,0 +1,6 @@
+name: 'Facets events test'
+type: module
+description: 'Facets events test'
+package: 'Search'
+core: 8.x
+hidden: true

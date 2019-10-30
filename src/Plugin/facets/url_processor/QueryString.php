@@ -5,8 +5,11 @@ namespace Drupal\facets\Plugin\facets\url_processor;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Url;
+use Drupal\facets\Event\QueryStringCreated;
 use Drupal\facets\FacetInterface;
 use Drupal\facets\UrlProcessor\UrlProcessorPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -29,11 +32,33 @@ class QueryString extends UrlProcessorPluginBase {
   protected $urlAlias;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, EntityTypeManagerInterface $entity_type_manager, EventDispatcherInterface $eventDispatcher) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $request, $entity_type_manager);
+    $this->eventDispatcher = $eventDispatcher;
     $this->initializeActiveFilters();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('request_stack')->getMasterRequest(),
+      $container->get('entity_type.manager'),
+      $container->get('event_dispatcher')
+    );
   }
 
   /**
@@ -155,6 +180,10 @@ class QueryString extends UrlProcessorPluginBase {
           }
         }
       }
+
+      // Allow other modules to alter the result url built.
+      $this->eventDispatcher->dispatch(QueryStringCreated::NAME, new QueryStringCreated($result_get_params, $filter_params, $result, $this->activeFilters, $facet));
+
       asort($filter_params, \SORT_NATURAL);
       $result_get_params->set($this->filterKey, array_values($filter_params));
       if (!empty($routeParameters)) {
