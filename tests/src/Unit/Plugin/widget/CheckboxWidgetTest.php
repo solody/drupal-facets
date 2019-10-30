@@ -32,7 +32,7 @@ class CheckboxWidgetTest extends WidgetTestBase {
     $this->assertInternalType('array', $output);
     $this->assertCount(4, $output['#items']);
 
-    $this->assertEquals(['js-facets-checkbox-links'], $output['#attributes']['class']);
+    $this->assertEquals(['facet-inactive', 'js-facets-checkbox-links'], $output['#attributes']['class']);
 
     $expected_links = [
       $this->buildLinkAssertion('Llama', 'llama', $facet, 10),

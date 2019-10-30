@@ -78,6 +78,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
       '#attributes' => [
         'data-drupal-facet-id' => $facet->id(),
         'data-drupal-facet-alias' => $facet->getUrlAlias(),
+        'class' => [$facet->getActiveItems() ? 'facet-active' : 'facet-inactive'],
       ],
       '#context' => ['list_style' => $widget['type']],
       '#cache' => [

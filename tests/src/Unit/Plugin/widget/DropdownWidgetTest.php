@@ -33,7 +33,7 @@ class DropdownWidgetTest extends WidgetTestBase {
     $this->assertInternalType('array', $output);
     $this->assertCount(4, $output['#items']);
 
-    $this->assertEquals(['js-facets-dropdown-links'], $output['#attributes']['class']);
+    $this->assertEquals(['facet-inactive', 'js-facets-dropdown-links'], $output['#attributes']['class']);
 
     $expected_links = [
       $this->buildLinkAssertion('Llama', 'llama', $facet, 10),
