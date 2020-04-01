@@ -59,7 +59,7 @@ abstract class FacetResourceTestBase extends EntityResourceTestBase {
       'dependencies' => [],
       'empty_behavior' => ['behavior' => 'none'],
       'enable_parent_when_child_gets_disabled' => TRUE,
-      'exclude' => NULL,
+      'exclude' => FALSE,
       'expand_hierarchy' => FALSE,
       'facet_source_id' => NULL,
       'field_identifier' => NULL,

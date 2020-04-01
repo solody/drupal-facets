@@ -1,7 +1,7 @@
 name: 'Facets Range Widget'
 type: module
 description: 'Provides a range widget and solid slider.'
-core: 8.x
+core_version_requirement: ^8.8 || ^9
 package: Search
 dependencies:
   - facets:facets

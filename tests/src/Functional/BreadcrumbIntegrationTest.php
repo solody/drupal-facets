@@ -26,6 +26,11 @@ class BreadcrumbIntegrationTest extends FacetsTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp();
 

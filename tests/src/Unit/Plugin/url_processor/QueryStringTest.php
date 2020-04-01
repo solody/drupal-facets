@@ -80,7 +80,8 @@ class QueryStringTest extends UnitTestCase {
    * Tests that the processor correctly throws an exception.
    */
   public function testEmptyProcessorConfiguration() {
-    $this->setExpectedException(InvalidProcessorException::class, "The url processor doesn't have the required 'facet' in the configuration array.");
+    $this->expectException(InvalidProcessorException::class);
+    $this->expectExceptionMessage("The url processor doesn't have the required 'facet' in the configuration array.");
     new QueryString([], 'test', [], new Request(), $this->entityManager, $this->eventDispatcher);
   }
 
@@ -452,7 +453,6 @@ class QueryStringTest extends UnitTestCase {
     $container->set('router.no_access_checks', $router);
     $container->set('plugin.manager.facets.facet_source', $manager);
     $container->set('entity_type.manager', $em);
-    $container->set('entity.manager', $em);
     $container->set('path.validator', $validator);
     \Drupal::setContainer($container);
   }

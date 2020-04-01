@@ -4,8 +4,8 @@ namespace Drupal\Tests\facets\Unit\Utility;
 
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -45,7 +45,7 @@ class FacetsDateHandlerTest extends UnitTestCase {
 
     $entity_storage = $this->createMock(EntityStorageInterface::class);
 
-    $em = $this->createMock(EntityManagerInterface::class);
+    $em = $this->createMock(EntityTypeManagerInterface::class);
     $em->expects($this->any())
       ->method('getStorage')
       ->with('date_format')
@@ -236,7 +236,7 @@ class FacetsDateHandlerTest extends UnitTestCase {
     $range = '[2016-03-01T00:00:00Z TO 2016-04-01T00:00:00Z]';
     $extracted = $this->handler->extractActiveItems($range);
 
-    $this->assertInternalType('array', $extracted);
+    $this->assertSame('array', gettype($extracted));
     $this->assertEquals('1456790400', $extracted['start']['timestamp']);
     $this->assertEquals('2016-03-01T00:00:00Z', $extracted['start']['iso']);
   }

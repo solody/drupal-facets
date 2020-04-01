@@ -275,7 +275,7 @@ class SearchApiDate extends QueryTypeRangeBase {
     $date = new DrupalDateTime();
     $date->setTimestamp($value);
     $now = new DrupalDateTime();
-    $now->setTimestamp(REQUEST_TIME);
+    $now->setTimestamp(\Drupal::time()->getRequestTime());
     $interval = $date->diff($now);
     $future = $date > $now;
 

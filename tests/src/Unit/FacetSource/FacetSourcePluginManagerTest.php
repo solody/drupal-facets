@@ -117,7 +117,7 @@ class FacetSourcePluginManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->willReturn($definitions);
 
-    $this->setExpectedException(PluginException::class);
+    $this->expectException(PluginException::class);
     $this->sut->getDefinitions();
   }
 
