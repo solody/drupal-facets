@@ -1,6 +1,5 @@
 name: 'Facets query processor'
 type: module
 description: 'Facets query processor'
-package: 'Search'
-core_version_requirement: ^8.8 || ^9
+package: 'Testing'
 hidden: true

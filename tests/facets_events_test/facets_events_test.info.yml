@@ -1,6 +1,5 @@
 name: 'Facets events test'
 type: module
 description: 'Facets events test'
-package: 'Search'
-core_version_requirement: ^8.8 || ^9
+package: 'Testing'
 hidden: true

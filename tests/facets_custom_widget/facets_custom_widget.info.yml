@@ -1,6 +1,5 @@
 name: 'Facets custom widget'
 type: module
 description: 'Facets custom widget'
-package: 'Search'
-core_version_requirement: ^8.8 || ^9
+package: 'Testing'
 hidden: true

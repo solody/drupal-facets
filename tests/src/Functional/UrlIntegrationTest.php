@@ -199,7 +199,7 @@ class UrlIntegrationTest extends FacetsTestBase {
     foreach ($content_types as $content_type) {
       $this->drupalGet('search-api-test-fulltext');
       $this->clickLink('2');
-      $this->assertTrue(strpos($this->getUrl(), 'page=1'));
+      $this->assertNotFalse(strpos($this->getUrl(), 'page=1'));
       $this->clickLink($content_type);
       $this->assertFalse(strpos($this->getUrl(), 'page=1'));
     }
