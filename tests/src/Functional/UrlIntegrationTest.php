@@ -55,9 +55,9 @@ class UrlIntegrationTest extends FacetsTestBase {
 
     /** @var \Drupal\facets\FacetInterface $facet */
     $facet = Facet::load($id);
-    $this->assertTrue($facet instanceof FacetInterface);
+    $this->assertInstanceOf(FacetInterface::class, $facet);
     $config = $facet->getFacetSourceConfig();
-    $this->assertTrue($config instanceof FacetSourceInterface);
+    $this->assertInstanceOf(FacetSourceInterface::class, $config);
     $this->assertEquals('f', $config->getFilterKey());
 
     $facet = NULL;
@@ -76,7 +76,7 @@ class UrlIntegrationTest extends FacetsTestBase {
     /** @var \Drupal\facets\FacetInterface $facet */
     $facet = Facet::load($id);
     $config = $facet->getFacetSourceConfig();
-    $this->assertTrue($config instanceof FacetSourceInterface);
+    $this->assertInstanceOf(FacetSourceInterface::class, $config);
     $this->assertEquals('y', $config->getFilterKey());
 
     $facet = NULL;
@@ -99,7 +99,7 @@ class UrlIntegrationTest extends FacetsTestBase {
     /** @var \Drupal\facets\FacetInterface $facet */
     $facet = Facet::load($id);
     $config = $facet->getFacetSourceConfig();
-    $this->assertTrue($config instanceof FacetSourceInterface);
+    $this->assertInstanceOf(FacetSourceInterface::class, $config);
     $this->assertEquals('y', $config->getFilterKey());
 
     $facet = NULL;
