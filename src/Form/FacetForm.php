@@ -376,7 +376,7 @@ class FacetForm extends EntityForm {
     $form['facet_settings']['show_title'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show title of facet'),
-      '#description' => $this->t('Show the title of the facet trough a twig template'),
+      '#description' => $this->t('Show the title of the facet through a Twig template'),
       '#default_value' => $facet->get('show_title'),
     ];
 
