@@ -12,12 +12,6 @@ use Drupal\search_api\Query\QueryInterface;
  */
 function facets_summary_theme($existing, $type, $theme, $path) {
   return [
-    'facets_summary' => [
-      'variables' => [
-        'count' => [],
-        'items' => [],
-      ],
-    ],
     'facets_summary_count' => [
       'variables' => [
         'count' => NULL,
