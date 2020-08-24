@@ -80,7 +80,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
         'data-drupal-facet-alias' => $facet->getUrlAlias(),
         'class' => [$facet->getActiveItems() ? 'facet-active' : 'facet-inactive'],
       ],
-      '#context' => ['list_style' => $widget['type']],
+      '#context' => !empty($widget['type']) ? ['list_style' => $widget['type']] : [],
       '#cache' => [
         'contexts' => [
           'url.path',
@@ -105,7 +105,8 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
    *   A theme hook name with suggestions, suitable for the #theme property.
    */
   protected function getFacetItemListThemeHook(FacetInterface $facet) {
-    return 'facets_item_list__' . $facet->getWidget()['type'] . '__' . $facet->id();
+    $type = $facet->getWidget()['type'] ?? 'std';
+    return 'facets_item_list__' . $type . '__' . $facet->id();
   }
 
   /**

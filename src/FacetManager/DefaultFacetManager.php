@@ -322,7 +322,7 @@ class DefaultFacetManager {
     // settings.
     if (empty($facet->getResults())) {
       $empty_behavior = $facet->getEmptyBehavior();
-      if ($empty_behavior['behavior'] == 'text') {
+      if ($empty_behavior && $empty_behavior['behavior'] === 'text') {
         return [
           [
             $build,
