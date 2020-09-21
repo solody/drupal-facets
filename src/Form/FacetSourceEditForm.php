@@ -177,7 +177,7 @@ class FacetSourceEditForm extends EntityForm {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     $facet_source = $this->getEntity();
-    \Drupal::messenger()->addMessage($this->t('Facet source %name has been saved.', ['%name' => $facet_source->label()]));
+    $this->messenger()->addMessage($this->t('Facet source %name has been saved.', ['%name' => $facet_source->label()]));
     $form_state->setRedirect('entity.facets_facet.collection');
   }
 
