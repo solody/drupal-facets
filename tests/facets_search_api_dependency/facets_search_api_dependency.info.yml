@@ -7,3 +7,4 @@ dependencies:
   - search_api:search_api
   - search_api:search_api_test_db
   - drupal:views
+core_version_requirement: ^8.8 || ^9

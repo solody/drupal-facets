@@ -3,3 +3,4 @@ type: module
 description: 'Facets query processor'
 package: 'Testing'
 hidden: true
+core_version_requirement: ^8.8 || ^9
