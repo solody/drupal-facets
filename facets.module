@@ -358,60 +358,11 @@ function facets_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInter
  * Implements hook_language_switch_links_alter().
  */
 function facets_language_switch_links_alter(array &$links, $type, Url $url) {
-  /** @var \Drupal\Core\Language\LanguageManagerInterface $languageManager */
-  $languageManager = \Drupal::languageManager();
-  $language_interface = $languageManager->getCurrentLanguage();
-  /** @var \Drupal\facets\FacetInterface[] $allFacets */
-  $allFacets = \Drupal::entityTypeManager()
-    ->getStorage('facets_facet')
-    ->loadMultiple();
-
-  /** @var \Drupal\facets\UrlProcessor\UrlProcessorPluginManager $urlProcessorManager */
-  $urlProcessorManager = \Drupal::service('plugin.manager.facets.url_processor');
-  foreach ($links as &$link) {
-    if (empty($link['language']) || !($link['language'] instanceof LanguageInterface) || $link['language']->getId() === $language_interface->getId()) {
-      continue;
-    }
-
-    foreach ($allFacets as $facet) {
-      if (!isset($link['query'][$facet->getFacetSourceConfig()->getFilterKey()]) ||
-          !is_array($link['query'][$facet->getFacetSourceConfig()->getFilterKey()])) {
-        continue;
-      }
-
-      $configName = 'facets.facet.' . $facet->id();
-      $untranslatedAlias = $languageManager->getLanguageConfigOverride($language_interface->getId(), $configName)->get('url_alias');
-      $translatedAlias = $languageManager->getLanguageConfigOverride($link['language']->getId(), $configName)->get('url_alias');
-
-      // If we don't have a translated alias, that means we're trying to create
-      // a link to the original language.
-      if ($translatedAlias === NULL) {
-        $translatedAlias = \Drupal::config($configName)->getOriginal('url_alias', FALSE);
-      }
-      // If we don't have an untranslated alias, we're trying to create a link
-      // from the original language.
-      if ($untranslatedAlias === NULL) {
-        $untranslatedAlias = \Drupal::config($configName)->getOriginal('url_alias', FALSE);
-      }
-
-      /** @var \Drupal\facets\UrlProcessor\UrlProcessorInterface $urlProcessor */
-      $urlProcessor = $urlProcessorManager
-        ->createInstance($facet
-          ->getFacetSourceConfig()
-          ->getUrlProcessorName(), ['facet' => $facet]
-        );
-
-      foreach ($link['query'][$facet->getFacetSourceConfig()->getFilterKey()] as &$filters) {
-        $separator = $urlProcessor->getSeparator();
-        $filters = preg_replace(
-          '/(' . $untranslatedAlias . ")$separator/",
-          $translatedAlias . $separator,
-          $filters
-        );
-      }
-    }
-  }
+  /** @var \Drupal\facets\LanguageSwitcherLinksAlterer $alterer */
+  $alterer = \Drupal::service('facets.language_switcher_links_alterer');
+  $alterer->alter($links, $type, $url);
 }
+
 
 /**
  * Implements hook_form_FORM_ID_alter().

@@ -38,3 +38,6 @@ services:
     arguments: ['@plugin.manager.block']
     tags:
       - { name: event_subscriber }
+  facets.language_switcher_links_alterer:
+    class: Drupal\facets\LanguageSwitcherLinksAlterer
+    arguments: ['@language_manager', '@cache.default', '@entity_type.manager', '@plugin.manager.facets.url_processor']
