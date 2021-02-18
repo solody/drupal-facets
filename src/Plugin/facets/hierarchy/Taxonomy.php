@@ -118,6 +118,10 @@ class Taxonomy extends HierarchyPluginBase {
    * {@inheritdoc}
    */
   public function getSiblingIds(array $ids, array $activeIds = [], bool $parentSiblings = TRUE) {
+    if (empty($ids)) {
+      return [];
+    }
+
     $parentIds = [];
     $topLevelTerms = [];
 
