@@ -181,7 +181,9 @@ class QueryString extends UrlProcessorPluginBase {
       }
 
       // Allow other modules to alter the result url built.
-      $this->eventDispatcher->dispatch(QueryStringCreated::NAME, new QueryStringCreated($result_get_params, $filter_params, $result, $this->activeFilters, $facet));
+      $event = new QueryStringCreated($result_get_params, $filter_params, $result, $this->activeFilters, $facet);
+      $this->eventDispatcher->dispatch(QueryStringCreated::NAME, $event);
+      $filter_params = $event->getFilterParameters();
 
       asort($filter_params, \SORT_NATURAL);
       $result_get_params->set($this->filterKey, array_values($filter_params));
