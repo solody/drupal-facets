@@ -194,6 +194,10 @@ class QueryString extends UrlProcessorPluginBase {
       if ($result_get_params->all() !== [$this->filterKey => []]) {
         $new_url_params = $result_get_params->all();
 
+        if (empty($new_url_params[$this->filterKey])) {
+          unset($new_url_params[$this->filterKey]);
+        }
+
         // Facet links should be page-less.
         // See https://www.drupal.org/node/2898189.
         unset($new_url_params['page']);
