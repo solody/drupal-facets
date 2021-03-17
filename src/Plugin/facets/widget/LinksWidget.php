@@ -92,7 +92,7 @@ class LinksWidget extends WidgetPluginBase {
       // Check if any other facet is in use.
       $none_active = TRUE;
       foreach ($results as $result) {
-        if ($result->isActive()) {
+        if ($result->isActive() || $result->hasActiveChildren()) {
           $none_active = FALSE;
           break;
         }
