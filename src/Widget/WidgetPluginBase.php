@@ -186,6 +186,7 @@ abstract class WidgetPluginBase extends PluginBase implements WidgetPluginInterf
 
       $items['children'] = [
         '#theme' => $this->getFacetItemListThemeHook($facet),
+        '#facet' => $facet,
         '#items' => $child_items,
       ];
 
